@@ -9,7 +9,6 @@ struct Dimension_contents{// defines the struct on which Dimension will point to
 
 typedef std::shared_ptr<Dimension_contents> Dimension;
 
-Dimension default_dim(new Dimension_contents);
 
 class Vector3D{
 	private:
