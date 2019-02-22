@@ -15,8 +15,16 @@ class Vector3D{
 		double x;
 		double y;
 		double z;
-		Dimension dimension = default_dim;
+		Dimension dimension;
 	public:
+		Vector3D(double a = 0, double b = 0, double c = 0){
+			x = a;
+			y = b;
+			z = c;
+			Dimension dim(new Dimension_contents);
+			dimension = dim;
+		}
+
 		void setCoords(double a, double b, double c);// intialise instance of Vector3D to the given coords
 
 		std::array<double,3> getCoords(void) const;// return coords in an array
