@@ -28,15 +28,6 @@ Vous pouvez ajouter vos propres tâches si vous le jugez utile
 [ ] fichier NOMS                                        	??
 
 ======================================================================
-# A FAIRE (PROCHAINE ETAPE)
-
-Mettez ici ce que vous pensez devoir être la ou les 2 prochaines étapes
-pour chacun. Par exemple :
-
-Ron: debugger les Vecteurs
-Hermione: finir le reste du projet
-
-======================================================================
 # SUIVI
 
 ## Semaine 1:
