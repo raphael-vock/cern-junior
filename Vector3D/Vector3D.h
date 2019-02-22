@@ -18,6 +18,10 @@ class Vector3D{
 		double z;
 		Dimension dimension = default_dim;
 	public:
+
+		Vector3D(double X, double Y, double Z) : x(X), y(Y), z(Z) {} //constructor for Vector3D class
+		Vector3D(void) : x(0), y(0), z(0) {} //default constructor, all coords initialised at 0
+
 		void setCoords(double a, double b, double c);// intialise instance of Vector3D to the given coords
 
 		std::array<double,3> getCoords(void) const;// return coords in an array
