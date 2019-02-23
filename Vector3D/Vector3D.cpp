@@ -86,3 +86,8 @@ Vector3D operator*(const double &lambda, const Vector3D& u){
 double mixed_prod(const Vector3D &u, const Vector3D &v, const Vector3D &w){
 	return u|(v^w);
 }
+
+std::ostream& operator<<(std::ostream& output, const Vector3D & u){
+	output << u.getCoords()[0] << " " << u.getCoords()[1] << " " << u.getCoords()[2];
+	return output;
+}

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <array>
 #include <string>
 #include <memory>
@@ -54,3 +55,5 @@ class Vector3D{
 Vector3D operator*(const double &, const Vector3D&);// scalar multiplication, with the scalar coming BEFORE
 
 double mixed_prod(const Vector3D &, const Vector3D &, const Vector3D &);// returns mixed product of (u,v,w) i.e. u|(v^w);
+
+std::ostream& operator<<(std::ostream& output, const Vector3D &);// overloaded operator to print coords in console
