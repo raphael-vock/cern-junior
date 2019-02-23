@@ -1,11 +1,14 @@
-CC=$(CXX)
-CXXFLAGS = -std=c++11 -pedantic -Wall
-CXXFLAGS += -O2
-CXXFLAGS += -g
-LDLIBS = -lgraph
+output: Vector3D_test.o Dimension.o Vector3D.o
+	g++ Vector3D_test.o Dimension.o Vector3D.o -o output
 
-all: Vector3D_test
-Vector3D: Vector_3D.cpp Vector3D.h
-Vector3D_test.o: Vector3D_test.cpp Vector3D.h
-Vector3D_test: Vector3D_test.o Vector3D.o
-	g++ -o Vector3D_test Vector3D_test.o Vector3D.o 
+Vector3D_test.o: Vector3D_test.cpp
+	g++ -c Vector3D_test.cpp
+
+Dimension.o: Dimension.cpp Dimension.h
+	g++ -c Dimension.cpp
+
+Vector3D.o: Vector3D.cpp Vector3D.h
+	g++ -c Vector3D.cpp
+
+clean:
+	rm *.o output
