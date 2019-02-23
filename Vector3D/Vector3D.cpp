@@ -27,7 +27,6 @@ void Vector3D::print(void) const{
 	std::cout << x << "  " << y << "  " << z << "  ";
 }
 
-
 Vector3D Vector3D::operator-(void) const{
 	Vector3D Res;
 	Res.setCoords(-x,-y,-z);
