@@ -3,14 +3,15 @@
 #include <string>
 #include "Dimension.h"
 
+const extern double default_epsilon;
+
 class Vector3D{
 	private:
 		double x;
 		double y;
 		double z;
-		Dimension* p_dim;
 	public:
-		Vector3D(Dimension*, double, double, double);// constructor
+		Vector3D(double = 0, double = 0, double = 0);// constructor for when it is not (therefore adimensional by default)
 
 		void setCoords(double a, double b, double c);// intialise instance of Vector3D to the given coords
 
@@ -18,11 +19,17 @@ class Vector3D{
 
 		void print(void) const;// print coords in console
 
-		Vector3D opp(void) const;// returns the additive inverse
+		Vector3D operator-(void) const;// returns the additive inverse
+
+		void operator*=(const double &);
 
 		Vector3D operator*(const double &) const;// scalar multiplication. Note that the scalar comes AFTER the vector (i.e. u*lambda). We define lambda*u as a non-member operator
 
+		void operator+=(const Vector3D &);// for optimization purposes
+
 		Vector3D operator+(const Vector3D &) const;// vector addition
+
+		void operator-=(const Vector3D &);
 
 		Vector3D operator-(const Vector3D &) const;// vector subtraction
 
