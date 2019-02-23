@@ -6,9 +6,9 @@ using namespace std;
 int main(void){
 	cout << "\n";
 
-	Vector3D u(A,1.0, 2.0, -0.1);
-	Vector3D v(A,2.6, 3.5, 4.1);
-	Vector3D w(A,3.9, 3.8, 3.7);
+	Vector3D u(1.0, 2.0, -0.1);
+	Vector3D v(2.6, 3.5, 4.1);
+	Vector3D w(3.9, 3.8, 3.7);
 	
 	cout << "Si :\n u = "; u.print();
 	cout << "\n v = "; v.print();
