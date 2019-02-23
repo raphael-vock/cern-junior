@@ -1,28 +1,16 @@
+#include <iostream>
 #include <array>
 #include <string>
-#include <memory>
-
-struct Dimension_contents{// defines the struct on which Dimension will point to
-	std::string unit = "";// e.g. "m", "m/s", "eV", etc. By default, adimensional.
-	double tolerance = 1e-3;// small positive number beneath which objects of this type are considered zero
-};
-
-typedef std::shared_ptr<Dimension_contents> Dimension;
+#include "Dimension.h"
 
 class Vector3D{
 	private:
 		double x;
 		double y;
 		double z;
-		Dimension dimension;
+		Dimension* p_dim;
 	public:
-		Vector3D(double a = 0, double b = 0, double c = 0){
-			x = a;
-			y = b;
-			z = c;
-			Dimension dim(new Dimension_contents);
-			dimension = dim;
-		}
+		Vector3D(Dimension*, double, double, double);// constructor
 
 		void setCoords(double a, double b, double c);// intialise instance of Vector3D to the given coords
 
