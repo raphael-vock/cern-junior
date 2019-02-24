@@ -32,7 +32,7 @@ Vous pouvez ajouter vos propres tâches si vous le jugez utile
 
 ## Semaine 1:
 R: Création du module Vector3D. Testé et quasiment finalisé.
-Mise en place du répertoire GitHub.
+Mise en place du répertoire GitHub. Installation de SDL2 et OpenGL pour l'environnement graphique.
 
 ## Semaine 2 :
 
