@@ -45,6 +45,8 @@ class Vector3D{
 
 		bool operator ==(const Vector3D &) const;// returns true iff argument and "this" differ by a "zero" vector
 
+		bool operator !=(const Vector3D &) const;
+
 		Vector3D unitary() const;// returns the unit vector in the same direction
 };
 
