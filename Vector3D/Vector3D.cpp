@@ -97,6 +97,10 @@ bool Vector3D::operator==(const Vector3D& v) const{
 	return (*this - v).is_zero();
 }
 
+bool Vector3D::operator!=(const Vector3D& v) const{
+	return not (*this == v);
+}
+
 Vector3D Vector3D::unitary(void) const{
 	if(this->is_zero()) throw 0;
 	else return (*this) * (1/this->norm());
