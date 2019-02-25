@@ -15,8 +15,8 @@ EQ            = =
 CC            = /Library/Developer/CommandLineTools/usr/bin/clang
 CXX           = /Library/Developer/CommandLineTools/usr/bin/clang++
 DEFINES       = -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB
-CFLAGS        = -pipe -O2 $(EXPORT_ARCH_ARGS) -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -mmacosx-version-min=10.12 -Wall -W -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -stdlib=libc++ -O2 -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -mmacosx-version-min=10.12 -Wall -W -fPIC $(DEFINES)
+CFLAGS        = -pipe -O2 $(EXPORT_ARCH_ARGS) -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -mmacosx-version-min=10.7 -Wall -W -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -stdlib=libc++ -O2 -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -mmacosx-version-min=10.7 -Wall -W -fPIC $(DEFINES)
 INCPATH       = -I. -I../general -I/usr/local/Cellar/qt/5.12.1/lib/QtGui.framework/Headers -I/usr/local/Cellar/qt/5.12.1/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/AGL.framework/Headers/ -I/usr/local/Cellar/qt/5.12.1/mkspecs/macx-clang -F/usr/local/Cellar/qt/5.12.1/lib
 QMAKE         = /usr/local/opt/qt5/bin/qmake
 DEL_FILE      = rm -f
@@ -37,9 +37,9 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = console1.0.0
-DISTDIR = /Users/Raphael/Downloads/spheres/text/.tmp/console1.0.0
+DISTDIR = /Users/Raphael/Documents/GitHub/cern-junior/spheres/text/.tmp/console1.0.0
 LINK          = /Library/Developer/CommandLineTools/usr/bin/clang++
-LFLAGS        = -stdlib=libc++ -headerpad_max_install_names $(EXPORT_ARCH_ARGS) -Wl,-syslibroot,/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -mmacosx-version-min=10.12 -Wl,-rpath,@executable_path/Frameworks
+LFLAGS        = -stdlib=libc++ -headerpad_max_install_names $(EXPORT_ARCH_ARGS) -Wl,-syslibroot,/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -mmacosx-version-min=10.7 -Wl,-rpath,@executable_path/Frameworks
 LIBS          = $(SUBLIBS) -F/usr/local/Cellar/qt/5.12.1/lib -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework OpenGL -framework AGL   
 AR            = /Library/Developer/CommandLineTools/usr/bin/ar cq
 RANLIB        = /Library/Developer/CommandLineTools/usr/bin/ranlib -s
@@ -262,7 +262,7 @@ EXPORT_QMAKE_XCODE_DEVELOPER_PATH = /Library/Developer/CommandLineTools
 EXPORT_VALID_ARCHS = x86_64
 EXPORT_ACTIVE_ARCHS = $(filter $(EXPORT_VALID_ARCHS), $(ARCHS))
 EXPORT_ARCH_ARGS = $(foreach arch, $(if $(EXPORT_ACTIVE_ARCHS), $(EXPORT_ACTIVE_ARCHS), $(EXPORT_VALID_ARCHS)), -arch $(arch))
-EXPORT__PRO_FILE_ = /Users/Raphael/Downloads/spheres/text/text.pro
+EXPORT__PRO_FILE_ = /Users/Raphael/Documents/GitHub/cern-junior/spheres/text/text.pro
 
 
 include /usr/local/Cellar/qt/5.12.1/mkspecs/features/mac/sdk.mk
@@ -707,7 +707,7 @@ compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
 moc_predefs.h: /usr/local/Cellar/qt/5.12.1/mkspecs/features/data/dummy.cpp
-	/Library/Developer/CommandLineTools/usr/bin/clang++ -pipe -stdlib=libc++ -O2 -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -mmacosx-version-min=10.12 -Wall -W -dM -E -o moc_predefs.h /usr/local/Cellar/qt/5.12.1/mkspecs/features/data/dummy.cpp
+	/Library/Developer/CommandLineTools/usr/bin/clang++ -pipe -stdlib=libc++ -O2 -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -mmacosx-version-min=10.7 -Wall -W -dM -E -o moc_predefs.h /usr/local/Cellar/qt/5.12.1/mkspecs/features/data/dummy.cpp
 
 compiler_moc_header_make_all:
 compiler_moc_header_clean:
