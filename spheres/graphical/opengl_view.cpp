@@ -9,12 +9,12 @@ void OpenGLView::draw(Content const& to_draw){
 
 	QMatrix4x4 matrix;
 
-	/* drawAxes(matrix); // draw axes */
 
 	matrix.translate(-0.5, 0.0, -2.0);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	drawSphere(matrix, 0.0, 0.0); // blue
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);// draws  only the contour
+
+	drawSphere(matrix,{0.0, 0.0, 1.0}); // blue
 	matrix.scale(1.5); // axis length
 	/* drawAxes(matrix, false); // draws sphere axes in white */
 
@@ -23,16 +23,19 @@ void OpenGLView::draw(Content const& to_draw){
 	matrix.scale(0.5);
 	matrix.rotate(-30, 0.0, 1.0, 0.0);
 	matrix.rotate(-30, 1.0, 0.0, 0.0);
-	drawSphere(matrix, 1.0, 1.0, 0.0); // yellow
+	drawSphere(matrix,{1.0, 1.0, 0.0}); // yellow
 	matrix.scale(1.5);
 	/* drawAxes(matrix); // sphere axes */
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // repasse en mode "plein"
 
 	matrix.setToIdentity();
 	matrix.translate(0.0, 0.0, -2.0);
 	matrix.scale(0.125);
-	drawSphere(matrix, 1.0, 0.0, 0.0); // rouge
+	drawSphere(matrix,{1.0, 0.0, 0.0}); // rouge
+
+	matrix.setToIdentity();
+	matrix.translate(0.0, 0.0, -2.0);
+	matrix.scale(0.125);
+	drawCube(matrix, {0.0, 1.0, 0.0});
 }
 
 void OpenGLView::init(){
@@ -79,47 +82,47 @@ void OpenGLView::rotate(double angle, double x, double y, double z){
 	pov_matrix = rotation * pov_matrix;
 }
 
-void OpenGLView::drawCube(QMatrix4x4 const& pov){
+void OpenGLView::drawCube(QMatrix4x4 const& pov, RGB color){
 	prog.setUniformValue("view", pov_matrix * pov);
 
 	glBegin(GL_QUADS);
 	// X = +1 face
-	prog.setAttributeValue(ColorId, 1.0, 0.0, 0.0); // red
+	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 	prog.setAttributeValue(VertexId, +1.0, -1.0, -1.0);
 	prog.setAttributeValue(VertexId, +1.0, +1.0, -1.0);
 	prog.setAttributeValue(VertexId, +1.0, +1.0, +1.0);
 	prog.setAttributeValue(VertexId, +1.0, -1.0, +1.0);
 
 	// X = -1 face
-	prog.setAttributeValue(ColorId, 0.0, 1.0, 0.0); // green
+	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 	prog.setAttributeValue(VertexId, -1.0, -1.0, -1.0);
 	prog.setAttributeValue(VertexId, -1.0, -1.0, +1.0);
 	prog.setAttributeValue(VertexId, -1.0, +1.0, +1.0);
 	prog.setAttributeValue(VertexId, -1.0, +1.0, -1.0);
 
 	// Y = +1 face
-	prog.setAttributeValue(ColorId, 0.0, 0.0, 1.0); // blue
+	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 	prog.setAttributeValue(VertexId, -1.0, +1.0, -1.0);
 	prog.setAttributeValue(VertexId, -1.0, +1.0, +1.0);
 	prog.setAttributeValue(VertexId, +1.0, +1.0, +1.0);
 	prog.setAttributeValue(VertexId, +1.0, +1.0, -1.0);
 
 	// Y = -1 face
-	prog.setAttributeValue(ColorId, 0.0, 1.0, 1.0); // cyan
+	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 	prog.setAttributeValue(VertexId, -1.0, -1.0, -1.0);
 	prog.setAttributeValue(VertexId, +1.0, -1.0, -1.0);
 	prog.setAttributeValue(VertexId, +1.0, -1.0, +1.0);
 	prog.setAttributeValue(VertexId, -1.0, -1.0, +1.0);
 
 	// Z = +1 face
-	prog.setAttributeValue(ColorId, 1.0, 1.0, 0.0); // yellow
+	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 	prog.setAttributeValue(VertexId, -1.0, -1.0, +1.0);
 	prog.setAttributeValue(VertexId, +1.0, -1.0, +1.0);
 	prog.setAttributeValue(VertexId, +1.0, +1.0, +1.0);
 	prog.setAttributeValue(VertexId, -1.0, +1.0, +1.0);
 
 	// Z = -1 face
-	prog.setAttributeValue(ColorId, 1.0, 0.0, 1.0); // magenta
+	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 	prog.setAttributeValue(VertexId, -1.0, -1.0, -1.0);
 	prog.setAttributeValue(VertexId, -1.0, +1.0, -1.0);
 	prog.setAttributeValue(VertexId, +1.0, +1.0, -1.0);
@@ -128,14 +131,12 @@ void OpenGLView::drawCube(QMatrix4x4 const& pov){
 	glEnd();
 }
 
-// ======================================================================
-void OpenGLView::drawSphere (QMatrix4x4 const& pov, double red, double green, double blue){
+void OpenGLView::drawSphere (QMatrix4x4 const& pov, RGB color){
 	prog.setUniformValue("view", pov_matrix * pov);
-	prog.setAttributeValue(ColorId, red, green, blue);  // colors
+	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);  // colors
 	sphere.draw(prog, VertexId); // draws sphere
 }
 
-// ======================================================================
 void OpenGLView::drawAxes (QMatrix4x4 const& pov, bool is_in_color){
 	prog.setUniformValue("view", pov_matrix * pov);
 
