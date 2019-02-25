@@ -4,8 +4,6 @@ CONFIG +=\
 	console
 CONFIG -= app_bundle
 
-win32:LIBS += -lopengl32
-
 TARGET = graphical
 
 INCLUDEPATH = ../general
