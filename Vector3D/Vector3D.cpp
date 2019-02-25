@@ -1,4 +1,3 @@
-// j'effectue un changement risque
 #include <iostream>
 #include <cmath>
 #include <string>
@@ -71,12 +70,6 @@ double Vector3D::operator|(const Vector3D &v) const{
 
 Vector3D Vector3D::operator^(const Vector3D &v) const{
 	// note that member function binary operator overloading passes "this" as first argument and the method argument as second. i.e. x^y = x.operator^(y);
-	Vector3D Res;
-	Res.x = this->y * v.z - this->z * v.y;
-	Res.y = v.x * this->z - v.z * this->x;
-	Res.z = this->x * v.y - this->y * v.x;
-
-	return Res;
 	return Vector3D(
 		this->y * v.z - this->z * v.y,
 		v.x * this->z - v.z * this->x,
