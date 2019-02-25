@@ -9,33 +9,17 @@ void OpenGLView::draw(Content const& to_draw){
 
 	QMatrix4x4 matrix;
 
+	matrix.rotate(2*to_draw.getAngle(), 1.0,0.0,0.0);
+	drawSphere(matrix,{1.0, 0.0, 0.0});
 
-	matrix.translate(-0.5, 0.0, -2.0);
+	matrix.setToIdentity();
+	matrix.rotate(to_draw.getAngle(), 1.0, 0.0, 0.0);
+	matrix.translate(0.0,2.0,0.0);
+	matrix.scale(0.2);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);// draws  only the contour
-
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	drawSphere(matrix,{0.0, 0.0, 1.0}); // blue
 	matrix.scale(1.5); // axis length
-	/* drawAxes(matrix, false); // draws sphere axes in white */
-
-	matrix.setToIdentity();
-	matrix.translate(1.0, 0.0, -2.0);
-	matrix.scale(0.5);
-	matrix.rotate(-30, 0.0, 1.0, 0.0);
-	matrix.rotate(-30, 1.0, 0.0, 0.0);
-	drawSphere(matrix,{1.0, 1.0, 0.0}); // yellow
-	matrix.scale(1.5);
-	/* drawAxes(matrix); // sphere axes */
-
-	matrix.setToIdentity();
-	matrix.translate(0.0, 0.0, -2.0);
-	matrix.scale(0.125);
-	drawSphere(matrix,{1.0, 0.0, 0.0}); // rouge
-
-	matrix.setToIdentity();
-	matrix.translate(0.0, 0.0, -2.0);
-	matrix.scale(0.125);
-	drawCube(matrix, {0.0, 1.0, 0.0});
 }
 
 void OpenGLView::init(){
