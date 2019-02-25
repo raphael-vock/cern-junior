@@ -1,3 +1,4 @@
+// changement risque
 #include <iostream>
 #include <cmath>
 #include <string>
@@ -18,8 +19,7 @@ void Vector3D::setCoords(double a, double b, double c){
 }
 
 std::array<double,3> Vector3D::getCoords() const{
-	std::array<double,3> coords = {x,y,z};
-	return coords;
+	return {x,y,z};
 }
 
 
@@ -28,9 +28,7 @@ void Vector3D::print(void) const{
 }
 
 Vector3D Vector3D::operator-(void) const{
-	Vector3D Res;
-	Res.setCoords(-x,-y,-z);
-	return Res;
+	return Vector3D(-x, -y, -z);
 }
 
 void Vector3D::operator*=(const double &lambda){
@@ -79,6 +77,11 @@ Vector3D Vector3D::operator^(const Vector3D &v) const{
 	Res.z = this->x * v.y - this->y * v.x;
 
 	return Res;
+	return Vector3D(
+		this->y * v.z - this->z * v.y,
+		v.x * this->z - v.z * this->x,
+		this->x * v.y - this->y * v.x
+	); 
 }
 
 double Vector3D::norm2(void) const{
