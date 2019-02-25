@@ -2,6 +2,7 @@
 #define GLWIDGET_H
 
 #include <QOpenGLWidget>
+#include <QTime>
 #include "opengl_view.h"
 #include "content.h"
 
@@ -17,9 +18,17 @@ class GLWidget : public QOpenGLWidget{
 
 		// Event handling
 		virtual void keyPressEvent(QKeyEvent* event) override;
+		virtual void timerEvent(QTimerEvent*)        override;
+
+		// internal handling
+		void pause();
 
 		// viewpoint
 		OpenGLView view;
+
+		// timer
+		int timerId;
+		QTime stopwatch;
 
 		// to be drawn
 		Content c;
