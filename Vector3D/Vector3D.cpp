@@ -18,8 +18,7 @@ void Vector3D::setCoords(double a, double b, double c){
 }
 
 std::array<double,3> Vector3D::getCoords() const{
-	std::array<double,3> coords = {x,y,z};
-	return coords;
+	return {x,y,z};
 }
 
 
@@ -28,9 +27,7 @@ void Vector3D::print(void) const{
 }
 
 Vector3D Vector3D::operator-(void) const{
-	Vector3D Res;
-	Res.setCoords(-x,-y,-z);
-	return Res;
+	return Vector3D(-x, -y, -z);
 }
 
 void Vector3D::operator*=(const double &lambda){
@@ -73,12 +70,11 @@ double Vector3D::operator|(const Vector3D &v) const{
 
 Vector3D Vector3D::operator^(const Vector3D &v) const{
 	// note that member function binary operator overloading passes "this" as first argument and the method argument as second. i.e. x^y = x.operator^(y);
-	Vector3D Res;
-	Res.x = this->y * v.z - this->z * v.y;
-	Res.y = v.x * this->z - v.z * this->x;
-	Res.z = this->x * v.y - this->y * v.x;
-
-	return Res;
+	return Vector3D(
+		this->y * v.z - this->z * v.y,
+		v.x * this->z - v.z * this->x,
+		this->x * v.y - this->y * v.x
+	); 
 }
 
 double Vector3D::norm2(void) const{
