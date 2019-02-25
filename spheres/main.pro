@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-   graphical \
-   text
+	graphical \
+	text
