@@ -1,0 +1,12 @@
+
+*.swp
+Vector3D/.DS_Store
+Vector3D/output
+Vector3D/.exrc
+*.o
+.DS_Store
+spheres/.qmake.stash
+spheres/graphical/Makefile
+spheres/Makefile
+spheres/graphical/graphical
+spheres/text/console
