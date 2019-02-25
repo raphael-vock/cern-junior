@@ -1,10 +1,13 @@
 #ifndef OPENGL_VIEW
 #define OPENGL_VIEW
 
+#include <array>
 #include <QOpenGLShaderProgram> // shaders
 #include <QMatrix4x4>
 #include "glsphere.h"
 #include "canvas.h"
+
+typedef std::array<double,3> RGB;
 
 class OpenGLView : public Canvas{
 	public:
@@ -23,9 +26,9 @@ class OpenGLView : public Canvas{
 		void rotate(double angle, double dir_x, double dir_y, double dir_z);
 
 		// some useful methods
-		void drawAxes(QMatrix4x4 const& point_de_vue, bool en_couleur = true);
-		void drawCube(QMatrix4x4 const& point_de_vue = QMatrix4x4() );
-		void drawSphere(QMatrix4x4 const& point_de_vue, double rouge = 1.0, double vert = 1.0, double bleu = 1.0);
+		void drawAxes(QMatrix4x4 const& pov, bool is_in_color = true);
+		void drawCube(QMatrix4x4 const& pov = QMatrix4x4(), RGB color = {1.0,0.0,0.0});
+		void drawSphere(QMatrix4x4 const& point_de_vue, RGB color = {1.0,0.0,0.0});
 
 	private:
 		// OpenGL shader in Qt class
