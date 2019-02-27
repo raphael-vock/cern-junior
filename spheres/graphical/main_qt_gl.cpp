@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QMainWindow>
 #include "glwidget.h"
 
 int main(int argc, char* argv[]){
