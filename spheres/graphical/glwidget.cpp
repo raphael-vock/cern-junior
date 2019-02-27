@@ -30,8 +30,8 @@ void GLWidget::paintGL(){
 
 
 void GLWidget::keyPressEvent(QKeyEvent* event){
-	constexpr double small_angle(5.0); // in degrees
-	constexpr double small_increment(1.0);
+	constexpr double small_angle(2.5); // in degrees
+	constexpr double small_increment(0.5);
 
 	switch(event->key()){
 		case Qt::Key_Left:
@@ -51,7 +51,10 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 			break;
 
 		case Qt::Key_W:
-			view.translate(0.0, 0.0, small_increment);
+			// close on Ctrl-w (Windows/Linux) or Cmd-w (Mac):
+			if(event->modifiers() & Qt::ControlModifier) close();
+
+			else view.translate(0.0, 0.0, small_increment);
 			break;
 
 		case Qt::Key_S:
