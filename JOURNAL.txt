@@ -7,9 +7,9 @@ Vous pouvez ajouter vos propres tâches si vous le jugez utile
 
 [X] créer le JOURNAL                                    	 1
 [X] lire complètement le descriptif général                 	20 
-[ ] s'inscrire en binôme                                      	??
+[X] s'inscrire en binôme                                      	1
 [ ] Makefile                                               	??
-[~] Vecteur finie (pleinement opérationnelle et testée) 	100	
+[X] Vecteur finie (pleinement opérationnelle et testée) 	100	
 [ ] fichier REPONSES                                         	??
 [ ] Oscillateur                                            	??
 [ ] intégrateur d'Euler-Cromer                            	??
@@ -17,7 +17,7 @@ Vous pouvez ajouter vos propres tâches si vous le jugez utile
 [ ] Ressort                                               	??
 [ ] Systeme                                               	??
 [ ] exerciceP10                                           	??
-[ ] graphisme: cadre général                              	??
+[X] graphisme: cadre général                              	120
 [ ] graphisme: Pendule                                     	??
 [ ] OscillateurCouple                                     	??
 [ ] PenduleDouble                                         	??
