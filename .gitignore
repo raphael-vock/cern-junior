@@ -19,3 +19,4 @@ spheres/console_app/Makefile
 spheres/general/Makefile
 spheres/graphical_app/Makefile
 *.a
+spheres/vector3d/Makefile
