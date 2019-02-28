@@ -13,10 +13,8 @@ class Content : public Drawable{
 			canvas->draw(*this);
 		}
 
-		void evolve(double dt){
-			constexpr double omega(100.0);
-			angle += omega*dt;
-		}
+		void evolve(double dt);
+
 		double getAngle(void) const { return angle; }
 	private:
 		double angle;
