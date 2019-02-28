@@ -22,3 +22,10 @@ spheres/graphical_app/Makefile
 spheres/vector3d/Makefile
 spheres/physics/Makefile
 *.out
+*.stash
+src/console_app/Makefile
+src/general/Makefile
+src/graphical_app/Makefile
+src/Makefile
+src/physics/Makefile
+src/vector3d/Makefile
