@@ -1,5 +1,8 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-	graphical \
-	text
+	general \
+	vector3d \
+	physics \
+	graphical_app \
+	console_app
