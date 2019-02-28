@@ -32,11 +32,19 @@ Vous pouvez ajouter vos propres tâches si vous le jugez utile
 
 ## Semaine 1:
 R: Création du module Vector3D. Testé et quasiment finalisé.
+
 Mise en place du répertoire GitHub. Installation de SDL2 et OpenGL pour l'environnement graphique.
+--------------------------------------------------
 
 ## Semaine 2 :
+R+V: Décision d'utiliser Qt plutôt que SDL.
 
-décrire ici ce que vous avez fait en semaine 2
+Prise en main de l'environnement graphique, implémentation de plusieurs exemples simples (polygônes plans, cubes, sphères, sphères en mouvement).
+
+Création du répertoire qui sera, à terme, le répertoire du projet final.
+Résolution d'un bug très pénible dû à QMake qui rendait la compilation de librairie impossible (ouf!).
+
+Création du module "physics" qui contiendra, entre autre, la classe Particle.
 
 --------------------------------------------------
 ## Semaine 3 :
