@@ -43,7 +43,7 @@ class Vector3D{
 
 		bool is_zero(void) const;// returns true if square of norm is less than the tolerance specified by the vector's dimension  
 
-		bool operator ==(const Vector3D &) const;// returns true iff argument and "this" differ by a "zero" vector
+		bool operator ==(const Vector3D &) const;// returns true if argument and "this" differ by a "zero" vector
 
 		bool operator !=(const Vector3D &) const;
 
