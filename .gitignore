@@ -17,3 +17,4 @@ spheres/text/Makefile
 spheres/text/Makefile
 spheres/console_app/Makefile
 spheres/general/Makefile
+spheres/graphical_app/Makefile
