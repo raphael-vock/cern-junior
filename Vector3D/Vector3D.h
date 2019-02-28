@@ -21,17 +21,17 @@ class Vector3D{
 
 		Vector3D operator-(void) const;// returns the additive inverse
 
-		void operator*=(const double &);
+		Vector3D& operator*=(const double &);
 
 		Vector3D operator*(const double &) const;// scalar multiplication. Note that the scalar comes AFTER the vector (i.e. u*lambda). We define lambda*u as a non-member operator
 
-		void operator+=(const Vector3D &);// for optimization purposes
+		Vector3D& operator+=(const Vector3D &);// for optimization purposes
 
-		Vector3D operator+(const Vector3D &) const;// vector addition
+		Vector3D operator+(Vector3D v) const;// vector addition
 
-		void operator-=(const Vector3D &);
+		Vector3D& operator-=(const Vector3D &);
 
-		Vector3D operator-(const Vector3D &) const;// vector subtraction
+		Vector3D operator-(const Vector3D &v) const;// vector subtraction
 
 		double operator|(const Vector3D &) const;// dot product
 
