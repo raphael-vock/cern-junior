@@ -30,10 +30,11 @@ Vector3D Vector3D::operator-(void) const{
 	return Vector3D(-x, -y, -z);
 }
 
-void Vector3D::operator*=(const double &lambda){
+Vector3D& Vector3D::operator*=(const double &lambda){
 	x *= lambda;
 	y *= lambda;
 	z *= lambda;
+	return *this;
 }
 
 Vector3D Vector3D::operator*(const double &lambda) const{
@@ -42,22 +43,19 @@ Vector3D Vector3D::operator*(const double &lambda) const{
 	return Res;
 }
 
-void Vector3D::operator+=(const Vector3D &v){
+Vector3D& Vector3D::operator+=(const Vector3D &v){
 	x += v.x;
 	y += v.y;
 	z += v.z;
+	return *this;
 }
 
-Vector3D Vector3D::operator+(const Vector3D &v) const{
-	Vector3D Res(v);
-	Res += *this;
-	return Res;
+Vector3D Vector3D::operator+(Vector3D v) const{
+	return v += *this;
 }
 
-void Vector3D::operator-=(const Vector3D &v){
-	x -= v.x;
-	y -= v.y;
-	z -= v.z;
+Vector3D& Vector3D::operator-=(const Vector3D &v){
+	return (*this += (-v));
 }
 
 Vector3D Vector3D::operator-(const Vector3D &v) const{
