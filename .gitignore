@@ -20,3 +20,4 @@ spheres/general/Makefile
 spheres/graphical_app/Makefile
 *.a
 spheres/vector3d/Makefile
+spheres/physics/Makefile
