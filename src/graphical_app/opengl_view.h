@@ -1,9 +1,10 @@
 #ifndef OPENGL_VIEW
 #define OPENGL_VIEW
 
-#include <array>
 #include <QOpenGLShaderProgram> // shaders
 #include <QMatrix4x4>
+#include <array>
+#include "vector3d.h"
 #include "glsphere.h"
 #include "canvas.h"
 
@@ -12,7 +13,7 @@ typedef std::array<double,3> RGB;
 class OpenGLView : public Canvas{
 	public:
 		// drawing methods, inherited from Canvas
-		virtual void draw(Content const& to_draw) override;
+		virtual void draw(const Content &to_draw) override;
 
 		// initalization methods
 		void init();

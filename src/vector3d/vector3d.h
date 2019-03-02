@@ -3,7 +3,8 @@
 
 #include <iostream>
 #include <array>
-#include <string>
+#include <cmath>
+#include <random>
 
 const extern double default_epsilon;
 
@@ -13,7 +14,7 @@ class Vector3D{
 		double y;
 		double z;
 	public:
-		Vector3D(double = 0, double = 0, double = 0);
+		Vector3D(double a = 0, double b = 0, double c = 0) : x(a), y(b), z(c){}
 
 		void setCoords(double a, double b, double c);// intialise instance of Vector3D to the given coords
 
@@ -50,7 +51,10 @@ class Vector3D{
 		bool operator !=(const Vector3D &) const;
 
 		Vector3D unitary() const;// returns the unit vector in the same direction
+
 };
+
+Vector3D random_unit_vector(void);
 
 Vector3D operator*(const double &, const Vector3D&);// scalar multiplication, with the scalar coming BEFORE
 

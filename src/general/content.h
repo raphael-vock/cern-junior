@@ -1,12 +1,16 @@
-#ifndef CONTENU_H
-#define CONTENU_H
+#ifndef CONTENT_H
+#define CONTENT_H
 
 #include "drawable.h"
 #include "canvas.h"
+#include "particle.h"
 
 class Content : public Drawable{
+	private:
+		Universe &omega;
 	public:
-		Content(Canvas* vue) : Drawable(vue), angle(0.0){}// alpha is an angle-type parameter that evolves with time
+		Content(Canvas* vue, Universe& my_universe) : Drawable(vue), omega(my_universe){}
+
 		virtual ~Content(){}
 
 		virtual void draw() override{
@@ -15,9 +19,8 @@ class Content : public Drawable{
 
 		void evolve(double dt);
 
-		double getAngle(void) const { return angle; }
-	private:
-		double angle;
+		void setUniverse(Universe omega);
+		Universe* getUniverse(void) const;
 };
 
-#endif // CONTENU_H
+#endif

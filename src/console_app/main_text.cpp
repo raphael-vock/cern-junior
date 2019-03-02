@@ -5,18 +5,22 @@ using namespace std;
 
 int main(void){
 	TextViewer screen(cout);
-	Content c(&screen);
+
+	Universe my_universe;
+	my_universe.new_particle(0,0,0,0,0,0);
+
+	Content content(&screen, my_universe);
 
 	cout << "Initially:" << endl;
-	c.draw();
+	content.draw();
 
-	c.evolve(0.1);
+	content.evolve(0.1);
 	cout << "After one step:" << endl;
-	c.draw();
+	content.draw();
 
-	c.evolve(0.1);
+	content.evolve(0.1);
 	cout << "After two steps:" << endl;
-	c.draw();
+	content.draw();
 
 	return 0;
 }

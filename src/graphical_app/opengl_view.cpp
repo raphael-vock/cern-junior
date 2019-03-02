@@ -2,50 +2,23 @@
 #include "vertex_shader.h"
 #include "content.h"
 
-void OpenGLView::draw(Content const& to_draw){
-	Q_UNUSED(to_draw);
-
+void OpenGLView::draw(const Content &to_draw){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear window
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);// skeleton polygons
 
 	QMatrix4x4 matrix;
+	if(to_draw.getUniverse() != nullptr){
+		for(const Particle p : *to_draw.getUniverse()->getParticle_list()){
+			std::array<double,3> coords(p.getPosition()->getCoords());
 
-	// SUN
-	matrix.rotate(to_draw.getAngle(), 0.0,1.0,2.0);
-	drawSphere(matrix,{1.0, 0.0, 0.0});
-	//
+			matrix.translate(coords[0], coords[1], coords[2]);
+			matrix.scale(p.getRadius());
 
-	// EARTH + MOON1
-	matrix.setToIdentity();
+			drawSphere(matrix, p.getColor());
 
-	matrix.rotate(to_draw.getAngle(), 1.0, 0.0, 0.0);// rotation orbitale
-	matrix.translate(0.0,3.0,0.0);// mise en orbite autour du soleil
-	matrix.rotate(to_draw.getAngle(), 0.0, 1.0, 0.0);// rotation propre
-	matrix.scale(0.4);// rayon
-	drawSphere(matrix,{0.0, 0.0, 1.0}); // blue
-
-	// moon1
-	matrix.rotate(to_draw.getAngle(), 0.0, 4.0, 0.0);// rotation orbitale
-	matrix.translate(0.0,0.0,2.5);// mise en orbite autour de la Terre
-	matrix.rotate(to_draw.getAngle(), 0.0, 0.0, 3.0);// rotation propre
-	matrix.scale(0.2);// rayon
-	drawSphere(matrix, {0.0,1.0,0.2});
-
-	// EARTH + MOON1
-	matrix.setToIdentity();
-
-	matrix.rotate(2*to_draw.getAngle(), 0.0, 1.0, 0.0);// rotation orbitale
-	matrix.translate(0.0,0.0,3.5);// mise en orbite autour du soleil
-	matrix.rotate(to_draw.getAngle(), 0.0, 1.0, 0.0);// rotation propre
-	matrix.scale(0.4);// rayon
-	drawSphere(matrix,{131.0, 47.0, 0.0}); // blue
-
-	// moon1
-	matrix.rotate(4*to_draw.getAngle(), 0.0, 4.0, 0.0);// rotation orbitale
-	matrix.translate(0.0,0.0,1.5);// mise en orbite autour de la Terre
-	matrix.rotate(to_draw.getAngle(), 0.0, 0.0, 3.0);// rotation propre
-	matrix.scale(0.2);// rayon
-	drawSphere(matrix, {1.0,1.0,4.0});
+			matrix.setToIdentity();
+		}
+	}
 }
 
 void OpenGLView::init(){
@@ -74,8 +47,8 @@ void OpenGLView::init(){
 void OpenGLView::initializePosition(){
 	pov_matrix.setToIdentity();
 	pov_matrix.translate(0.0, 0.0, -5.0);
-	/* pov_matrix.rotate(60.0, 0.0, 1.0, 0.0); */
-	/* pov_matrix.rotate(45.0, 0.0, 0.0, 1.0); */
+	pov_matrix.rotate(60.0, 0.0, 1.0, 0.0);
+	pov_matrix.rotate(45.0, 0.0, 0.0, 1.0);
 }
 
 void OpenGLView::translate(double x, double y, double z){

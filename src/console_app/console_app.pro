@@ -7,22 +7,23 @@ CONFIG -= app_bundle
 TARGET = console.out
 
 INCLUDEPATH += \
-	../general \
-	../physics
+	../vector3d \
+	../physics \
+	../general
 
-LIBS += -L../general -lgeneral
-PRE_TARGETDEPS += ../general/libgeneral.a
+LIBS += \
+	-L../vector3d -lvector3d \
+	-L../physics -lphysics \
+	-L../general -lgeneral
 
-LIBS += -L../physics -lphysics
-PRE_TARGETDEPS += ../physics/libphysics.a
+PRE_TARGETDEPS +=\
+	../vector3d/libvector3d.a \
+	../physics/libphysics.a \
+	../general/libgeneral.a
 
 SOURCES += \
 	main_text.cpp \
 	text_viewer.cpp
 
 HEADERS += \
-	../general/content.h \
 	text_viewer.h \
-	../general/drawable.h \
-	../general/canvas.h
-	../physics/particle.h

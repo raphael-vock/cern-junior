@@ -1,15 +1,6 @@
-#include <iostream>
-#include <cmath>
-#include <string>
 #include "vector3d.h"
 
 const double default_epsilon(1e-10);
-
-Vector3D::Vector3D(double a, double b, double c){// by default, new vectors are 0
-	x = a;
-	y = b;
-	z = c;
-}
 
 void Vector3D::setCoords(double a, double b, double c){
 	x = a;
@@ -23,7 +14,7 @@ std::array<double,3> Vector3D::getCoords() const{
 
 
 void Vector3D::print(void) const{
-	std::cout << x << "  " << y << "  " << z << "  ";
+	std::cout << x << "  " << y << "  " << z << "  " << std::endl;
 }
 
 Vector3D Vector3D::operator-(void) const{
@@ -98,6 +89,19 @@ bool Vector3D::operator!=(const Vector3D& v) const{
 Vector3D Vector3D::unitary(void) const{
 	if(this->is_zero()) throw 0;
 	else return (*this) * (1/this->norm());
+}
+
+Vector3D random_unit_vector(void){
+	std::uniform_real_distribution<double> dis(0.0, M_PI);
+	std::random_device gen;
+
+	double phi(dis(gen));
+	double theta(2 * dis(gen));
+	return Vector3D(
+		sin(theta) * cos(phi),
+		sin(theta) * sin(phi),
+		cos(theta)
+	);
 }
 
 Vector3D operator*(const double &lambda, const Vector3D& u){

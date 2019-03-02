@@ -4,5 +4,4 @@ CONFIG = staticlib c++11
 
 SOURCES = vector3d.cpp
 
-HEADERS += \
-    vector3d.h
+HEADERS = vector3d.h

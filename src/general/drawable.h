@@ -1,5 +1,5 @@
-#ifndef DESSINABLE_H
-#define DESSINABLE_H
+#ifndef DRAWABLE_H
+#define DRAWABLE_H
 
 class Canvas;
 

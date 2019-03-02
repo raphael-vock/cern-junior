@@ -8,14 +8,19 @@ CONFIG -= app_bundle
 TARGET = graphical.out
 
 INCLUDEPATH += \
-	../general \
-	../physics
+	../vector3d \
+	../physics \
+	../general
 
-LIBS += -L../general -lgeneral
-PRE_TARGETDEPS += ../general/libgeneral.a
+LIBS += \
+	-L../vector3d -lvector3d \
+	-L../physics -lphysics \
+	-L../general -lgeneral
 
-LIBS += -L../physics -lphysics
-PRE_TARGETDEPS += ../physics/libphysics.a
+PRE_TARGETDEPS +=\
+	../vector3d/libvector3d.a \
+	../physics/libphysics.a \
+	../general/libgeneral.a
 
 SOURCES += \
 	main_qt_gl.cpp \
@@ -28,11 +33,6 @@ HEADERS += \
 	vertex_shader.h \
 	opengl_view.h \
 	glsphere.h \
-	../general/drawable.h \
-	../general/canvas.h \
-	../general/content.h \
-	../physics/particle.h
-
 
 RESOURCES += \
 	resource.qrc

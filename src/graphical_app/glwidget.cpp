@@ -3,6 +3,10 @@
 #include <QMatrix4x4>
 #include "glwidget.h"
 
+void GLWidget::setUniverse(Universe my_universe){
+	content.setUniverse(my_universe);
+}
+
 void GLWidget::initializeGL(){
 	view.init();
 	timerId = startTimer(20);
@@ -11,7 +15,7 @@ void GLWidget::initializeGL(){
 void GLWidget::timerEvent(QTimerEvent* event){
 	Q_UNUSED(event);
 	double dt = stopwatch.restart() / 1000.0;
-	c.evolve(dt);
+	content.evolve(dt);
 	update();
 }
 
@@ -25,7 +29,7 @@ void GLWidget::resizeGL(int width, int height){
 
 void GLWidget::paintGL(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	c.draw();
+	content.draw();
 }
 
 

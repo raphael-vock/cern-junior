@@ -8,8 +8,9 @@
 
 class GLWidget : public QOpenGLWidget{
 	public:
-		GLWidget(QWidget* parent = nullptr) : QOpenGLWidget(parent), c(&view){}
-		virtual ~GLWidget() {}
+		GLWidget(QWidget* parent, Universe& my_universe) : QOpenGLWidget(parent), content(&view, my_universe){}
+		virtual ~GLWidget(){}
+		void setUniverse(Universe my_universe);
 
 	private:
 		virtual void initializeGL()                  override;
@@ -31,7 +32,7 @@ class GLWidget : public QOpenGLWidget{
 		QTime stopwatch;
 
 		// to be drawn
-		Content c;
+		Content content;
 };
 
 #endif
