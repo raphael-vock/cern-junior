@@ -1,7 +1,7 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
-#include "vector3d.h"
+#include "../vector3d/vector3d.h"
 #include <vector>
 #include <array>
 #include <math.h>
