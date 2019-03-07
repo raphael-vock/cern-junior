@@ -1,0 +1,17 @@
+1.1 Vecteur3D
+
+  Les vecteurs de R3 sont modélisés par une classe dont les attributs x, y, z sont 3 double. 
+L'accès aux attributs est privé, et se fait par le biais d'un getter qui les retourne dans un tableau statique de dimension 3.  
+Les attributs peuvent toutefois être initialisés par le biais d'un setter unique.
+La classe dispose de plus d'un constructeur ainsi que d'un constructeur par défaut initialisant chacune des coordonnées à 0
+A cela s'ajoutent les méthodes permettant de tester l'égalité de deux vecteurs ainsi que de les afficher.
+Les opérateurs binaires produit scalaire et produit vectoriel ont été défini par surcharge, quant au produit mixte il s'agit d'une fonction externe prenant trois vecteurs en paramètre et retournant un double.
+Les opérateurs unaires : norme, norme carrée, etc. ont également été définis.
+
+4.1 Constructeur de copie
+
+  Nous n'avons pas ajouté de constructeur de copie, la classe Vector3D ne contient pas de pointeur dans ses attributs, entre autres, et ne nécessite pas de copie profonde. La copie de surface offerte par le constructeur de copie par défaut est amplement suffisante.
+
+4.2 Coordonnées sphériques
+
+  Nous n'avons pas implémenté de constructeur en coordonnées sphériques.
