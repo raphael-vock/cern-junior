@@ -15,6 +15,7 @@ class Vector3D{
 		double z;
 	public:
 		Vector3D(double a = 0, double b = 0, double c = 0) : x(a), y(b), z(c){}
+		Vector3D(std::array<double, 3> const& pos) : x(pos[0]), y(pos[1]), z(pos[2]) {} //constructor with doubles/array
 
 		void setCoords(double a, double b, double c);// intialise instance of Vector3D to the given coords
 
