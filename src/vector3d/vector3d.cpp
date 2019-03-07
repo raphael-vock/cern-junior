@@ -113,6 +113,6 @@ double mixed_prod(const Vector3D &u, const Vector3D &v, const Vector3D &w){
 }
 
 std::ostream& operator<<(std::ostream& output, Vector3D const& v){
-	output << v.getCoords()[0] << " " << v.getCoords()[1] << v.getCoords()[2];
+	output << v.getCoords()[0] << " " << v.getCoords()[1] << " " << v.getCoords()[2];
 	return output;
 }
