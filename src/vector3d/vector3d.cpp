@@ -1,7 +1,13 @@
 #include "vector3d.h"
 #include <cmath>
 
-const double default_epsilon(1e-10);
+const double EPSILON(1e-10);
+const Vector3D ZERO_VECTOR(0.0,0.0,0.0);
+const Vector3D X_VECTOR(1.0,0.0,0.0);
+const Vector3D Y_VECTOR(0.0,1.0,0.0);
+const Vector3D Z_VECTOR(0.0,0.0,1.0);
+
+const int DIV_BY_ZERO(0);
 
 void Vector3D::setCoords(double a, double b, double c){
 	x = a;
@@ -59,7 +65,7 @@ double Vector3D::operator|(const Vector3D &v) const{
 }
 
 Vector3D Vector3D::operator^(const Vector3D &v) const{
-	// note that member function binary operator overloading passes "this" as first argument and the method argument as second. i.e. x^y = x.operator^(y);
+	// note that member function binary operator overloading passes *this as first argument and the method argument as second. i.e. x^y = x.operator^(y);
 	return Vector3D(
 		this->y * v.z - this->z * v.y,
 		v.x * this->z - v.z * this->x,
@@ -76,7 +82,7 @@ double Vector3D::norm(void) const{
 }
 
 bool Vector3D::is_zero(void) const{
-	return this->norm2() <= default_epsilon;
+	return this->norm2() <= EPSILON;
 }
 
 bool Vector3D::operator==(const Vector3D& v) const{
@@ -88,13 +94,20 @@ bool Vector3D::operator!=(const Vector3D& v) const{
 }
 
 Vector3D Vector3D::unitary(void) const{
-	if(this->is_zero()) throw 0;
+	if(this->is_zero()) throw DIV_BY_ZERO;
 	else return (*this) * (1/this->norm());
 }
 
-Vector3D Vector3D::rotate(Vector3D axis, double angle){
-	axis = axis.unitary(); // axis has to be a unitary vector
-	return cos(angle) * *this + (1 - cos(angle)) * (*this | axis) * axis + sin(angle) * axis ^ *this;
+Vector3D Vector3D::rotate(Vector3D u, double alpha) const{
+	// rotates *this around u by an angle alpha
+	// if u is zero-vector an exception will be thrown
+	try{
+		u = u.unitary(); // normalize
+		return (cos(alpha)*(*this))
+	 		    + (1.0-cos(alpha))*((*this)|u)*u +
+			    + sin(alpha)*(u ^ (*this));
+	}
+	catch(...){ throw; }
 }
 
 Vector3D random_unit_vector(void){

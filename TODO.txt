@@ -1,1 +1,3 @@
-Implement a custom swap(x,y) in the Vector3D class for efficiency purposes.
+[ ] Implement a custom swap(x,y) in the Vector3D class for efficiency purposes.
+[ ] Fix the #&@$-ing bug in Node.cpp.
+[ ] Finish off the Particle class

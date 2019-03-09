@@ -42,13 +42,17 @@ R+V: Décision d'utiliser Qt plutôt que SDL.
 Prise en main de l'environnement graphique, implémentation de plusieurs exemples simples (polygônes plans, cubes, sphères, sphères en mouvement).
 
 Création du répertoire qui sera, à terme, le répertoire du projet final.
-Résolution d'un bug très pénible dû à QMake qui rendait la compilation de librairie impossible (ouf!).
+Résolution d'un bug très pénible dû à QMake sur Macintosh qui rendait la compilation de librairie impossible (ouf!).
 
 Création du module "physics" qui contiendra, entre autre, la classe Particle.
 
+Création d'une toute première (et fort rudimentaire) simulation physique en temps réel à sortie graphique : un simulateur de problème à n corps (Calculs par somme direct, donc O(n^2). Devient très couteux à partir de ~1000 particules.)
+
 --------------------------------------------------
 ## Semaine 3 :
+R: Cela sort un peu du cadre du projet mais je décide d'essayer d'implémenter l'algorithme de Barnes-Hut pour accélérer les calculs des intéractions gravitationnelles ou électromagnétique des particules. Celui-ci est en O(n.log(n)) donc très intéressant si on a un grand nombre de particules en jeu. En écrivant une classe récursive pour représenter les arbres je m'affronte à un horrible beugue. :'(
 
+L: Finalisation de la classe Particle et écriture d'un fichier test.
 
 
 --------------------------------------------------

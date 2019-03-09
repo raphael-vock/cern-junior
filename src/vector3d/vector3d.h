@@ -7,7 +7,15 @@
 #include <cmath>
 #include <random>
 
-const extern double default_epsilon;
+class Vector3D;
+
+const extern double EPSILON;
+const extern Vector3D ZERO_VECTOR;
+
+// the three unit vectors:
+const extern Vector3D X_VECTOR;
+const extern Vector3D Y_VECTOR;
+const extern Vector3D Z_VECTOR;
 
 class Vector3D{
 	private:
@@ -15,47 +23,45 @@ class Vector3D{
 		double y;
 		double z;
 	public:
-
-// --------------------------------------- Constructor getters, setters ----------------------------------------------------
-
+		// Constructor, getters, setters:
 		Vector3D(double a = 0, double b = 0, double c = 0) : x(a), y(b), z(c){}
 
-		void setCoords(double a, double b, double c);// intialise instance of Vector3D to the given coords
-		std::array<double,3> getCoords(void) const;// return coords in an array
+		void setCoords(double a, double b, double c); // intialise instance of Vector3D to the given coords
+		std::array<double,3> getCoords(void) const; // return coords in an array
 
-
-// ---------------------------------------- Algebric operators --------------------------------------------------------------
-
-		Vector3D operator-(void) const;// returns the additive inverse
+		// Algebraic operators:
+		Vector3D operator-(void) const; // returns the additive inverse
 		Vector3D& operator*=(const double &);
-		Vector3D operator*(const double &) const;// scalar multiplication. Note that the scalar comes AFTER the vector (i.e. u*lambda). We define lambda*u as a non-member operator
-		Vector3D& operator+=(const Vector3D &);// for optimization purposes
-		Vector3D operator+(Vector3D v) const;// vector addition
+		Vector3D operator*(const double &) const; // scalar multiplication. Note that the scalar comes AFTER the vector (i.e. u*lambda). We define lambda*u as a non-member operator
+		Vector3D& operator+=(const Vector3D &); // for optimization purposes
+		Vector3D operator+(Vector3D v) const; // vector addition
 		Vector3D& operator-=(const Vector3D &);
-		Vector3D operator-(const Vector3D &v) const;// vector subtraction
-		double operator|(const Vector3D &) const;// dot product
-		Vector3D operator^(const Vector3D &) const;// cross product
+		Vector3D operator-(const Vector3D &v) const; // vector subtraction
+		double operator|(const Vector3D &) const; // dot product
+		Vector3D operator^(const Vector3D &) const; // cross product
 
-		bool operator ==(const Vector3D &) const;// returns true if argument and "this" differ by a "zero" vector
+		// Boolean operators:
+		bool operator ==(const Vector3D &) const; // returns true iff argument and *this are equal up to a small vector
 		bool operator !=(const Vector3D &) const;
-		Vector3D unitary() const;// returns the unit vector in the same direction
 
-		Vector3D rotate(Vector3D axis, double angle); // when applied to a vector x, returns the resulting vector of the rotation cos(t) x + ( 1-cos(t) ) (x*a) a + sin(t) a ^ x
+		// Other methods with scalar output:
+		double norm2(void) const; // returns square of Euclidian norm
+		double norm(void) const; // returns Euclidian norm
+		bool is_zero(void) const; // returns true if square of norm is "zero" i.e. less than EPSILON
 
-// --------------------------------------- Constant methods ----------------------------------------------------------------
+		// Other methods with vector output:
+		Vector3D rotate(Vector3D, double) const; // rotates around a given axis by a given angle angle passed as arguments
+		Vector3D unitary() const; // returns the unit vector in the same direction
 
-		double norm2(void) const;// returns square of Euclidian norm
-		double norm(void) const;// returns Euclidian norm
-		bool is_zero(void) const;// returns true if square of norm is less than the tolerance specified by the vector's dimension  
-		void print(void) const;// print coords in console
+		void print(void) const; // print coords in console
 };
 
 Vector3D random_unit_vector(void);
 
-Vector3D operator*(const double &, const Vector3D&);// scalar multiplication, with the scalar coming BEFORE
+Vector3D operator*(const double &, const Vector3D&); // scalar multiplication, with the scalar coming BEFORE
 
-double mixed_prod(const Vector3D &, const Vector3D &, const Vector3D &);// returns mixed product of (u,v,w) i.e. u|(v^w);
+double mixed_prod(const Vector3D &, const Vector3D &, const Vector3D &); // returns mixed product of (u,v,w) i.e. u|(v^w);
 
-std::ostream& operator<<(std::ostream& output, Vector3D const& v);// overloaded operator to print a vector
+std::ostream& operator<<(std::ostream& output, Vector3D const& v); // prints to output (e.g. std::cout or std::ofstream)
 
 #endif
