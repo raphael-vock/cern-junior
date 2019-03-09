@@ -1,4 +1,5 @@
 #include "vector3d.h"
+#include <cmath>
 
 const double default_epsilon(1e-10);
 
@@ -89,6 +90,11 @@ bool Vector3D::operator!=(const Vector3D& v) const{
 Vector3D Vector3D::unitary(void) const{
 	if(this->is_zero()) throw 0;
 	else return (*this) * (1/this->norm());
+}
+
+Vector3D Vector3D::rotate(Vector3D axis, double angle){
+	axis = axis.unitary(); // axis has to be a unitary vector
+	return cos(angle) * *this + (1 - cos(angle)) * (*this | axis) * axis + sin(angle) * axis ^ *this;
 }
 
 Vector3D random_unit_vector(void){

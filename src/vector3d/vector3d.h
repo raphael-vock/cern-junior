@@ -40,6 +40,8 @@ class Vector3D{
 		bool operator !=(const Vector3D &) const;
 		Vector3D unitary() const;// returns the unit vector in the same direction
 
+		Vector3D rotate(Vector3D axis, double angle); // when applied to a vector x, returns the resulting vector of the rotation cos(t) x + ( 1-cos(t) ) (x*a) a + sin(t) a ^ x
+
 // --------------------------------------- Constant methods ----------------------------------------------------------------
 
 		double norm2(void) const;// returns square of Euclidian norm

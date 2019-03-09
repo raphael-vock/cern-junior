@@ -12,6 +12,10 @@ double Particle::getRadius(void) const{
 	return radius;
 }
 
+double Particle::getCharge(void) const{
+	return charge;
+}
+
 RGB Particle::getColor(void) const{
 	return color;
 }
@@ -32,6 +36,13 @@ void Particle::incrementForce(const Vector3D& my_F){
 	F += my_F;
 }
 
+void Particle::addMagneticForce(const Vector3D& B, double dt){
+	if (dt > 10e-10){
+		F = F + charge * (v^B); 
+	}
+	// add rotation (need to implement gamma)
+}
+
 void Particle::evolve(double dt){
 	std::swap(v, v_p);
 	v = v_p + (dt / mass) * F;
@@ -47,6 +58,7 @@ std::vector<Particle>* Universe::getParticle_list(void){
 std::ostream& operator<<(std::ostream& output, Particle const& particle){
 	output << "Mass : " << particle.getMass() << std::endl 
 	<< "Radius : " << particle.getRadius() << std::endl
+	<< "Charge : " << particle.getCharge() << std::endl
 	<< "Color : " << particle.getColor()[0] << " " << particle.getColor()[1] << " " << particle.getColor()[2] << std::endl
 	<< "Position : " << *(particle.getPosition()) << std::endl
 	<< "Force : " << *(particle.getForce());

@@ -25,10 +25,10 @@ int main(){
 
 	output << "Creation of two particles : " << std::endl
 	<< "One particle : " << std::endl; 
-	Particle p1(3.00984, -0.391837, 0, -210200, -2.64754e+08, 0); 
+	Particle p1(3.00984, -0.391837, 0, -210200, -2.64754e+08, 0, 1.60217653e-19); 
 	output << p1 << std::endl << std::endl
 	<< "One particle : " << std::endl;
-	Particle p2(2.99016, -0.391837, 0, 210200, -2.64754e+08, 0);
+	Particle p2(2.99016, -0.391837, 0, 210200, -2.64754e+08, 0, 1.60217653e-19);
 	output << p2 << std::endl << std::endl;
 
 	output.close();
