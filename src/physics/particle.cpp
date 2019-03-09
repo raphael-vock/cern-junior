@@ -44,6 +44,15 @@ std::vector<Particle>* Universe::getParticle_list(void){
 	return &particle_list;
 }
 
+std::ostream& operator<<(std::ostream& output, Particle const& particle){
+	output << "position : " << *(particle.getPosition()) << std::endl
+	<< "mass : " << particle.getMass() << std::endl 
+	<< "radius : " << particle.getRadius() << std::endl
+	<< "color : " << particle.getColor()[0] << " " << particle.getColor()[1] << " " << particle.getColor()[2] << std::endl
+	<< "force : " << *(particle.getForce()) << std::endl;
+	return output;	
+}
+
 void Universe::new_particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass, double my_radius, RGB my_color){
 	particle_list.push_back(Particle(x,y,z,v_x,v_y,v_z,my_mass,my_radius, my_color));
 }

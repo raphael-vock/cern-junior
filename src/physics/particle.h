@@ -63,6 +63,8 @@ class Particle{
 		{}
 };
 
+std::ostream& operator<<(std::ostream& output, Particle const& particle);
+
 class Universe{
 	private:
 		std::vector<Particle> particle_list;
