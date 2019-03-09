@@ -39,14 +39,21 @@ Mise en place du répertoire GitHub. Installation de SDL2 et OpenGL pour l'envir
 ## Semaine 2 :
 R+V: Décision d'utiliser Qt plutôt que SDL.
 
+*********
 Prise en main de l'environnement graphique, implémentation de plusieurs exemples simples (polygônes plans, cubes, sphères, sphères en mouvement).
 
 Création du répertoire qui sera, à terme, le répertoire du projet final.
 Résolution d'un bug très pénible dû à QMake sur Macintosh qui rendait la compilation de librairie impossible (ouf!).
 
-Création du module "physics" qui contiendra, entre autre, la classe Particle.
+Création du module "physics" qui contenant la classe Particle.
 
-Création d'une toute première (et fort rudimentaire) simulation physique en temps réel à sortie graphique : un simulateur de problème à n corps (Calculs par somme direct, donc O(n^2). Devient très couteux à partir de ~1000 particules.)
+Conception d'une toute première (et fort rudimentaire) simulation physique en temps réel à sortie graphique : un simulateur de problème à n corps (Calculs par somme direct, donc O(n^2). Devient très couteux à partir de ~1000 particules.)
+
+*********
+L: Modification des opérateurs de calcul algébrique sur les vecteurs et surcharge des opérateurs d'affichage
+Ajout de la méthode rotate à la classe Vector3D
+Ajout de la méthode force magnétique à la classe Particule
+Création d'un fichier test pour la classe Particule, ce dernier écrit en sortie sur un fichier au format txt
 
 --------------------------------------------------
 ## Semaine 3 :
