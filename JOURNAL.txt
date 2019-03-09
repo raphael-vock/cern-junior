@@ -46,6 +46,11 @@ Résolution d'un bug très pénible dû à QMake qui rendait la compilation de l
 
 Création du module "physics" qui contiendra, entre autre, la classe Particle.
 
+L: Modification des opérateurs de calcul algébrique sur les vecteurs et surcharge des opérateurs d'affichage
+Ajout de la méthode rotate à la classe Vector3D
+Ajout de la méthode force magnétique à la classe Particule
+Création d'un fichier test pour la classe Particule, ce dernier écrit en sortie sur un fichier au format txt
+
 --------------------------------------------------
 ## Semaine 3 :
 
