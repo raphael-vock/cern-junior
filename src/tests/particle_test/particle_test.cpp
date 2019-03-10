@@ -1,4 +1,4 @@
-#include "particle.h"
+#include "../../physics/particle.h"
 #include <ctime>
 #include <fstream>
 
