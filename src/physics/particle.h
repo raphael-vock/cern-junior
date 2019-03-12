@@ -11,6 +11,7 @@ typedef std::array<double,3> RGB;
 extern const double DEFAULT_MASS;
 extern const double DEFAULT_RADIUS;
 extern const double G;
+extern const double c;
 
 class Particle{
 	private:
@@ -31,6 +32,9 @@ class Particle{
 		double getMass(void) const;
 		double getRadius(void) const;
 		double getCharge(void) const;
+
+		double gamma(void) const;
+		double energy(void) const;
 
 		RGB getColor(void) const;
 

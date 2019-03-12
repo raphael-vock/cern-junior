@@ -3,6 +3,7 @@
 const double DEFAULT_MASS = 1.0;
 const double DEFAULT_RADIUS = 1.0;
 const double G = 1;
+const double c = 299792458;
 
 double Particle::getMass(void) const{
 	return mass;
@@ -18,6 +19,14 @@ double Particle::getCharge(void) const{
 
 RGB Particle::getColor(void) const{
 	return color;
+}
+
+double Particle::gamma(void) const{
+	return 1/(sqrt(1-(v.norm()/c)));
+}
+
+double Particle::energy(void) const{
+	return this->gamma() * this->getMass() * pow(c, 2);
 }
 
 const Vector3D* Particle::getPosition(void) const{
@@ -61,7 +70,9 @@ std::ostream& operator<<(std::ostream& output, Particle const& particle){
 	<< "Charge : " << particle.getCharge() << std::endl
 	<< "Color : " << particle.getColor()[0] << " " << particle.getColor()[1] << " " << particle.getColor()[2] << std::endl
 	<< "Position : " << *(particle.getPosition()) << std::endl
-	<< "Force : " << *(particle.getForce());
+	<< "Force : " << *(particle.getForce()) << std::endl
+	<< "Energy : " << particle.energy() << std::endl
+	<< "Gamma : " << particle.gamma();
 	return output; 
 }
 
