@@ -135,3 +135,11 @@ std::ostream& operator<<(std::ostream& output, Vector3D const& v){
 	output << v.getCoords()[0] << " " << v.getCoords()[1] << " " << v.getCoords()[2];
 	return output;
 }
+
+double distance(const Vector3D& u, const Vector3D& v){
+	return (u - v).norm2();
+}
+
+double distance2(const Vector3D& u, const Vector3D& v){
+	return (u - v).norm();
+}

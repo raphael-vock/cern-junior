@@ -64,4 +64,7 @@ double mixed_prod(const Vector3D &, const Vector3D &, const Vector3D &); // retu
 
 std::ostream& operator<<(std::ostream& output, Vector3D const& v); // prints to output (e.g. std::cout or std::ofstream)
 
+double distance(const Vector3D& u, const Vector3D& v);
+double distance2(const Vector3D& u, const Vector3D& v);
+
 #endif
