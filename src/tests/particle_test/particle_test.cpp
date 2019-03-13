@@ -22,12 +22,11 @@ int main(){
 
 	std::cout << "Creation of two particles : " << std::endl
 	<< "One particle : " << std::endl; 
-	Particle p1(3.00984, -0.391837, 0, -210200, -2.64754e+08, 0, 1.60217653e-19); 
+	Particle p1(3.00984, -0.391837, 0, -210200, -2.64754e+08, 0, 1.60217653e-19, 0.938272);
 	std::cout << p1 << std::endl << std::endl
 	<< "One particle : " << std::endl;
-	Particle p2(2.99016, -0.391837, 0, 210200, -2.64754e+08, 0, 1.60217653e-19);
+	Particle p2(2.99016, -0.391837, 0, 210200, -2.64754e+08, 0, 1.60217653e-19, 0.938272);
 	std::cout << p2 << std::endl << std::endl;
-	
 	std::cout << "Adding a magnetic force B=0 0 7 (dt=1e-11) : " << std::endl; 
 	Vector3D B(0, 0, 7);
 	std::cout << "To p1 : " << std::endl;
@@ -36,7 +35,7 @@ int main(){
 	std::cout << "To p2 : " << std::endl;
 	p2.addMagneticForce(B, 1e-11);
 	std::cout << p2 << std::endl;
-
+	std::cout << std::endl;
 	std::cout << "Particles move once : " << std::endl;
 	std::cout << "One particle : " << std::endl;
 	p1.evolve(1e-11);

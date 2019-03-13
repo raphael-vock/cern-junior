@@ -2,8 +2,8 @@
 
 const double DEFAULT_MASS = 1.0;
 const double DEFAULT_RADIUS = 1.0;
-const double G = 1;
-const double c = 299792458;
+const double G = 1.0;
+const double c = 299792458.0;
 
 double Particle::getMass(void) const{
 	return mass;
@@ -46,10 +46,10 @@ void Particle::incrementForce(const Vector3D& my_F){
 }
 
 void Particle::addMagneticForce(const Vector3D& B, double dt){
-	if (dt > 10e-10){
-		F = F + charge * (v^B); 
+	if(F.is_zero() and dt > 1e-19) {incrementForce(charge * (v^B));}
+	else if(dt > 1e-19){
+		incrementForce(charge * (v^B).rotate(v^F, asin(dt * F.norm()/(2*gamma() * mass * v.norm()))));
 	}
-	// add rotation (need to implement gamma)
 }
 
 void Particle::evolve(double dt){
@@ -65,23 +65,23 @@ std::vector<Particle>* Universe::getParticle_list(void){
 }
 
 std::ostream& operator<<(std::ostream& output, Particle const& particle){
-	output << "Mass : " << particle.getMass() << std::endl 
-	<< "Radius : " << particle.getRadius() << std::endl
-	<< "Charge : " << particle.getCharge() << std::endl
-	<< "Color : " << particle.getColor()[0] << " " << particle.getColor()[1] << " " << particle.getColor()[2] << std::endl
+	output << "Mass (GeV/c^2) : " << particle.getMass() << std::endl 
 	<< "Position : " << *(particle.getPosition()) << std::endl
+	// << "Radius : " << particle.getRadius() << std::endl
+	<< "Charge : " << particle.getCharge() << std::endl
+	// << "Color : " << particle.getColor()[0] << " " << particle.getColor()[1] << " " << particle.getColor()[2] << std::endl
 	<< "Force : " << *(particle.getForce()) << std::endl
-	<< "Energy : " << particle.energy() << std::endl
+	<< "Energy (GeV) : " << particle.energy() << std::endl
 	<< "Gamma : " << particle.gamma();
 	return output; 
 }
 
-void Universe::new_particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass, double my_radius, RGB my_color){
-	particle_list.push_back(Particle(x,y,z,v_x,v_y,v_z,my_mass,my_radius, my_color));
+void Universe::new_particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_charge, double my_mass, double my_radius, RGB my_color){
+	particle_list.push_back(Particle(x,y,z,v_x,v_y,v_z,my_charge, my_mass,my_radius, my_color));
 }
 
-void Universe::new_particle(Vector3D x_0, Vector3D v_0, double my_mass, double my_radius, RGB my_color){
-	particle_list.push_back(Particle(x_0, v_0, my_mass, my_radius, my_color));
+void Universe::new_particle(Vector3D x_0, Vector3D v_0, double my_charge, double my_mass, double my_radius, RGB my_color){
+	particle_list.push_back(Particle(x_0, v_0, my_charge, my_mass, my_radius, my_color));
 }
 
 void Universe::clear_forces(void){
