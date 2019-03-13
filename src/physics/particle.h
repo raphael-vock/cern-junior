@@ -47,7 +47,7 @@ class Particle{
 
 		void evolve(double dt);
 
-		Particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_charge, double my_mass = DEFAULT_MASS, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0}) :
+		Particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass = DEFAULT_MASS, double my_charge = 0, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0}) :
 			r(Vector3D(x,y,z)),
 			r_p(Vector3D(x,y,z)),
 			v(Vector3D(v_x,v_y,v_z)),
@@ -60,7 +60,7 @@ class Particle{
 
 		{}
 
-		Particle(Vector3D x_0, Vector3D v_0, double my_charge, double my_mass = DEFAULT_MASS, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0}) :
+		Particle(Vector3D x_0, Vector3D v_0, double my_mass = DEFAULT_MASS, double my_charge = 0, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0}) :
 			r(Vector3D(x_0)),
 			r_p(Vector3D(x_0)),
 			v(Vector3D(v_0)),
@@ -80,8 +80,8 @@ class Universe{
 		std::vector<Particle> particle_list;
 	public:
 		std::vector<Particle>* getParticle_list(void);
-		void new_particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_charge, double my_mass = DEFAULT_MASS, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0});
-		void new_particle(Vector3D x_0, Vector3D v_0, double my_charge, double my_mass = DEFAULT_MASS, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0});
+		void new_particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass = DEFAULT_MASS, double my_charge = 0, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0});
+		void new_particle(Vector3D x_0, Vector3D v_0, double my_mass = DEFAULT_MASS, double my_charge = 0, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0});
 		
 		void clear_forces(void);
 		void calculate_gravitational_forces(void);
