@@ -8,10 +8,6 @@
 
 typedef std::array<double,3> RGB;
 
-extern const double DEFAULT_MASS;
-extern const double DEFAULT_RADIUS;
-extern const double G;
-extern const double c;
 
 class Particle{
 	private:
@@ -25,13 +21,19 @@ class Particle{
 
 		// physical attributes
 		double mass;
+		double charge; 
 		double radius;
-		double charge = 0; // by default until fully implemented 
 		RGB color;
 	public:
+		static constexpr double DEFAULT_MASS = 1.0;
+		static constexpr double DEFAULT_RADIUS = 1.0;
+		static constexpr double G = 1.0;
+		static constexpr double C = 3e8;
+		static constexpr double GeV = 6.242e9;
+
 		double getMass(void) const;
-		double getRadius(void) const;
 		double getCharge(void) const;
+		double getRadius(void) const;
 
 		double gamma(void) const;
 		double energy(void) const;
@@ -47,24 +49,27 @@ class Particle{
 
 		void evolve(double dt);
 
-		Particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass = DEFAULT_MASS, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0}) :
+		Particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass = DEFAULT_MASS, double my_charge = 0, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0}) :
 			r(Vector3D(x,y,z)),
 			r_p(Vector3D(x,y,z)),
 			v(Vector3D(v_x,v_y,v_z)),
 			v_p(Vector3D(v_x,v_y,v_z)),
 			F(Vector3D()),
 			mass(my_mass),
+			charge(my_charge),
 			radius(my_radius),
 			color(my_color)
+
 		{}
 
-		Particle(Vector3D x_0, Vector3D v_0, double my_mass = DEFAULT_MASS, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0}) :
+		Particle(Vector3D x_0, Vector3D v_0, double my_mass = DEFAULT_MASS, double my_charge = 0, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0}) :
 			r(Vector3D(x_0)),
 			r_p(Vector3D(x_0)),
 			v(Vector3D(v_0)),
 			v_p(Vector3D(v_0)),
 			F(Vector3D()),
 			mass(my_mass),
+			charge(my_charge),
 			radius(my_radius),
 			color(my_color)
 		{}
@@ -77,8 +82,8 @@ class Universe{
 		std::vector<Particle> particle_list;
 	public:
 		std::vector<Particle>* getParticle_list(void);
-		void new_particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass = DEFAULT_MASS, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0});
-		void new_particle(Vector3D x_0, Vector3D v_0, double my_mass = DEFAULT_MASS, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0});
+		void new_particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass = Particle::DEFAULT_MASS, double my_charge = 0, double my_radius = Particle::DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0});
+		void new_particle(Vector3D x_0, Vector3D v_0, double my_mass = Particle::DEFAULT_MASS, double my_charge = 0, double my_radius = Particle::DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0});
 		
 		void clear_forces(void);
 		void calculate_gravitational_forces(void);

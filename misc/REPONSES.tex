@@ -1,31 +1,32 @@
 \documentclass[12pt, letterpaper, twoside]{article}
+\usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
 \usepackage{amsmath}
-\usepackage{amsfont}
 \usepackage{amssymb}
 
 \title{Réponses}
 \author{Vock Raphaël, Vezin Lomàn}
 
 \begin{document}
+\maketitle
 \section{Vector3D}
 
 \subsection{Première modélisation}
-
-Les vecteurs de $\textbf{R}^3$ sont modélisés par une classe \begin{lstlisting}[language=bash]
-  $ wget http://tex.stackexchange.com
-\end{lstlisting} dont les attributs x, y, z sont 3 double.
-L'accès aux attributs est privé, et se fait par le biais d'un getter qui les retourne dans un tableau statique de dimension 3.
-Les attributs peuvent toutefois être initialisés par le biais d'un setter unique.
-La classe dispose de plus d'un constructeur ainsi que d'un constructeur par défaut initialisant chacune des coordonnées à 0
-
-A cela s'ajoutent les méthodes permettant de tester l'égalité de deux vecteurs ainsi que de les afficher.
-Les opérateurs binaires produit scalaire et produit vectoriel ont été défini par surcharge, quant au produit mixte il s'agit d'une fonction externe prenant trois vecteurs en paramètre et retournant un double.
-Les opérateurs unaires : norme, norme carrée, etc. ont également été définis.
+\paragraph{}
+Nous avons fait le choix d'une représentation cartésienne des vecteurs de \textbf{R}$^3$, ces derniers sont donc modélisés par une classe \texttt{Vector3D} dont les trois attributs x, y, z sont des \texttt{double}. L'accès aux attributs est privé, et se fait par le bisais d'un getter qui les retourne dans un \texttt{array} de dimension 3. Nous utilisons une méthode \texttt{is\_zero} qui renvoie \texttt{true} si la norme carrée du vecteur en instance est inférieure à une marge \texttt{DEFAULT\_EPSILON} donnée. Les attributs peuvent toutefois être initialisés par le biais s'un setter. La classe dispose de plus d'un constructeur faisant également office de constructeur par défaut, initialisant en l'absence d'argument chacune des coordonnées à 0.
 
 \subsection{Constructeur de copie}
-Nous n'avons pas ajouté de constructeur de copie, la classe Vector3D ne contient pas de pointeur dans ses attributs, entre autres, et ne nécessite pas de copie profonde. La copie de surface offerte par le constructeur de copie par défaut est amplement suffisante.
+\paragraph{}
+Nous avons décidé de ne pas ajouter de constructeur de copie, la classe \texttt{Vector3D} ne contient pas, entre autres, de pointeur dans ses attributs, ses instances ne nécessitent donc pas de copie profonde. la copie de surface offerte par le constructeur de copie par défaut est amplement suffisante.
 
 \subsection{Coordonnées sphériques}
-Nous n'avons pas implémenté de constructeur en coordonnées sphériques.
+Nous n’avons pas implémenté de constructeur en coordonnées sphériques. L’ajout de ce dernier poserait problème au niveau du constructeur dont le prototype demanderait tout comme le constructeur cartésien 3 \texttt{double} en entrée ce qui ne constitue pas une surcharge. Bien que l’on ai la possibilité de contourner ce problème les coordonnées sphériques restent, dans le contexte d’un accelerateur de particules, moins pertinentes que les coordonnées cylindriques.
+
+\subsection{Surcharge des opérateurs}
+\paragraph{}
+Nous avons défini par surcharge les opérateurs d'auto-affectation nécessaires aux calculs vectoriels \texttt{+=}, \texttt{-=}, \texttt{*=}. A partir de ces derniers nous avons ensuite défini les opérateurs \texttt{+}, \texttt{-}, \texttt{*}. La surcharge de l'opérateur \texttt{*} est dédiée à la multiplication d'un vecteur par un scalaire.
+\paragraph{}
+Nous avons également défini une surcharge pour les opérateurs binaires produit scalaire \texttt{|} et produit vectoriel \texttt{\^}, quant au produit mixte, il s'agit d'une fonction externe prenant trois vecteurs en paramètre et retournant un \texttt{double}.
+\paragraph{}
+Finalement nous avons surchargé les opérateurs \texttt{==} et \texttt{!=} permettant de tester l'égalité de deux vecteurs, dans le cas où la norme de la différence est inférieure à la marge mentionnée plus haut.
 
 \end{document}
