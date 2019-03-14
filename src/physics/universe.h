@@ -13,7 +13,7 @@ class Universe{
 	public:
 		int N = 0;
 
-		void print_tree(void);
+		void print_tree(void) const;
 
 		Universe(Box my_domain) : domain(my_domain), tree(my_domain){}
 		Universe(Vector3D origin, double x, double y, double z) : domain(Box(origin, x, y, z)), tree(domain){}

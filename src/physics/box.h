@@ -19,7 +19,7 @@ class Box{
 		double volume(void) const;
 
 		bool contains(Particle &x);
-		void print(void);
+		void print(void) const;
 		Box octant(bool right, bool back, bool top);
 };
 

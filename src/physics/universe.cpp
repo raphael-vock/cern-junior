@@ -39,10 +39,14 @@ void Universe::evolve(double dt){
 	
 }
 
+void Universe::print_tree(void) const{
+	tree.print_elements();
+}
+
 void Universe::print_particles(void) const{
 	for(size_t i(0); i <= N-1; ++i){
 		std::cout << "-------------\nParticle " << i+1 << ": ";
-		particle_list[i].getPosition()->print();
+		std::cout << particle_list[i] << std::endl;
 		std::cout << "F = " << *particle_list[i].getForce() << "\n";
 	}
 }

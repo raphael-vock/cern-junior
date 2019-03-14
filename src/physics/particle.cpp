@@ -55,8 +55,7 @@ void Particle::barycenter(const Particle& P){
 }
 
 void Particle::increment_gravity(Particle& P) const{
-	if(not alive) return;
-	if(P.r == r) return;
+	if(this == &P or not alive) return;
 
 	Vector3D F_g(r - P.r);
 	F_g *= Particle::G * mass * P.mass / pow( F_g.norm2() + EPSILON_SQUARED, 1.5 );

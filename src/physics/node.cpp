@@ -68,10 +68,10 @@ void Node::set_gravity(Particle& P) const{
 	increment_gravity(P);
 }
 
-void Node::print_elements(void){
+void Node::print_elements(void) const{
 	if(type == INT) for(Node* child : children) child->print_elements();
 	if(type == EXT){
-		tenant->getPosition()->print();
+		std::cout << *tenant << std::endl;
 		std::cout << " is in\n";
 		domain.print();
 	}
@@ -84,6 +84,6 @@ void Node::print_type(void){
 
 void Node::info(void) const{
 	std::cout << "Node info:\n";
-	virtual_particle.getPosition()->print();
+	std::cout << *virtual_particle.getPosition() << std::endl;
 	std::cout << "Total mass = " << virtual_particle.getMass() << "\n";
 }

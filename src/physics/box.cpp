@@ -16,9 +16,9 @@ bool Box::contains(Particle &x){
 	   and 0.0 <= delta_z and delta_z <= height;
 }
 
-void Box::print(void){
-	origin.print();
-	Vector3D(width, depth, height).print();
+void Box::print(void) const{
+	std::cout << origin << std::endl;
+	std::cout << Vector3D(width, depth, height) << std::endl;
 	std::cout << "\n";
 }
 

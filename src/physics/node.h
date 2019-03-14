@@ -30,7 +30,7 @@ class Node{
 		void increment_gravity(Particle& P) const; // increments gravity on P according to Barnes-Hut approximation with parameter THETA
 		void set_gravity(Particle& P) const; // sets gravity on P
 
-		void print_elements(void);
+		void print_elements(void) const;
 		void print_type(void);
 
 		void info(void) const;

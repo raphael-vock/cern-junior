@@ -44,7 +44,7 @@ class Particle{
 			mass(my_mass),
 			charge(my_charge),
 			radius(my_radius),
-			color({1.0,1.0,0.0})
+			color({1.0,1.0,1.0})
 			{}
 
 		Particle(Vector3D x_0, Vector3D v_0 = ZERO_VECTOR, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
