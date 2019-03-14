@@ -26,7 +26,7 @@ class Vector3D{
 		// Constructor, getters, setters:
 		Vector3D(double a = 0, double b = 0, double c = 0) : x(a), y(b), z(c){}
 
-		void setCoords(double a, double b, double c); // intialise instance of Vector3D to the given coords
+		// void setCoords(double a, double b, double c); // intialise instance of Vector3D to the given coords
 		std::array<double,3> getCoords(void) const; // return coords in an array
 
 		// Algebraic operators:
@@ -52,8 +52,6 @@ class Vector3D{
 		// Other methods with vector output:
 		Vector3D rotate(Vector3D, double) const; // rotates around a given axis by a given angle angle passed as arguments
 		Vector3D unitary() const; // returns the unit vector in the same direction
-
-		void print(void) const; // print coords in console
 };
 
 Vector3D random_unit_vector(void);

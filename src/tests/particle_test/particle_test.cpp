@@ -12,7 +12,6 @@ void time(){
 }
 
 int main(){
-	time();
 	/* std::ofstream output; */
 	/* output.open("test_particles.txt", std::ios::out|std::ios::app); */
 
@@ -22,10 +21,10 @@ int main(){
 
 	std::cout << "Creation of two particles : " << std::endl
 	<< "One particle : " << std::endl; 
-	Particle p1(3.00984, -0.391837, 0, -210200, -2.64754e+08, 0, 0.938272, 1.60217653e-19);
+	Particle p1(3.00984, -0.391837, 0, -210200, -2.64754e+08, 0, (Particle::GeV/pow(Particle::C, 2)) * 0.938272, 1.60217653e-19);
 	std::cout << p1 << std::endl << std::endl
 	<< "One particle : " << std::endl;
-	Particle p2(2.99016, -0.391837, 0, 210200, -2.64754e+08, 0, 0.938272, 1.60217653e-19);
+	Particle p2(2.99016, -0.391837, 0, 210200, -2.64754e+08, 0, (Particle::GeV/pow(Particle::C, 2)) * 0.938272, 1.60217653e-19);
 	std::cout << p2 << std::endl << std::endl;
 
 	std::cout << "Adding a magnetic force B=0 0 7 (dt=1e-11) : " << std::endl; 

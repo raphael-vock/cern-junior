@@ -34,6 +34,10 @@ const Vector3D* Particle::getForce(void) const{
 	return &F;
 }
 
+double Particle::getCharge(void) const{
+	return charge;
+}
+
 void Particle::resetForce(void){
 	F = ZERO_VECTOR;
 }
@@ -61,13 +65,13 @@ void Particle::increment_gravity(Particle& P) const{
 
 void Particle::evolve(double dt){
 	double f(F.norm()/(1e5*G*EPSILON_SQUARED)); // == F/F_max
-	double e((v.norm())/12);
 	color = {f, f, 1};
 	std::swap(v, v_p);
 	v = v_p + (dt / mass) * F;
 
 	std::swap(r, r_p);
 	r = r_p + (dt * v);
+	resetForce();
 }
 
 void Particle::swallow(Particle q){
@@ -85,3 +89,34 @@ void Particle::swallow(Particle q){
 
 	radius = pow( pow(radius,3.0) + pow(q.getRadius(),3.0), 0.333 );
 }
+
+void Particle::incrementForce(const Vector3D & my_F){
+	F += my_F;
+}
+
+void Particle::addMagneticForce(const Vector3D & B, double dt){
+	if (F.is_zero() and dt > 1e-19) {incrementForce(charge * (v^B));}
+	else if (dt > 1e-19){
+		incrementForce(charge * (v^B).rotate(v^F, asin(dt * F.norm()/(2*gamma() * mass * v.norm()))));
+	}
+}
+
+double Particle::gamma(void) const{
+	return 1/(sqrt(1-v.norm2()/pow(C, 2)));
+}
+
+double Particle::energy(void) const{
+	return this->gamma() * mass * pow(C, 2);
+}
+
+std::ostream& operator<<(std::ostream& output, Particle const& particle){                 
+	output << "Mass (GeV/c^2) : " << particle.getMass() * (pow(Particle::C, 2)/Particle::GeV) * 2<< std::endl 
+	<< "Position : " << *(particle.getPosition()) << std::endl
+	// << "Radius : " << particle.getRadius() << std::endl
+	<< "Charge : " << particle.getCharge() << std::endl
+	// << "Color : " << particle.getColor()[0] << " " << particle.getColor()[1] << " " << particle.getColor()[2] << std::endl
+	<< "Force : " << *(particle.getForce()) << std::endl
+	<< "Energy (GeV) : " << particle.energy() *1/Particle::GeV << std::endl
+	<< "Gamma : " << particle.gamma();
+	return output; 
+}      

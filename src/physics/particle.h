@@ -1,7 +1,7 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
-#include "vector3d.h"
+#include "../vector3d/vector3d.h"
 #include <vector>
 #include <array>
 #include <math.h>
@@ -62,6 +62,8 @@ class Particle{
 		double getMass(void) const;
 		void setMass(double my_mass);
 
+		double getCharge(void) const;
+
 		double getRadius(void) const;
 
 		RGB getColor(void) const;
@@ -70,6 +72,12 @@ class Particle{
 		const Vector3D* getVelocity(void) const;
 		Vector3D getMomentum(void) const;
 		const Vector3D* getForce(void) const;
+		
+		void incrementForce(const Vector3D & my_F);
+		void addMagneticForce(const Vector3D& B, double dt);
+
+		double gamma(void) const;
+		double energy(void) const;
 
 		void barycenter(const Particle& P); // turns P into a particle whose mass is the sum of both particle's masses
 								
@@ -84,5 +92,6 @@ class Particle{
 };
 
 const Vector3D center_of_mass(std::vector<Particle> list);
+std::ostream& operator<<(std::ostream& output, Particle const& particle);
 
 #endif

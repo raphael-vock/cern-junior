@@ -9,19 +9,8 @@ const Vector3D Z_VECTOR(0.0,0.0,1.0);
 
 const int DIV_BY_ZERO(0);
 
-void Vector3D::setCoords(double a, double b, double c){
-	x = a;
-	y = b;
-	z = c;
-}
-
 std::array<double,3> Vector3D::getCoords() const{
 	return {x,y,z};
-}
-
-
-void Vector3D::print(void) const{
-	std::cout << x << "  " << y << "  " << z << "  " << std::endl;
 }
 
 Vector3D Vector3D::operator-(void) const{
