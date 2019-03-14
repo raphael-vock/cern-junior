@@ -3,7 +3,7 @@
 
 #include "drawable.h"
 #include "canvas.h"
-#include "particle.h"
+#include "universe.h"
 
 class Content : public Drawable{
 	private:

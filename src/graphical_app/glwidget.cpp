@@ -9,14 +9,17 @@ void GLWidget::setUniverse(Universe my_universe){
 
 void GLWidget::initializeGL(){
 	view.init();
-	timerId = startTimer(20);
 }
 
 void GLWidget::timerEvent(QTimerEvent* event){
-	Q_UNUSED(event);
-	double dt = stopwatch.restart() / 1000.0;
-	content.evolve(dt);
-	update();
+	if(not isPaused){
+		Q_UNUSED(event);
+		double dt = stopwatch.restart() / 1000.0;
+
+		content.evolve(dt);
+
+		update();
+	}
 }
 
 void GLWidget::resizeGL(int width, int height){
@@ -38,6 +41,15 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 	constexpr double small_increment(0.5);
 
 	switch(event->key()){
+		case Qt::Key_P:
+			if(isPaused){
+				timerId = startTimer(20);
+				isPaused = false;
+			}else{
+				isPaused = true;
+				killTimer(timerId);
+			}
+			break;
 		case Qt::Key_Left:
 			view.rotate(small_angle, 0.0, -1.0, 0.0);
 			break;

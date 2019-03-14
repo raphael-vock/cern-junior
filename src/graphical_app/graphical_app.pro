@@ -1,11 +1,11 @@
 QT += core gui opengl widgets
 
 CONFIG +=\
+	console\
 	c++11\
-	console
 CONFIG -= app_bundle
 
-TARGET = graphical.out
+TARGET = graphical_app
 
 INCLUDEPATH += \
 	../vector3d \

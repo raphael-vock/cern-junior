@@ -21,6 +21,8 @@ class GLWidget : public QOpenGLWidget{
 		virtual void keyPressEvent(QKeyEvent* event) override;
 		virtual void timerEvent(QTimerEvent*)        override;
 
+		bool isPaused = true;
+
 		// internal handling
 		void pause();
 

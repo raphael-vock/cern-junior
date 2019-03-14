@@ -7,8 +7,8 @@ void OpenGLView::draw(const Content &to_draw){
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);// skeleton polygons
 
 	QMatrix4x4 matrix;
-	if(to_draw.getUniverse() != nullptr){
-		for(const Particle p : *to_draw.getUniverse()->getParticle_list()){
+	for(const Particle p : *to_draw.getUniverse()->getParticle_list()){
+		if(p.alive){
 			std::array<double,3> coords(p.getPosition()->getCoords());
 
 			matrix.translate(coords[0], coords[1], coords[2]);
@@ -46,9 +46,9 @@ void OpenGLView::init(){
 
 void OpenGLView::initializePosition(){
 	pov_matrix.setToIdentity();
-	pov_matrix.translate(0.0, 0.0, -5.0);
-	pov_matrix.rotate(60.0, 0.0, 1.0, 0.0);
-	pov_matrix.rotate(45.0, 0.0, 0.0, 1.0);
+	pov_matrix.translate(0.0, 0.0, -30.0);
+	/* pov_matrix.rotate(60.0, 0.0, 1.0, 0.0); */
+	/* pov_matrix.rotate(45.0, 0.0, 0.0, 1.0); */
 }
 
 void OpenGLView::translate(double x, double y, double z){

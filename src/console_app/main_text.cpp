@@ -6,8 +6,7 @@ using namespace std;
 int main(void){
 	TextViewer screen(cout);
 
-	Universe my_universe;
-	my_universe.new_particle(0,0,0,0,0,0);
+	Universe my_universe(ZERO_VECTOR, 1.0, 1.0, 1.0);
 
 	Content content(&screen, my_universe);
 

@@ -1,13 +1,12 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
-#include "../vector3d/vector3d.h"
+#include "vector3d.h"
 #include <vector>
 #include <array>
 #include <math.h>
 
 typedef std::array<double,3> RGB;
-
 
 class Particle{
 	private:
@@ -21,35 +20,22 @@ class Particle{
 
 		// physical attributes
 		double mass;
-		double charge; 
+		double charge;
 		double radius;
 		RGB color;
+
 	public:
 		static constexpr double DEFAULT_MASS = 1.0;
 		static constexpr double DEFAULT_RADIUS = 1.0;
-		static constexpr double G = 1.0;
+
+		static constexpr double G = 1e-3;
+		static constexpr double EPSILON_SQUARED = 1e-2; // softening constant
+
 		static constexpr double C = 3e8;
-		static constexpr double GeV = 6.242e9;
+		static constexpr double GeV = 6.24e9;
+		bool alive = true;
 
-		double getMass(void) const;
-		double getCharge(void) const;
-		double getRadius(void) const;
-
-		double gamma(void) const;
-		double energy(void) const;
-
-		RGB getColor(void) const;
-
-		const Vector3D* getPosition(void) const;
-		const Vector3D* getForce(void) const;
-
-		void setForce(const Vector3D &my_F);
-		void incrementForce(const Vector3D &my_F);
-		void addMagneticForce(const Vector3D &B, double dt);
-
-		void evolve(double dt);
-
-		Particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass = DEFAULT_MASS, double my_charge = 0, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0}) :
+		Particle(double x = 0, double y = 0, double z = 0, double v_x = 0.0, double v_y = 0.0, double v_z = 0.0, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
 			r(Vector3D(x,y,z)),
 			r_p(Vector3D(x,y,z)),
 			v(Vector3D(v_x,v_y,v_z)),
@@ -58,11 +44,10 @@ class Particle{
 			mass(my_mass),
 			charge(my_charge),
 			radius(my_radius),
-			color(my_color)
+			color({1.0,1.0,0.0})
+			{}
 
-		{}
-
-		Particle(Vector3D x_0, Vector3D v_0, double my_mass = DEFAULT_MASS, double my_charge = 0, double my_radius = DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0}) :
+		Particle(Vector3D x_0, Vector3D v_0 = ZERO_VECTOR, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
 			r(Vector3D(x_0)),
 			r_p(Vector3D(x_0)),
 			v(Vector3D(v_0)),
@@ -71,23 +56,33 @@ class Particle{
 			mass(my_mass),
 			charge(my_charge),
 			radius(my_radius),
-			color(my_color)
-		{}
-};
+			color({1.0,1.0,1.0})
+			{}
 
-std::ostream& operator<<(std::ostream& output, Particle const& particle);
+		double getMass(void) const;
+		void setMass(double my_mass);
 
-class Universe{
-	private:
-		std::vector<Particle> particle_list;
-	public:
-		std::vector<Particle>* getParticle_list(void);
-		void new_particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass = Particle::DEFAULT_MASS, double my_charge = 0, double my_radius = Particle::DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0});
-		void new_particle(Vector3D x_0, Vector3D v_0, double my_mass = Particle::DEFAULT_MASS, double my_charge = 0, double my_radius = Particle::DEFAULT_RADIUS, RGB my_color = {1.0,1.0,1.0});
-		
-		void clear_forces(void);
-		void calculate_gravitational_forces(void);
+		double getRadius(void) const;
+
+		RGB getColor(void) const;
+
+		const Vector3D* getPosition(void) const;
+		const Vector3D* getVelocity(void) const;
+		Vector3D getMomentum(void) const;
+		const Vector3D* getForce(void) const;
+
+		void barycenter(const Particle& P); // turns P into a particle whose mass is the sum of both particle's masses
+								
+		void increment_gravity(Particle& P) const; // increments force of P by the gravitational force exerted by *this
+
+		void resetForce(void); // sets force to zero-vector
+
+		bool is_touching(const Particle& q) const;
+
 		void evolve(double dt);
+		void swallow(Particle q);
 };
+
+const Vector3D center_of_mass(std::vector<Particle> list);
 
 #endif

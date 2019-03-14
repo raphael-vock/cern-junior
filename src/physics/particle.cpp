@@ -1,53 +1,68 @@
 #include "particle.h"
 
+int GRAVITATIONAL_SINGULARITY(1);
+
 double Particle::getMass(void) const{
 	return mass;
+}
+
+void Particle::setMass(double my_mass){
+	mass = my_mass;
 }
 
 double Particle::getRadius(void) const{
 	return radius;
 }
 
-double Particle::getCharge(void) const{
-	return charge;
-}
-
 RGB Particle::getColor(void) const{
 	return color;
-}
-
-double Particle::gamma(void) const{
-	return 1/(sqrt(1-(v.norm()/C)));
-}
-
-double Particle::energy(void) const{
-	return this->gamma() * this->getMass() * pow(C, 2);
 }
 
 const Vector3D* Particle::getPosition(void) const{
 	return &r;
 }
 
+const Vector3D* Particle::getVelocity(void) const{
+	return &v;
+}
+
+Vector3D Particle::getMomentum(void) const{
+	return mass * v;
+}
+
 const Vector3D* Particle::getForce(void) const{
 	return &F;
 }
 
-void Particle::setForce(const Vector3D& my_F){
-	F = my_F;
+void Particle::resetForce(void){
+	F = ZERO_VECTOR;
 }
 
-void Particle::incrementForce(const Vector3D& my_F){
-	F += my_F;
+bool Particle::is_touching(const Particle& q) const{
+	return distance(r, q.r) <= radius + q.radius;
 }
 
-void Particle::addMagneticForce(const Vector3D& B, double dt){
-	if(F.is_zero() and dt > 1e-19) {incrementForce(charge * (v^B));}
-	else if(dt > 1e-19){
-		incrementForce(charge * (v^B).rotate(v^F, asin(dt * F.norm()/(2*gamma() * mass * v.norm()))));
-	}
+void Particle::barycenter(const Particle& P){
+	r *= mass;
+	r += P.mass * (*P.getPosition());
+	mass += P.mass;
+	r *= 1/mass;
+	r_p = r;
+}
+
+void Particle::increment_gravity(Particle& P) const{
+	if(not alive) return;
+	if(P.r == r) return;
+
+	Vector3D F_g(r - P.r);
+	F_g *= Particle::G * mass * P.mass / pow( F_g.norm2() + EPSILON_SQUARED, 1.5 );
+	P.F += F_g;
 }
 
 void Particle::evolve(double dt){
+	double f(F.norm()/(1e5*G*EPSILON_SQUARED)); // == F/F_max
+	double e((v.norm())/12);
+	color = {f, f, 1};
 	std::swap(v, v_p);
 	v = v_p + (dt / mass) * F;
 
@@ -55,52 +70,18 @@ void Particle::evolve(double dt){
 	r = r_p + (dt * v);
 }
 
-std::vector<Particle>* Universe::getParticle_list(void){
-	return &particle_list;
-}
+void Particle::swallow(Particle q){
+	double q_mass(q.getMass());
+	v *= mass;
+	v += q_mass*(*q.getVelocity());
 
-std::ostream& operator<<(std::ostream& output, Particle const& particle){
-	output << "Mass (GeV/c^2) : " << particle.getMass() << std::endl 
-	<< "Position : " << *(particle.getPosition()) << std::endl
-	// << "Radius : " << particle.getRadius() << std::endl
-	<< "Charge : " << particle.getCharge() << std::endl
-	// << "Color : " << particle.getColor()[0] << " " << particle.getColor()[1] << " " << particle.getColor()[2] << std::endl
-	<< "Force : " << *(particle.getForce()) << std::endl
-	<< "Energy (GeV) : " << particle.energy() << std::endl
-	<< "Gamma : " << particle.gamma();
-	return output; 
-}
+	r *= mass;
+	r += q_mass*(*q.getPosition());
 
-void Universe::new_particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass, double my_charge, double my_radius, RGB my_color){
-	particle_list.push_back(Particle(x,y,z,v_x,v_y,v_z, my_mass, my_charge, my_radius, my_color));
-}
+	mass += q_mass;
 
-void Universe::new_particle(Vector3D x_0, Vector3D v_0, double my_mass, double my_charge, double my_radius, RGB my_color){
-	particle_list.push_back(Particle(x_0, v_0, my_mass, my_charge, my_radius, my_color));
-}
+	v *= 1/mass;
+	r *= 1/mass;
 
-void Universe::clear_forces(void){
-	for(Particle &p : particle_list) p.setForce(Vector3D());
-}
-
-void Universe::calculate_gravitational_forces(void){
-	int N(particle_list.size()-1);
-	for(int i(0); i <= N; ++i){
-		for(int j(i+1); j <= N; ++j){
-			Particle* A(&particle_list[i]);
-			Particle* B(&particle_list[j]);
-			double k(pow((*B->getPosition() - *A->getPosition()).norm2(),1.5));// == d^3
-			Vector3D F((*B->getPosition()) - (*A->getPosition()));
-
-			F *= (Particle::G * A->getMass() * B->getMass()) / k;
-			A->incrementForce(F);
-			B->incrementForce(-F);
-		}
-	}
-}
-
-void Universe::evolve(double dt){
-	clear_forces();
-	calculate_gravitational_forces();
-	for(Particle &p : particle_list) p.evolve(dt);
+	radius = pow( pow(radius,3.0) + pow(q.getRadius(),3.0), 0.333 );
 }
