@@ -1,10 +1,5 @@
 #include "particle.h"
 
-const double DEFAULT_MASS = 1.0;
-const double DEFAULT_RADIUS = 1.0;
-const double G = 1.0;
-const double c = 299792458.0;
-
 double Particle::getMass(void) const{
 	return mass;
 }
@@ -22,11 +17,11 @@ RGB Particle::getColor(void) const{
 }
 
 double Particle::gamma(void) const{
-	return 1/(sqrt(1-(v.norm()/c)));
+	return 1/(sqrt(1-(v.norm()/C)));
 }
 
 double Particle::energy(void) const{
-	return this->gamma() * this->getMass() * pow(c, 2);
+	return this->gamma() * this->getMass() * pow(C, 2);
 }
 
 const Vector3D* Particle::getPosition(void) const{
@@ -76,12 +71,12 @@ std::ostream& operator<<(std::ostream& output, Particle const& particle){
 	return output; 
 }
 
-void Universe::new_particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_charge, double my_mass, double my_radius, RGB my_color){
-	particle_list.push_back(Particle(x,y,z,v_x,v_y,v_z,my_charge, my_mass,my_radius, my_color));
+void Universe::new_particle(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass, double my_charge, double my_radius, RGB my_color){
+	particle_list.push_back(Particle(x,y,z,v_x,v_y,v_z, my_mass, my_charge, my_radius, my_color));
 }
 
-void Universe::new_particle(Vector3D x_0, Vector3D v_0, double my_charge, double my_mass, double my_radius, RGB my_color){
-	particle_list.push_back(Particle(x_0, v_0, my_charge, my_mass, my_radius, my_color));
+void Universe::new_particle(Vector3D x_0, Vector3D v_0, double my_mass, double my_charge, double my_radius, RGB my_color){
+	particle_list.push_back(Particle(x_0, v_0, my_mass, my_charge, my_radius, my_color));
 }
 
 void Universe::clear_forces(void){
@@ -97,7 +92,7 @@ void Universe::calculate_gravitational_forces(void){
 			double k(pow((*B->getPosition() - *A->getPosition()).norm2(),1.5));// == d^3
 			Vector3D F((*B->getPosition()) - (*A->getPosition()));
 
-			F *= (G * A->getMass() * B->getMass()) / k;
+			F *= (Particle::G * A->getMass() * B->getMass()) / k;
 			A->incrementForce(F);
 			B->incrementForce(-F);
 		}
