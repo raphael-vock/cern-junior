@@ -3,33 +3,56 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 
-\usepackage[french]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel}
 
-\title{Réponses}
-\author{Vock Raphaël, Vezin Lomàn}
+\title{Projet : fichier réponses}
+\author{Raphaël Vock, Lomàn Vezin}
+
+\newcommand{\T}[1]{\texttt{#1}}
+\newcommand{\V}[0]{\texttt{Vector3D}}
+\newcommand{\double}{\texttt{double}}
 
 \begin{document}
 \maketitle
-\section{Vector3D}
+\section{La classe Vector3D}
+\subsection{Conception}
+\noindent \textbf{(P1.1)} Les points et vecteurs de l'espace euclidien sont représentés au moyen d'instances de la classe \V\ dont les attributs \T{x}, \T{y}, \T{z} (de type \double) sont leurs coordonnées cartésiennes. Celles-ci sont des attributs privés, mais tout le reste est publique. Voici les opérations que nous avons implémentées en premier :
 
-\subsection{Première modélisation}
-\paragraph{}
-Nous avons fait le choix d'une représentation cartésienne des vecteurs de \textbf{R}$^3$, ces derniers sont donc modélisés par une classe \texttt{Vector3D} dont les trois attributs x, y, z sont des \texttt{double}. L'accès aux attributs est privé, et se fait par le bisais d'un getter qui les retourne dans un \texttt{array} de dimension 3. Nous utilisons une méthode \texttt{is\_zero} qui renvoie \texttt{true} si la norme carrée du vecteur en instance est inférieure à une marge \texttt{DEFAULT\_EPSILON} donnée. Les attributs peuvent toutefois être initialisés par le biais s'un setter. La classe dispose de plus d'un constructeur faisant également office de constructeur par défaut, initialisant en l'absence d'argument chacune des coordonnées à 0.
+\begin{itemize}
 
-\subsection{Constructeur de copie}
-\paragraph{}
-Nous avons décidé de ne pas ajouter de constructeur de copie, la classe \texttt{Vector3D} ne contient pas, entre autres, de pointeur dans ses attributs, ses instances ne nécessitent donc pas de copie profonde. la copie de surface offerte par le constructeur de copie par défaut est amplement suffisante.
+\item \T{getCoords()}  est une méthode constante qui retourne les coordonnées d'une instance via un \T{std::array<double,3>}.
+
+\item \T{norm()} et \T{norm2()} retournent la norme euclidienne (resp. norme euclidienne au carré).
+
+\item \T{distance(x,y)} et \T{distance2(x,y)} sont des fonctions qui retournent la distance euclidienne (resp. distance euclidienne au carré).
+
+\item \T{unitary()} est une méthode qui retourne le vecteur directeur de même sens et de même direction (et lance une exception si l'instance est nulle ; voir point suivant).
+
+\item \T{is\_zero()} est une méthode qui retourne un bool indiquant si l'instance est plus petite (en norme au carré) qu'une (petite) constante \T{EPSILON}. 
+\end{itemize}
+
+\subsection{Constructeur, constructeur de copie}
+\noindent \textbf{(P4.1)} L'unique constructeur de la classe prend en argument trois \double\ (nuls par défaut) et initialise un \V\ avec les coordonnées cartésiennes précisées. En l'absence d'attributs pointeurs, le constructeur de copie minimal par défaut réalise exactement ce que l'on attend, donc nous n'en avions pas defini.
 
 \subsection{Coordonnées sphériques}
-Nous n’avons pas implémenté de constructeur en coordonnées sphériques. L’ajout de ce dernier poserait problème au niveau du constructeur dont le prototype demanderait tout comme le constructeur cartésien 3 \texttt{double} en entrée ce qui ne constitue pas une surcharge. Bien que l’on ai la possibilité de contourner ce problème les coordonnées sphériques restent, dans le contexte d’un accelerateur de particules, moins pertinentes que les coordonnées cylindriques.
+\noindent \textbf{(P4.2)} Nous n’avons pas implémenté de constructeur en coordonnées sphériques. L’ajout de ce dernier serait problématique car nous aurions deux constructeurs aux protoypes identiques.  Ce n'est pas un problème incontournable ; on pourrait, par exemple, écrire un seul et unique constructeur dont le quatrième argument est un \T{bool} (\T{false} par défaut) qui précise si les arguments donnés doivent être compris comme des coordonnées sphériques ou sinon cartésiennes.
+
+Mais, de toute façon, nous considérons que les coordonnées sphériques ne sont pas un choix pertinent dans le cadre de ce projet. L'avantage des sphériques est généralement d'obtenir, dans des cas bien particuliers, une cinématique plus agréable. Mais dans ce cas-ci l'intégration des équations différentielles sera effectuée par des méthodes numériques donc la simplicité des expressions algébriques nous est indifférente. D'ailleurs, nous avons tout intérêt à avoir des vecteurs dont la représentation est \textit{canonique}, c'est-à-dire indépendante d'untel objet ou d'un autre. C'est le cas des coordonnées cartésiennes, mais pas des sphériques.
 
 \subsection{Surcharge des opérateurs}
-\paragraph{}
-Nous avons défini par surcharge les opérateurs d'auto-affectation nécessaires aux calculs vectoriels \texttt{+=}, \texttt{-=}, \texttt{*=}. A partir de ces derniers nous avons ensuite défini les opérateurs \texttt{+}, \texttt{-}, \texttt{*}. La surcharge de l'opérateur \texttt{*} est dédiée à la multiplication d'un vecteur par un scalaire.
-\paragraph{}
-Nous avons également défini une surcharge pour les opérateurs binaires produit scalaire \texttt{|} et produit vectoriel \texttt{\^}, quant au produit mixte, il s'agit d'une fonction externe prenant trois vecteurs en paramètre et retournant un \texttt{double}.
-\paragraph{}
-Finalement nous avons surchargé les opérateurs \texttt{==} et \texttt{!=} permettant de tester l'égalité de deux vecteurs, dans le cas où la norme de la différence est inférieure à la marge mentionnée plus haut.
+\noindent \textbf{(P4.3)}
+\begin{itemize}
+\item Nous avons surchargé les opérateurs d'auto-affectation \T{+=}, \T{-=}, \T{*=} correspondant à l'addition (resp. soustraction) vectorielle et la multiplication par un scalaire. Celles-ci retournent le résultat de l'affectation pour optimiser certains calculs par la suite.
+
+\item À partir de ces derniers nous avons surchargé les opérateurs binaires \T{+}, \T{-}, \T{*}.
+
+\item Les opérateurs binaires \T{|} et \T{$\wedge$} retournent respectivement le produit scalaire usuel et le produit vectoriel.
+
+\item Accessoirement, la fonction \T{mixed\_prod(u,v,w)} retourne le produit mixte, c'est-à-dire le scalaire \T{u|(v$\wedge$w)}.
+
+\item Les opérateurs de comparaison \T{==} et \T{!=} sont définis à partir de la méthode \T{is\_zero()} (cf. 1.1).
+\end{itemize}
 
 \end{document}
