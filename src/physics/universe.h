@@ -6,14 +6,12 @@
 
 class Universe{
 	private:
-		std::vector<Particle> particle_list;
+		std::vector<Particle*> particle_list;
 		Box domain;
 		Node tree;
 
 	public:
 		int N = 0;
-
-		void print_tree(void) const;
 
 		Universe(Box my_domain) : domain(my_domain), tree(my_domain){}
 		Universe(Vector3D origin, double x, double y, double z) : domain(Box(origin, x, y, z)), tree(domain){}
@@ -22,7 +20,7 @@ class Universe{
 
 		void insert(Vector3D x_0 = ZERO_VECTOR, Vector3D v_0 = ZERO_VECTOR, double my_mass = Particle::DEFAULT_MASS, double my_charge = 0.0, double my_radius = Particle::DEFAULT_RADIUS);
 
-		std::vector<Particle>* getParticle_list(void);
+		std::vector<Particle*>* getParticle_list(void);
 		
 		/* void set_gravity(void); */
 		void direct_sum(void);
@@ -30,6 +28,7 @@ class Universe{
 		void evolve(double dt);
 
 		void print_particles(void) const;
+		void print_tree(void) const;
 };
 
 #endif

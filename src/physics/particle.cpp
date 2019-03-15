@@ -63,8 +63,10 @@ void Particle::increment_gravity(Particle& P) const{
 }
 
 void Particle::evolve(double dt){
-	double f(F.norm()/(1e5*G*EPSILON_SQUARED)); // == F/F_max
-	color = {f, f, 1};
+	double f(F.norm()/(G*mass*mass/EPSILON_SQUARED)); // == F/F_max
+	if(f > 1) f = 1;
+	color = {f, f*f*f, 1};
+
 	std::swap(v, v_p);
 	v = v_p + (dt / mass) * F;
 
@@ -73,8 +75,9 @@ void Particle::evolve(double dt){
 	resetForce();
 }
 
-void Particle::swallow(Particle q){
+void Particle::swallow(Particle& q){
 	double q_mass(q.getMass());
+
 	v *= mass;
 	v += q_mass*(*q.getVelocity());
 
@@ -83,10 +86,12 @@ void Particle::swallow(Particle q){
 
 	mass += q_mass;
 
-	v *= 1/mass;
+	v *= ETA/mass;
 	r *= 1/mass;
 
 	radius = pow( pow(radius,3.0) + pow(q.getRadius(),3.0), 0.333 );
+
+	q.alive = false;
 }
 
 void Particle::incrementForce(const Vector3D & my_F){

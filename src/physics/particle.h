@@ -28,8 +28,10 @@ class Particle{
 		static constexpr double DEFAULT_MASS = 1.0;
 		static constexpr double DEFAULT_RADIUS = 1.0;
 
-		static constexpr double G = 1e-3;
-		static constexpr double EPSILON_SQUARED = 1e-2; // softening constant
+		static constexpr double G = 1e-1;
+		static constexpr double EPSILON_SQUARED = 1e-1; // softening constant
+		
+		static constexpr double ETA = 0.8; // collision constant
 
 		static constexpr double C = 3e8;
 		static constexpr double GeV = 6.24e9;
@@ -88,7 +90,7 @@ class Particle{
 		bool is_touching(const Particle& q) const;
 
 		void evolve(double dt);
-		void swallow(Particle q);
+		void swallow(Particle &q);
 };
 
 const Vector3D center_of_mass(std::vector<Particle> list);

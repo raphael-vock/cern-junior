@@ -26,7 +26,6 @@ bool Node::insert(Particle* my_particle){
 			if(tenant->alive){
 				if(my_particle->is_touching(*tenant)){
 					my_particle->swallow(*tenant);
-					tenant->alive = false;
 					return insert(my_particle);
 				}
 

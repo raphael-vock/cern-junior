@@ -1,9 +1,10 @@
 QT += core gui opengl widgets
 
-CONFIG -= app_bundle
-CONFIG +=\
-	console\
-	c++11\
+CONFIG -= \
+	app_bundle \
+	console
+CONFIG += \
+	c++11 \
 
 TARGET = graphical_app
 
