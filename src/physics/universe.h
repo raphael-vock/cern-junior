@@ -2,6 +2,7 @@
 #define UNIVERSE_H
 
 #include <vector>
+
 #include "../vector3d/vector3d.h"
 #include "particle.h"
 #include "node.h"
@@ -11,9 +12,8 @@ class Universe{
 		std::vector<Particle*> particle_list;
 		Box domain;
 		Node tree;
-
 	public:
-		int N = 0;
+		int particle_count = 0;
 
 		Universe(Box my_domain) : domain(my_domain), tree(my_domain){}
 		Universe(Vector3D origin, double x, double y, double z) : domain(Box(origin, x, y, z)), tree(domain){}

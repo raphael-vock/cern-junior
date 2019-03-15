@@ -7,13 +7,13 @@ std::vector<Particle*>* Universe::getParticle_list(void){
 void Universe::insert(double x, double y, double z, double v_x, double v_y, double v_z, double my_mass, double my_charge, double my_radius){
 	particle_list.push_back(new Particle(x,y,z,v_x,v_y,v_z,my_mass,my_charge,my_radius));
 	tree.insert(particle_list.back());
-	++N;
+	++particle_count;
 }
 
 void Universe::insert(Vector3D x_0, Vector3D v_0, double my_mass, double my_charge, double my_radius){
 	particle_list.push_back(new Particle(x_0,v_0,my_mass,my_charge,my_radius));
 	tree.insert(particle_list.back());
-	++N;
+	++particle_count;
 }
 
 // naive gravity algorithm:
@@ -42,7 +42,7 @@ void Universe::print_tree(void) const{
 }
 
 void Universe::print_particles(void) const{
-	for(size_t i(0); i <= N-1; ++i){
+	for(size_t i(0); i <= particle_count-1; ++i){
 		std::cout << "-------------\nParticle " << i+1 << ": ";
 		std::cout << *particle_list[i]->getPosition() << std::endl;
 		std::cout << "F = " << *particle_list[i]->getForce() << "\n";

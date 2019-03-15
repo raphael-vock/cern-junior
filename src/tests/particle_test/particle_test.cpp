@@ -1,7 +1,7 @@
-#include "../../physics/particle.h"
-#include <ctime>
-#include <fstream>
 #include <iostream>
+
+#include "../../physics/particle.h"
+#include "../../physics/physical_constants.h"
 
 void time(){
 	time_t tt;
@@ -21,22 +21,22 @@ int main(){
 
 	std::cout << "Creation of two particles : " << std::endl
 	<< "One particle : " << std::endl; 
-	Particle p1(3.00984, -0.391837, 0, -210200, -2.64754e+08, 0, (Particle::GeV/pow(Particle::C, 2)) * 0.938272, 1.60217653e-19);
+	Particle p1(3.00984, -0.391837, 0, -210200, -2.64754e+08, 0, (GeV/C*C) * 0.938272, 1.60217653e-19);
 	std::cout << p1 << std::endl << std::endl
 	<< "One particle : " << std::endl;
-	Particle p2(2.99016, -0.391837, 0, 210200, -2.64754e+08, 0, (Particle::GeV/pow(Particle::C, 2)) * 0.938272, 1.60217653e-19);
+	Particle p2(2.99016, -0.391837, 0, 210200, -2.64754e+08, 0, (GeV/C*C) * 0.938272, 1.60217653e-19);
 	std::cout << p2 << std::endl << std::endl;
 
 	std::cout << "Adding a magnetic force B=0 0 7 (dt=1e-11) : " << std::endl; 
 	Vector3D B(0, 0, 7);
 	std::cout << "To p1 : " << std::endl;
 	std::cout << "  F0 = " << *(p1.getForce()) << std::endl;
-	p1.addMagneticForce(B, 1e-11);
+	p1.add_magnetic_force(B, 1e-11);
 	std::cout << "  F1 = " << *(p1.getForce()) << std::endl;
 
 	std::cout << "To p2 : " << std::endl;
 	std::cout << "  F0 = " << *(p2.getForce()) << std::endl;
-	p2.addMagneticForce(B, 1e-11);
+	p2.add_magnetic_force(B, 1e-11);
 	std::cout << "  F1 = " << *(p2.getForce()) << std::endl;
 	std::cout << std::endl;
 

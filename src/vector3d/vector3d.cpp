@@ -127,9 +127,9 @@ double Vector3D::mixed_prod(const Vector3D &u, const Vector3D &v, const Vector3D
 }
 
 std::ostream& operator<<(std::ostream& output, Vector3D const& v){
-	output << v.getCoords()[0] << " " << v.getCoords()[1] << " " << v.getCoords()[2];
+	std::array<double,3> coords(v.getCoords());
+	output << coords[0] << " " << coords[1] << " " << coords[2];
 	return output;
 }
-
 
 const Vector3D Vector3D::ZERO_VECTOR(0.0,0.0,0.0);

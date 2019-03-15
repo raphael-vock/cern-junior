@@ -67,7 +67,7 @@ void Particle::add_gravitational_force(Particle& P) const{
 void Particle::evolve(double dt){
 	double f(F.norm()/(G*mass*mass/GRAVITY_EPSILON)); // == F/F_max
 	if(f > 1.0) f = 1.0;
-	color = {f, f*f*f, 1.0};
+	color = {0.1+f, 0.3+f*f*f, 1.0};
 
 	std::swap(v, v_p);
 	v = v_p + (dt / mass) * F;

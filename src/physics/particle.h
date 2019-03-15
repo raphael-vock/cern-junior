@@ -9,15 +9,15 @@
 
 class Particle{
 	private:
-		Vector3D r;// position at time t
-		Vector3D r_p;// position at time t-dt
+		Vector3D r; // position at time t
+		Vector3D r_p; // position at time t-dt
 
-		Vector3D v;// velocity at time t 
-		Vector3D v_p;// velocity at time t-dt
+		Vector3D v; // velocity at time t 
+		Vector3D v_p; // velocity at time t-dt
 
-		Vector3D F;// resultant force being applied 
+		Vector3D F; // resultant force being applied 
 
-		// physical attributes
+		// Physical attributes:
 		double mass;
 		double charge;
 		double radius;
@@ -27,7 +27,7 @@ class Particle{
 		static constexpr double DEFAULT_MASS = 1.0;
 		static constexpr double DEFAULT_RADIUS = 1.0;
 
-		static constexpr double GRAVITY_EPSILON = 1e-3;
+		static constexpr double GRAVITY_EPSILON = 1e-1;
 		
 		static constexpr double ETA = 0.8; // collision constant
 

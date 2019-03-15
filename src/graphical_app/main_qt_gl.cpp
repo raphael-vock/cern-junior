@@ -4,10 +4,10 @@
 #include <cmath>
 
 #include "glwidget.h"
-#include "vector3d.h"
-#include "particle.h"
-#include "physical_constants.h"
-#include "universe.h"
+#include "../vector3d/vector3d.h"
+#include "../physics/particle.h"
+#include "../physics/physical_constants.h"
+#include "../physics/universe.h"
 
 int main(int argc, char* argv[]){
 	QApplication a(argc, argv);
