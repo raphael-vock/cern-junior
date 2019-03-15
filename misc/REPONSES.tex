@@ -39,12 +39,16 @@
 \subsection{Coordonnées sphériques}
 \noindent \textbf{(P4.2)} Nous n’avons pas implémenté de constructeur en coordonnées sphériques. Avant tout, l’ajout de ce dernier serait un peu technique au niveau du prototypage de car nous aurions \textit{a priori} deux constructeurs aux protoypes identiques. Ce n'est pas un problème incontournable ; on pourrait, par exemple, écrire un seul et unique constructeur dont le quatrième argument est un \T{bool} (\T{false} par défaut) qui précise si les arguments donnés doivent être compris comme des coordonnées sphériques ou sinon cartésiennes.
 
+<<<<<<< HEAD
 Mais le problème fondamental est le suivant : un repère sphérique est intextricablement lié à la donnée d'un point $O$ considéré comme l'origine. Pour écrire un constructeur sphérique sans ambiguité il serait donc nécessaire :
 \begin{itemize}
 \item ou bien de faire un choix canonique de $O$ qui ne changerait pas du début à la fin
 \item ou bien de préciser $O$ en passant sa valeur (ou éventuellement son adresse) en argument.
 \end{itemize}
 Si l'on choisit la première option, l'unique avantage des sphériques serait perdue car on ne serait plus en mesure de choisir l'origine à notre gré pour simplifier, entre autres, des expressions de force (e.g. en choisissant $O$ l'origine d'un champ de force central). Mais la deuxième option serait coûteuse à implémenter et lourde à utiliser pour des avantages qui finalement n'en vaudraient pas le coup.
+=======
+Mais, de toute façon, nous considérons que les coordonnées sphériques ne sont pas un choix pertinent dans le cadre de ce projet. L'avantage des sphériques est généralement d'obtenir, dans des cas bien particuliers, une cinématique plus agréable. Mais dans ce cas-ci l'intégration des équations différentielles sera effectuée par des méthodes numériques donc la simplicité des expressions algébriques nous est indifférente. D'ailleurs, nous avons tout intérêt à avoir des vecteurs dont la représentation est \textit{canonique}, c'est-à-dire indépendante d'un tel objet ou d'un autre. C'est le cas des coordonnées cartésiennes, mais pas des sphériques.
+>>>>>>> 67760e85a9d7fd1444c1903f4786adc4d8884395
 
 \subsection{Surcharge des opérateurs}
 \noindent \textbf{(P4.3)}
