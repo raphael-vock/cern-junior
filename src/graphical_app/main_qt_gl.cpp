@@ -6,6 +6,7 @@
 #include "glwidget.h"
 #include "vector3d.h"
 #include "particle.h"
+#include "physical_constants.h"
 #include "universe.h"
 
 int main(int argc, char* argv[]){
@@ -39,7 +40,7 @@ int main(int argc, char* argv[]){
 		double theta(angle(gen));
 		Vector3D x(d*sin(theta), d*cos(theta), 0.0);
 		Vector3D v(cos(theta), -sin(theta), 0.0);
-		v *= sqrt(1.25*Particle::G*N*m/d);
+		v *= sqrt(1.25*G*N*m/d);
 		Omega.insert(x,v,m,0,r);
 	}
 

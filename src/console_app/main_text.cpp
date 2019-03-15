@@ -1,12 +1,12 @@
 #include <iostream>
 #include "text_viewer.h"
-#include "content.h"
+#include "../general/content.h"
 using namespace std;
 
 int main(void){
 	TextViewer screen(cout);
 
-	Universe my_universe(ZERO_VECTOR, 1.0, 1.0, 1.0);
+	Universe my_universe(Vector3D::ZERO_VECTOR, 1.0, 1.0, 1.0);
 
 	Content content(&screen, my_universe);
 

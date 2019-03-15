@@ -2,7 +2,7 @@
 #define TEXT_VIEWER_H
 
 #include <iostream>
-#include "canvas.h"
+#include "../general/canvas.h"
 
 class TextViewer : public Canvas {
 	public:

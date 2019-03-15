@@ -1,12 +1,6 @@
 #include "vector3d.h"
 #include <cmath>
 
-const double EPSILON(1e-10);
-const Vector3D ZERO_VECTOR(0.0,0.0,0.0);
-const Vector3D X_VECTOR(1.0,0.0,0.0);
-const Vector3D Y_VECTOR(0.0,1.0,0.0);
-const Vector3D Z_VECTOR(0.0,0.0,1.0);
-
 const int DIV_BY_ZERO(0);
 
 std::array<double,3> Vector3D::getCoords() const{
@@ -70,6 +64,14 @@ double Vector3D::norm(void) const{
 	return sqrt(norm2());
 }
 
+double Vector3D::distance(const Vector3D& u, const Vector3D& v){
+	return (u - v).norm2();
+}
+
+double Vector3D::distance2(const Vector3D& u, const Vector3D& v){
+	return (u - v).norm();
+}
+
 bool Vector3D::is_zero(void) const{
 	return this->norm2() <= EPSILON;
 }
@@ -116,7 +118,7 @@ Vector3D operator*(const double &lambda, const Vector3D& u){
 	return u * lambda;
 }
 
-double mixed_prod(const Vector3D &u, const Vector3D &v, const Vector3D &w){
+double Vector3D::mixed_prod(const Vector3D &u, const Vector3D &v, const Vector3D &w){
 	return u|(v^w);
 }
 
@@ -125,10 +127,5 @@ std::ostream& operator<<(std::ostream& output, Vector3D const& v){
 	return output;
 }
 
-double distance(const Vector3D& u, const Vector3D& v){
-	return (u - v).norm2();
-}
 
-double distance2(const Vector3D& u, const Vector3D& v){
-	return (u - v).norm();
-}
+const Vector3D Vector3D::ZERO_VECTOR(0.0,0.0,0.0);

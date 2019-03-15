@@ -1,4 +1,3 @@
-#include <thread>
 #include "universe.h"
 
 std::vector<Particle*>* Universe::getParticle_list(void){

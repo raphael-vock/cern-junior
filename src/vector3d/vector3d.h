@@ -7,16 +7,6 @@
 #include <cmath>
 #include <random>
 
-class Vector3D;
-
-const extern double EPSILON;
-const extern Vector3D ZERO_VECTOR;
-
-// the three unit vectors:
-const extern Vector3D X_VECTOR;
-const extern Vector3D Y_VECTOR;
-const extern Vector3D Z_VECTOR;
-
 class Vector3D{
 	private:
 		double x;
@@ -44,25 +34,29 @@ class Vector3D{
 		bool operator ==(const Vector3D &) const; // returns true iff argument and *this are equal up to a small vector
 		bool operator !=(const Vector3D &) const;
 
-		// Other methods with scalar output:
+		// Other methods/functions with scalar output:
 		double norm2(void) const; // returns square of Euclidian norm
 		double norm(void) const; // returns Euclidian norm
+		static double distance(const Vector3D& u, const Vector3D& v);
+		static double distance2(const Vector3D& u, const Vector3D& v);
 		bool is_zero(void) const; // returns true if square of norm is "zero" i.e. less than EPSILON
+		static double mixed_prod(const Vector3D &, const Vector3D &, const Vector3D &); // returns mixed product of (u,v,w) i.e. u|(v^w);
 
-		// Other methods with vector output:
+		// Other methods/functions with vector output:
 		Vector3D rotate(Vector3D, double) const; // rotates around a given axis by a given angle angle passed as arguments
 		Vector3D unitary() const; // returns the unit vector in the same direction
+		static Vector3D random_unit_vector(void);
+
+		// Constants:
+		static constexpr double EPSILON = 1e-5;
+		static const Vector3D ZERO_VECTOR;
+		/* // the three unit vectors: */
+		/* const extern Vector3D X_VECTOR; */
+		/* const extern Vector3D Y_VECTOR; */
+		/* const extern Vector3D Z_VECTOR; */
 };
 
-Vector3D random_unit_vector(void);
-
 Vector3D operator*(const double &, const Vector3D&); // scalar multiplication, with the scalar coming BEFORE
-
-double mixed_prod(const Vector3D &, const Vector3D &, const Vector3D &); // returns mixed product of (u,v,w) i.e. u|(v^w);
-
 std::ostream& operator<<(std::ostream& output, Vector3D const& v); // prints to output (e.g. std::cout or std::ofstream)
-
-double distance(const Vector3D& u, const Vector3D& v);
-double distance2(const Vector3D& u, const Vector3D& v);
 
 #endif

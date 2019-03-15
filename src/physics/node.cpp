@@ -56,7 +56,7 @@ void Node::increment_gravity(Particle& P) const{
 		return;
 	}
 
-	double ratio(pow(domain.volume(),0.333) / distance(*P.getPosition(), *virtual_particle.getPosition()) );
+	double ratio(pow(domain.volume(),0.333) / Vector3D::distance(*P.getPosition(), *virtual_particle.getPosition()) );
 
 	if(ratio <= THETA) virtual_particle.increment_gravity(P);
 	else for(Node* child : children) child->increment_gravity(P);

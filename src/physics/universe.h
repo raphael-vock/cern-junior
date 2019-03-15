@@ -1,6 +1,7 @@
 #ifndef UNIVERSE_H
 #define UNIVERSE_H
 
+#include "../vector3d/vector3d.h"
 #include "particle.h"
 #include "node.h"
 
@@ -18,7 +19,7 @@ class Universe{
 		
 		void insert(double x, double y, double z, double v_x = 0.0, double v_y = 0.0, double v_z = 0.0, double my_mass = Particle::DEFAULT_MASS, double my_charge = 0.0, double my_radius = Particle::DEFAULT_RADIUS);
 
-		void insert(Vector3D x_0 = ZERO_VECTOR, Vector3D v_0 = ZERO_VECTOR, double my_mass = Particle::DEFAULT_MASS, double my_charge = 0.0, double my_radius = Particle::DEFAULT_RADIUS);
+		void insert(Vector3D x_0 = Vector3D::ZERO_VECTOR, Vector3D v_0 = Vector3D::ZERO_VECTOR, double my_mass = Particle::DEFAULT_MASS, double my_charge = 0.0, double my_radius = Particle::DEFAULT_RADIUS);
 
 		std::vector<Particle*>* getParticle_list(void);
 		

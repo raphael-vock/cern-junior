@@ -2,7 +2,7 @@
 #define BOX_H
 
 #include <iostream>
-#include "vector3d.h"
+#include "../vector3d/vector3d.h"
 #include "particle.h"
 
 class Box{

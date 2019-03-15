@@ -1,12 +1,11 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
-#include "../vector3d/vector3d.h"
-#include <vector>
 #include <array>
-#include <math.h>
 
-typedef std::array<double,3> RGB;
+#include "../general/color.h"
+#include "../vector3d/vector3d.h"
+#include "physical_constants.h"
 
 class Particle{
 	private:
@@ -28,13 +27,10 @@ class Particle{
 		static constexpr double DEFAULT_MASS = 1.0;
 		static constexpr double DEFAULT_RADIUS = 1.0;
 
-		static constexpr double G = 1e-1;
-		static constexpr double EPSILON_SQUARED = 1e-1; // softening constant
+		static constexpr double GRAVITY_EPSILON = 1e-3;
 		
 		static constexpr double ETA = 0.8; // collision constant
 
-		static constexpr double C = 3e8;
-		static constexpr double GeV = 6.24e9;
 		bool alive = true;
 
 		Particle(double x = 0, double y = 0, double z = 0, double v_x = 0.0, double v_y = 0.0, double v_z = 0.0, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
@@ -46,10 +42,10 @@ class Particle{
 			mass(my_mass),
 			charge(my_charge),
 			radius(my_radius),
-			color({1.0,1.0,1.0})
+			color(WHITE)
 			{}
 
-		Particle(Vector3D x_0, Vector3D v_0 = ZERO_VECTOR, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
+		Particle(Vector3D x_0, Vector3D v_0 = Vector3D::ZERO_VECTOR, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
 			r(Vector3D(x_0)),
 			r_p(Vector3D(x_0)),
 			v(Vector3D(v_0)),
@@ -58,7 +54,7 @@ class Particle{
 			mass(my_mass),
 			charge(my_charge),
 			radius(my_radius),
-			color({1.0,1.0,1.0})
+			color(WHITE)
 			{}
 
 		double getMass(void) const;
@@ -93,7 +89,6 @@ class Particle{
 		void swallow(Particle &q);
 };
 
-const Vector3D center_of_mass(std::vector<Particle> list);
 std::ostream& operator<<(std::ostream& output, Particle const& particle);
 
 #endif

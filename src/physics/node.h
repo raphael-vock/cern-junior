@@ -2,7 +2,7 @@
 #define NODE_H
 
 #include <array>
-#include "vector3d.h"
+#include "../vector3d/vector3d.h"
 #include "box.h"
 
 extern const double THETA;
