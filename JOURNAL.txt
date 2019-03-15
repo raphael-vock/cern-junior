@@ -57,10 +57,11 @@ Création d'un fichier test pour la classe Particule, ce dernier écrit en sorti
 
 --------------------------------------------------
 ## Semaine 3 :
-R: Cela sort un peu du cadre du projet mais je décide d'essayer d'implémenter l'algorithme de Barnes-Hut pour accélérer les calculs des intéractions gravitationnelles ou électromagnétique des particules. Celui-ci est en O(n.log(n)) donc très intéressant si on a un grand nombre de particules en jeu. En écrivant une classe récursive pour représenter les arbres je m'affronte à un horrible beugue. :'(
+R: Cela sort un peu du cadre du projet mais je décide d'essayer d'implémenter l'algorithme de Barnes-Hut pour accélérer les calculs des intéractions gravitationnelles des particules. Celui-ci est en O(n.log(n)) donc très intéressant si on a un grand nombre de particules en jeu.
+
+R (quelques jours plus tard): Après avoir résolu un bug fort pénible, l'implémentation de Barnes-Hut est un succès. La simulation de problème à n corps pour 10^4 voire 10^5 particules peut maintenant être exécutée aisément même sur un ordinateur peu puissant. Évidemment l'algorithme peut facilement être adapté pour le calcul de forces électromagnétique.
 
 L: Finalisation de la classe Particle et écriture d'un fichier test.
-
 
 --------------------------------------------------
 ## Semaine 4 :

@@ -29,3 +29,8 @@ src/graphical_app/Makefile
 src/Makefile
 src/physics/Makefile
 src/vector3d/Makefile
+*.fdb_latexmk
+*.fls
+*.log
+*.gz
+*.aux
