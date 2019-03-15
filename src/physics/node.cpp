@@ -1,24 +1,19 @@
-#include "node.h"
+#include <cmath> // for pow
 
-const double THETA(0.5);
+#include "node.h"
 
 void Node::subdivide(void){
 	type = INT;
-	children[0] = new Node(domain.octant(0,0,0));
-	children[1] = new Node(domain.octant(0,0,1));
-	children[2] = new Node(domain.octant(0,1,0));
-	children[3] = new Node(domain.octant(0,1,1));
-	children[4] = new Node(domain.octant(1,0,0));
-	children[5] = new Node(domain.octant(1,0,1));
-	children[6] = new Node(domain.octant(1,1,0));
-	children[7] = new Node(domain.octant(1,1,1));
+	for(uint8_t i(0); i <= 1; ++i) for(uint8_t j(0); j <= 1; ++j) for(uint8_t k(0); k <= 1; ++k){
+		children[i + 2*j + 4*k] = new Node(domain.octant(i,j,k));
+	}
 }
 
 bool Node::insert(Particle* my_particle){
 	if(not domain.contains(*my_particle)) return false;
 	switch(type){
 		case INT:{
-			virtual_particle.barycenter(*my_particle);
+			virtual_particle.average_particle(*my_particle);
 			for(Node* child : children) if(child->insert(my_particle)) return true;
 			return false;
 		}
@@ -29,7 +24,7 @@ bool Node::insert(Particle* my_particle){
 					return insert(my_particle);
 				}
 
-				virtual_particle.barycenter(*my_particle);
+				virtual_particle.average_particle(*my_particle);
 				subdivide();
 
 				for(Node* child : children) if(child->insert(tenant)) break;
@@ -52,18 +47,18 @@ bool Node::insert(Particle* my_particle){
 void Node::increment_gravity(Particle& P) const{
 	if(type == EMPTY) return;
 	if(type == EXT){
-		virtual_particle.increment_gravity(P);
+		virtual_particle.add_gravitational_force(P);
 		return;
 	}
 
-	double ratio(pow(domain.volume(),0.333) / Vector3D::distance(*P.getPosition(), *virtual_particle.getPosition()) );
+	double ratio(pow(domain.volume(),1.0/3.0) / Vector3D::distance(*P.getPosition(), *virtual_particle.getPosition()) );
 
-	if(ratio <= THETA) virtual_particle.increment_gravity(P);
+	if(ratio <= THETA) virtual_particle.add_gravitational_force(P);
 	else for(Node* child : children) child->increment_gravity(P);
 }
 
 void Node::set_gravity(Particle& P) const{
-	P.resetForce();
+	P.reset_force();
 	increment_gravity(P);
 }
 

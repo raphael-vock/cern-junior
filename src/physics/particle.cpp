@@ -1,4 +1,5 @@
-#include <cmath>
+#include <iostream> // for std::cout 
+#include <cmath> // for pow
 
 #include "particle.h"
 
@@ -40,7 +41,7 @@ double Particle::getCharge(void) const{
 	return charge;
 }
 
-void Particle::resetForce(void){
+void Particle::reset_force(void){
 	F = Vector3D::ZERO_VECTOR;
 }
 
@@ -48,15 +49,14 @@ bool Particle::is_touching(const Particle& q) const{
 	return Vector3D::distance(r, q.r) <= radius + q.radius;
 }
 
-void Particle::barycenter(const Particle& P){
+void Particle::average_particle(const Particle& P){
 	r *= mass;
-	r += P.mass * (*P.getPosition());
+	r += P.mass * P.r;
 	mass += P.mass;
 	r *= 1.0/mass;
-	r_p = r;
 }
 
-void Particle::increment_gravity(Particle& P) const{
+void Particle::add_gravitational_force(Particle& P) const{
 	if(this == &P or not alive) return;
 
 	Vector3D F_g(r - P.r);
@@ -74,7 +74,7 @@ void Particle::evolve(double dt){
 
 	std::swap(r, r_p);
 	r = r_p + (dt * v);
-	resetForce();
+	reset_force();
 }
 
 void Particle::swallow(Particle& q){
@@ -91,33 +91,33 @@ void Particle::swallow(Particle& q){
 	v *= ETA/mass;
 	r *= 1.0/mass;
 
-	radius = pow( pow(radius,3.0) + pow(q.getRadius(),3.0), 0.333 );
+	radius = pow( pow(radius,3.0) + pow(q.getRadius(),3.0), 1.0/3.0 );
 
 	q.alive = false;
 }
 
-void Particle::incrementForce(const Vector3D & my_F){
+void Particle::add_force(const Vector3D & my_F){
 	F += my_F;
 }
 
-void Particle::addMagneticForce(const Vector3D & B, double dt){
+void Particle::add_magnetic_force(const Vector3D &B, double dt){
 	if(F.is_zero() and dt > 1e-19){
-		incrementForce(charge * (v^B));
+		add_force(charge*(v^B));
 	}else if(dt > 1e-19){
-		incrementForce(charge * (v^B).rotate(v^F, asin(dt * F.norm()/(2*gamma() * mass * v.norm()))));
+		add_force(charge*(v^B).rotate(v^F, asin(dt * F.norm()/(2*gamma() * mass * v.norm()))));
 	}
 }
 
 double Particle::gamma(void) const{
-	return 1/(sqrt(1-v.norm2()/pow(C, 2)));
+	return 1.0/(sqrt(1.0-v.norm2()/(C*C)));
 }
 
 double Particle::energy(void) const{
-	return this->gamma() * mass * pow(C, 2);
+	return gamma()*mass*C*C;
 }
 
 std::ostream& operator<<(std::ostream& output, Particle const& particle){                 
-	output << "Mass (GeV/c^2) : " << particle.getMass() * (C*C/GeV) * 2 << std::endl 
+	output << "Mass (GeV/c^2) : " << particle.getMass() * (C*C/GeV) * 2.0 << std::endl 
 	<< "Position : " << *(particle.getPosition()) << std::endl
 	// << "Radius : " << particle.getRadius() << std::endl
 	<< "Charge : " << particle.getCharge() << std::endl

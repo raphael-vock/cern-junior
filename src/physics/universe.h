@@ -1,6 +1,7 @@
 #ifndef UNIVERSE_H
 #define UNIVERSE_H
 
+#include <vector>
 #include "../vector3d/vector3d.h"
 #include "particle.h"
 #include "node.h"

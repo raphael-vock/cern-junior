@@ -1,11 +1,7 @@
 #ifndef VECTOR3D_H
 #define VECTOR3D_H
 
-#include <iostream>
 #include <array>
-#include <initializer_list>
-#include <cmath>
-#include <random>
 
 class Vector3D{
 	private:

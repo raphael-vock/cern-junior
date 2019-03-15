@@ -1,5 +1,9 @@
-#include "vector3d.h"
+#include <iostream>
+#include <initializer_list>
+#include <random>
 #include <cmath>
+
+#include "vector3d.h"
 
 const int DIV_BY_ZERO(0);
 

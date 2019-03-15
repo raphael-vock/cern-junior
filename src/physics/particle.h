@@ -71,22 +71,20 @@ class Particle{
 		Vector3D getMomentum(void) const;
 		const Vector3D* getForce(void) const;
 		
-		void incrementForce(const Vector3D & my_F);
-		void addMagneticForce(const Vector3D& B, double dt);
+		void reset_force(void); // sets force to zero-vector
+		void add_force(const Vector3D & my_F);
+		void add_magnetic_force(const Vector3D& B, double dt);
+		void add_gravitational_force(Particle& P) const; // increments force of P by the gravitational force exerted by *this
 
 		double gamma(void) const;
 		double energy(void) const;
 
-		void barycenter(const Particle& P); // turns P into a particle whose mass is the sum of both particle's masses
-								
-		void increment_gravity(Particle& P) const; // increments force of P by the gravitational force exerted by *this
-
-		void resetForce(void); // sets force to zero-vector
+		void average_particle(const Particle& Q); // returns the particle whose mass is the sum of the two masses and whose position is their barycenter
 
 		bool is_touching(const Particle& q) const;
 
-		void evolve(double dt);
 		void swallow(Particle &q);
+		void evolve(double dt);
 };
 
 std::ostream& operator<<(std::ostream& output, Particle const& particle);
