@@ -8,9 +8,9 @@ class Universe{
 	private:
 		std::vector<Particle*> particle_list;
 		Box domain;
-		Node tree;
 
 	public:
+		Node tree;
 		int N = 0;
 
 		Universe(Box my_domain) : domain(my_domain), tree(my_domain){}

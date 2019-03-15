@@ -8,12 +8,15 @@
 #include "glsphere.h"
 #include "canvas.h"
 
+#include "node.h"
+
 typedef std::array<double,3> RGB;
 
 class OpenGLView : public Canvas{
 	public:
 		// drawing methods, inherited from Canvas
 		virtual void draw(const Content &to_draw) override;
+		void draw_cubes(const Node tree);
 
 		// initalization methods
 		void init();

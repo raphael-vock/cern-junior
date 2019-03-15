@@ -14,23 +14,24 @@ int main(int argc, char* argv[]){
 	Vector3D origin(-20.0,-20.0,-20.0);
 	Universe Omega(origin,40,40,40);
 
-	double M(1e5);// mass of sun
+	double M(1e3);// mass of sun
 	double R(1.5);// radius of sun
 
-	double m(0.15);// mass of asteroids
-	double r(0.015);// mass of asteroids
-	int N(5e4);// number of asteroids
+	double m(0.1);// mass of asteroids
+	double r(0.01);// mass of asteroids
+	int N(1e4);// number of asteroids
 
 	// creating the sun...
 	/* Omega.insert( */
 	/* 	0,0,0, */
 	/* 	0,0,0, */
 	/* 	M, */
+	/* 	0.0, */
 	/* 	R */
 	/* ); */
 
 	std::random_device gen;
-	std::normal_distribution<double> distance(10*R, 2*R);
+	std::normal_distribution<double> distance(5*R, 3*R);
 	std::uniform_real_distribution<double> angle(0.0, 2*M_PI);
 
 	// asteroids...
@@ -39,7 +40,7 @@ int main(int argc, char* argv[]){
 		double theta(angle(gen));
 		Vector3D x(d*sin(theta), d*cos(theta), 0.0);
 		Vector3D v(cos(theta), -sin(theta), 0.0);
-		v *= sqrt(1.25*Particle::G*N*m/d);
+		v *= sqrt(Particle::G*m*N/d);
 		Omega.insert(x,v,m,0,r);
 	}
 

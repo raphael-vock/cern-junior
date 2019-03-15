@@ -2,11 +2,26 @@
 #include "vertex_shader.h"
 #include "content.h"
 
+void OpenGLView::draw_cubes(const Node tree){
+	Box domain(tree.domain);
+
+	QMatrix4x4 matrix;// identity by default
+	std::array<double,3> origin(domain.origin.getCoords());
+
+	matrix.translate(origin[0],origin[1],origin[2]);
+	matrix.scale(domain.height/2);
+	matrix.translate(1,1,1);
+	drawCube(matrix,{0.0,1.0,0.0});
+	if(tree.type == Node::INT) for(Node* child : tree.children) draw_cubes(*child);
+}
+
 void OpenGLView::draw(const Content &to_draw){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear window
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);// skeleton polygons
 
-	QMatrix4x4 matrix;
+	draw_cubes(to_draw.getUniverse()->tree);
+	QMatrix4x4 matrix;// identity by default
+	
 	for(Particle* p : *to_draw.getUniverse()->getParticle_list()){
 		if(p->alive){
 			std::array<double,3> coords(p->getPosition()->getCoords());

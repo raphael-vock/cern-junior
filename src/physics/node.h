@@ -11,17 +11,17 @@ class Node;
 
 class Node{
 	private:
-		std::array<Node*,8> children;
-		Box domain;
 		Particle* tenant;
 
-		enum node_type { INT, EXT, EMPTY };
-		node_type type;
 
 		Particle virtual_particle; // the theoretical particle that represents the cell,
 						   // i.e. its mass is the total mass of the particles in the cell
 						   // and its position is their barycenter
 	public:
+		enum node_type { INT, EXT, EMPTY };
+		node_type type;
+		std::array<Node*,8> children;
+		Box domain;
 		Node(Box my_Box) : domain(my_Box), type(EMPTY), virtual_particle(){}
 
 		void subdivide(void);
