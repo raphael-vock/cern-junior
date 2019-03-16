@@ -42,9 +42,9 @@
 Mais le problème fondamental est le suivant : un repère sphérique est intextricablement lié à la donnée d'un point $O$ considéré comme l'origine. Pour écrire un constructeur sphérique sans ambiguité il serait donc nécessaire :
 \begin{itemize}
 \item ou bien de faire un choix canonique de $O$ qui ne changerait pas du début à la fin
-\item ou bien de préciser $O$ en passant sa valeur (ou éventuellement son adresse) en argument.
+\item ou bien de préciser $O$ en le passant comme argument.
 \end{itemize}
-Si l'on choisit la première option, l'unique avantage des sphériques serait perdue car on ne serait plus en mesure de choisir l'origine à notre gré pour simplifier, entre autres, des expressions de force (e.g. en choisissant $O$ l'origine d'un champ de force central). Mais la deuxième option serait coûteuse à implémenter et lourde à utiliser pour des avantages qui finalement n'en vaudraient pas le coup.
+Si l'on choisit la première option, l'unique avantage des sphériques serait perdue car on ne serait plus en mesure de choisir l'origine à notre gré pour simplifier, entre autres, des expressions de force (e.g. en choisissant $O$ l'origine d'un champ de force central). Mais la deuxième option serait coûteuse à implémenter et lourde à utiliser, pour des avantages qui finalement n'en vaudraient pas le coup.
 
 \subsection{Surcharge des opérateurs}
 \noindent \textbf{(P4.3)}
@@ -64,12 +64,12 @@ Si l'on choisit la première option, l'unique avantage des sphériques serait pe
 
 \subsection{Facteur gamma, énergie}
 \noindent \textbf{(P5.1)}
-L'implémentation du facteur gamma et de l'énergie dans la classe \T{Particle} peut–être accomplie par un attribut ou par une méthode. Chacun présente des avantages et des inconvénients.
+L'implémentation du facteur gamma et de l'énergie dans la classe \T{Particle} peut être accomplie par un attribut ou par une méthode. Chacun présente des avantages et des inconvénients.
 
 \begin{itemize}
 
 \item \textbf{Sous forme d'attribut:}
-\subitem $\oplus$ Leur valeur serait calculée une et une seule fois, donc une même grandeur ne serait jamais calculée deux fois inutilement.
+\subitem $\oplus$ Leur valeur serait calculée une et une seule fois, donc une même valeur ne serait jamais calculée deux fois inutilement.
 \subitem $\ominus$ Leur valeur devrait être calculée systématiquement à chaque mise-à-jour de l'instance. Donc eventuellement même si elle ne servira jamais.
 \subitem $\ominus$ Rajouter des attributs, c'est augmenter le poids des instances.
 \subitem $\ominus$ Conceptuellement c'est un non sens ; voir ci-dessous.
@@ -82,6 +82,6 @@ L'implémentation du facteur gamma et de l'énergie dans la classe \T{Particle} 
 \subitem $\ominus$ \ldots quitte à effectuer inutilement plusieurs fois le même calcul.
 \end{itemize}
 \bigskip
-Certes, il s'agit de calculs simples avec des \double\ donc les arguments de complexité et de poids sont probablement négligeables pour un ordinateur moderne. Moyennant le pour et le contre, et en se focalisant surtout sur la clarté conceptuelle, \textbf{nous avons finalement opté pour des méthodes.}
+Certes, il s'agit de calculs simples avec des \double\ donc les arguments de complexité et de poids sont probablement négligeables pour un ordinateur moderne. Moyennant le pour et le contre, et en se focalisant surtout sur la clarté conceptuelle, \textbf{nous avons opté pour des méthodes.}
 
 \end{document}
