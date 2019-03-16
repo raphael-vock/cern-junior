@@ -11,11 +11,11 @@ int main(void){
 	Vector3D v(2.6, 3.5, 4.1);
 	Vector3D w(3.9, 3.8, 3.7);
 	
-	cout << "Si :\n u = " << u;
+	cout << "If:\n u = " << u;
 	cout << "\n v = " << v;
 	cout << "\n w = " << w;
 
-	cout << "\nAlors :";
+	cout << "\nThen :";
 	cout << "\n u+v+w = " << u+v+w;
 	cout << "\n u-v = " << u-v;
 	cout << "\n 3.u = " << 3.0*u;
@@ -25,7 +25,7 @@ int main(void){
 	cout << "\n |u| = " << u.norm();
 	cout << "\n |v|^2 = " << v.norm2();
 	cout << "\n |v| = " << v.norm();
-	cout << "\n unitaire(v) = " << v.unitary();
+	cout << "\n unitary(v) = " << v.unitary();
 	cout << "\n u.(v^w) = " << Vector3D::mixed_prod(u,v,w);
 
 	cout << "\n\n";
