@@ -4,7 +4,7 @@ CONFIG += \
 
 CONFIG -= app_bundle
 
-TARGET = console.out
+TARGET = vector3d_test.out
 
 INCLUDEPATH += \
 	../../vector3d \

@@ -117,13 +117,12 @@ double Particle::energy(void) const{
 }
 
 std::ostream& operator<<(std::ostream& output, Particle const& particle){                 
-	output << "Mass (GeV/c^2) : " << particle.getMass() * (C*C/GeV) * 2.0 << std::endl 
-	<< "Position : " << *(particle.getPosition()) << std::endl
-	// << "Radius : " << particle.getRadius() << std::endl
-	<< "Charge : " << particle.getCharge() << std::endl
-	// << "Color : " << particle.getColor()[0] << " " << particle.getColor()[1] << " " << particle.getColor()[2] << std::endl
-	<< "Force : " << *(particle.getForce()) << std::endl
-	<< "Energy (GeV) : " << particle.energy()/GeV << std::endl
-	<< "Gamma : " << particle.gamma();
+	output << "  Mass (GeV/c^2) : " << particle.getMass() * (C*C/GeV) * 2.0
+	<< "\n  Position : " << *(particle.getPosition())
+	<< "\n  Charge : " << particle.getCharge()
+	<< "\n  Force : " << *(particle.getForce())
+	<< "\n  Energy (GeV) : " << particle.energy()/GeV
+	<< "\n  Gamma : " << particle.gamma()
+	<< std::endl;
 	return output; 
 }      

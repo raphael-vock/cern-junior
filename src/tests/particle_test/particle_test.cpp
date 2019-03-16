@@ -3,49 +3,36 @@
 #include "../../physics/particle.h"
 #include "../../physics/physical_constants.h"
 
-void time(){
-	time_t tt;
-	struct tm* ti;
-	time(&tt);
-	ti = localtime(&tt);
-	std::cout << asctime(ti);
-}
+using namespace std;
 
 int main(){
-	/* std::ofstream output; */
-	/* output.open("test_particles.txt", std::ios::out|std::ios::app); */
+	double dt(1e-11);
 
-	// std::ostream output(std::cout);// la console suffit pour l'instant, pas envie de polluer le ~/ 
-	// auto start = std::chrono::system_clock::now();
-	// output << start << std::endl;
+	cout << "Particle 1:\n";
 
-	std::cout << "Creation of two particles : " << std::endl
-	<< "One particle : " << std::endl; 
-	Particle p1(3.00984, -0.391837, 0, -210200, -2.64754e+08, 0, (GeV/C*C) * 0.938272, 1.60217653e-19);
-	std::cout << p1 << std::endl << std::endl
-	<< "One particle : " << std::endl;
+	Particle p1(3.00984, -0.391837, 0, -210200, -2.64754e+08, 0, GeV/(C*C) * 0.938272, 1.60217653e-19);
+
+	cout << p1;
+	cout << "\nParticle 2:\n";
 	Particle p2(2.99016, -0.391837, 0, 210200, -2.64754e+08, 0, (GeV/C*C) * 0.938272, 1.60217653e-19);
-	std::cout << p2 << std::endl << std::endl;
+	cout << p2 << "\n";
 
-	std::cout << "Adding a magnetic force B=0 0 7 (dt=1e-11) : " << std::endl; 
-	Vector3D B(0, 0, 7);
-	std::cout << "To p1 : " << std::endl;
-	std::cout << "  F0 = " << *(p1.getForce()) << std::endl;
-	p1.add_magnetic_force(B, 1e-11);
-	std::cout << "  F1 = " << *(p1.getForce()) << std::endl;
+	cout << "Applying a magnetic force B = (0,0,7) over time dt = dt.\n";
+	Vector3D B(0,0,7);
+	p1.add_magnetic_force(B, dt);
+	p2.add_magnetic_force(B, dt);
+	cout << "Resultant forces on particles 1 and 2:\n";
+	cout << "  F_1 = " << *(p1.getForce());
+	cout << "\n\n  F_2 = " << *(p2.getForce()) << "\n\n";
 
-	std::cout << "To p2 : " << std::endl;
-	std::cout << "  F0 = " << *(p2.getForce()) << std::endl;
-	p2.add_magnetic_force(B, 1e-11);
-	std::cout << "  F1 = " << *(p2.getForce()) << std::endl;
-	std::cout << std::endl;
+	p1.evolve(dt);
+	p2.evolve(dt);
 
-	std::cout << "Particles move once : " << std::endl;
-	std::cout << "One particle : " << std::endl;
-	p1.evolve(1e-11);
-	std::cout << p1 << std::endl;
-	std::cout << "One particle : " << std::endl;
-	p2.evolve(1e-11);
-	std::cout << p2 << std::endl;
-	/* output.close(); */
+	cout << "Updating particle data:" << endl;
+	cout << "Particle 1:\n";
+	cout << p1;
+	cout << "\nParticle 2:\n";
+	cout << p2;
+	cout << endl;
+	return 0;
 }
