@@ -16,7 +16,7 @@
 
 \begin{document}
 \maketitle
-\section{La classe Vector3D}
+\section{La classe \T{Vector3D}}
 \subsection{Conception}
 \noindent \textbf{(P1.1)} Les points et vecteurs de l'espace euclidien sont représentés au moyen d'instances de la classe \V\ dont les attributs \T{x}, \T{y}, \T{z} (de type \double) sont leurs coordonnées cartésiennes. Celles-ci sont des attributs privés, mais tout le reste est publique. Voici les opérations que nous avons implémentées en premier :
 
@@ -26,18 +26,18 @@
 
 \item \T{norm()} et \T{norm2()} retournent la norme euclidienne (resp. norme euclidienne au carré).
 
-\item \T{distance(x,y)} et \T{distance2(x,y)} sont des méthodes statiques qui retournent la distance euclidienne (resp. distance euclidienne au carré).
+\item \T{distance(x,y)} et \T{distance2(x,y)} sont des méthodes statiques qui retournent la distance euclidienne (resp. distance euclidienne au carré) entre les deux arguments.
 
-\item \T{unitary()} est une méthode qui retourne le vecteur directeur de même sens et de même direction (et lance une exception si l'instance est nulle ; voir point suivant).
+\item \T{unitary()} est une méthode qui retourne le vecteur directeur de même sens et de même direction (et lance une exception si l'instance est le vecteur nul ; voir point suivant).
 
-\item \T{is\_zero()} est une méthode qui retourne un bool indiquant si l'instance est plus petite (en norme au carré) qu'une (petite) constante \T{EPSILON}. 
+\item \T{is\_zero()} est une méthode qui retourne un bool indiquant si l'instance est plus petite (en norme au carré) qu'une (petite) constante \T{EPSILON} de type \double.
 \end{itemize}
 
 \subsection{Constructeur, constructeur de copie}
-\noindent \textbf{(P4.1)} L'unique constructeur de la classe prend en argument trois \double\ (nuls par défaut) et initialise un \V\ avec les coordonnées cartésiennes précisées. En l'absence d'attributs pointeurs, le constructeur de copie minimal par défaut réalise exactement ce que l'on attend, donc nous n'en avons pas defini.
+\noindent \textbf{(P4.1)} L'unique constructeur de la classe prend en argument trois \double\ (nuls par défaut) et initialise un \V\ avec les coordonnées cartésiennes précisées. En l'absence d'attributs pointeurs, le constructeur de copie minimal par défaut réalise exactement ce que l'on attend, donc \textbf{nous n'avons pas défini de constructeur de copie.}
 
 \subsection{Coordonnées sphériques}
-\noindent \textbf{(P4.2)} Nous n’avons pas implémenté de constructeur en coordonnées sphériques. Avant tout, l’ajout de ce dernier serait un peu technique au niveau du prototypage de car nous aurions \textit{a priori} deux constructeurs aux protoypes identiques. Ce n'est pas un problème incontournable ; on pourrait, par exemple, écrire un seul et unique constructeur dont le quatrième argument est un \T{bool} (\T{false} par défaut) qui précise si les arguments donnés doivent être compris comme des coordonnées sphériques ou sinon cartésiennes.
+\noindent \textbf{(P4.2)} \textbf{Nous n’avons pas implémenté de constructeur en coordonnées sphériques.} Avant tout, l’ajout de ce dernier serait un peu technique au niveau du prototypage de car nous aurions \textit{a priori} deux constructeurs aux protoypes identiques. Ce n'est pas un problème incontournable ; on pourrait, par exemple, écrire un seul et unique constructeur dont le quatrième argument est un \T{bool} (\T{false} par défaut) qui précise si les arguments donnés doivent être compris comme des coordonnées sphériques ou sinon cartésiennes.
 
 Mais le problème fondamental est le suivant : un repère sphérique est intextricablement lié à la donnée d'un point $O$ considéré comme l'origine. Pour écrire un constructeur sphérique sans ambiguité il serait donc nécessaire :
 \begin{itemize}
@@ -51,13 +51,37 @@ Si l'on choisit la première option, l'unique avantage des sphériques serait pe
 \begin{itemize}
 \item Nous avons surchargé les opérateurs d'auto-affectation \T{+=}, \T{-=}, \T{*=} correspondant à l'addition (resp. soustraction) vectorielle et la multiplication par un scalaire. Celles-ci retournent le résultat de l'affectation pour optimiser certains calculs par la suite.
 
-\item À partir de ces derniers nous avons surchargé les opérateurs binaires \T{+}, \T{-}, \T{*}.
+\item À partir de ces derniers nous avons surchargé les opérateurs binaires \T{+}, \T{-}, \T{*} correspondant aux opérations vectorielles usuelles.
 
 \item Les opérateurs binaires \T{|} et \T{$\wedge$} retournent respectivement le produit scalaire euclidien et le produit vectoriel.
 
-\item Accessoirement, la fonction \T{mixed\_prod(u,v,w)} retourne le produit mixte des trois arguments, c'est-à-dire le scalaire \T{u|(v$\wedge$w)}.
+\item L'opérateur de comparaison \T{==} est défini à partir de la méthode \T{is\_zero()} (cf. \S1.1). L'opérateur \T{!=} retourne la négation logique de \T{==}.
 
-\item L'opérateur de comparaison \T{==} est défini à partir de la méthode \T{is\_zero()} (cf. \S1.1). L'opérateur \T{!=} retourne la négation logique de \T{==};
+\item L'opérateur d'indexage \T{[]} est surchargé pour permettre un accès direct (mais protégé) à chaque coordonnée sans devoir passer par \T{getCoords()}. Ainsi \T{u[0]}, \T{u[1]}, \T{u[1]} retournent des \textit{copies} de \T{x}, \T{y}, \T{z} respectivement. Une exception est bien-sûr lancée si l'indice n'est pas \T{0}, \T{1} ou \T{2}.
 \end{itemize}
+
+\section{La classe \T{Particle}}
+
+\subsection{Facteur gamma, énergie}
+\noindent \textbf{(P5.1)}
+L'implémentation du facteur gamma et de l'énergie dans la classe \T{Particle} peut–être accomplie par un attribut ou par une méthode. Chacun présente des avantages et des inconvénients.
+
+\begin{itemize}
+
+\item \textbf{Sous forme d'attribut:}
+\subitem $\oplus$ Leur valeur serait calculée une et une seule fois, donc une même grandeur ne serait jamais calculée deux fois inutilement.
+\subitem $\ominus$ Leur valeur devrait être calculée systématiquement à chaque mise-à-jour de l'instance. Donc eventuellement même si elle ne servira jamais.
+\subitem $\ominus$ Rajouter des attributs, c'est augmenter le poids des instances.
+\subitem $\ominus$ Conceptuellement c'est un non sens ; voir ci-dessous.
+
+\item \textbf{Sous forme de méthode:}
+\subitem $\oplus$ La masse et la vitesse sont des grandeurs \textit{essentielles} d'une particule tandis que le gamma et l'énergie en découlent via des fonctions mathématiques. Conceptuellement, les attributs d'une classe devraient devraient être reservées aux variables \textit{libres} et les méthodes aux variables \textit{liées}.
+
+\subitem $\oplus$ Stockées sous forme de méthodes, on calcule leur valeur précisément lorsqu'on en a besoin, donc on ne stocke jamais d'information redondante.
+
+\subitem $\ominus$ \ldots quitte à effectuer inutilement plusieurs fois le même calcul.
+\end{itemize}
+\bigskip
+Certes, il s'agit de calculs simples avec des \double\ donc les arguments de complexité et de poids sont probablement négligeables pour un ordinateur moderne. Moyennant le pour et le contre, et en se focalisant surtout sur la clarté conceptuelle, \textbf{nous avons finalement opté pour des méthodes.}
 
 \end{document}

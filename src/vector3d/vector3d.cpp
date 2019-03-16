@@ -51,7 +51,8 @@ Vector3D& Vector3D::operator+=(const Vector3D &v){
 }
 
 Vector3D Vector3D::operator+(Vector3D v) const{
-	return v += *this;
+	v += *this;
+	return v;
 }
 
 Vector3D& Vector3D::operator-=(const Vector3D &v){
@@ -142,8 +143,7 @@ double Vector3D::mixed_prod(const Vector3D &u, const Vector3D &v, const Vector3D
 }
 
 std::ostream& operator<<(std::ostream& output, Vector3D const& v){
-	std::array<double,3> coords(v.getCoords());
-	output << coords[0] << "  " << coords[1] << "  " << coords[2];
+	output << v[0] << "  " << v[1] << "  " << v[2];
 	return output;
 }
 
