@@ -51,7 +51,7 @@ void Node::increment_gravity(Particle& P) const{
 		return;
 	}
 
-	double ratio(pow(domain.volume(),1.0/3.0) / Vector3D::distance(*P.getPosition(), *virtual_particle.getPosition()) );
+	double ratio(pow(domain.volume(),1.0/3.0) / Vector3D::distance(P.getPosition(), virtual_particle.getPosition()) );
 
 	if(ratio <= THETA) virtual_particle.add_gravitational_force(P);
 	else for(Node* child : children) child->increment_gravity(P);
@@ -78,6 +78,6 @@ void Node::print_type(void){
 
 void Node::info(void) const{
 	std::cout << "Node info:\n";
-	std::cout << *virtual_particle.getPosition() << std::endl;
+	std::cout << virtual_particle.getPosition() << std::endl;
 	std::cout << "Total mass = " << virtual_particle.getMass() << "\n";
 }

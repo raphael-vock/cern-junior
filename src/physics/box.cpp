@@ -5,7 +5,7 @@ double Box::volume(void) const{
 }
 
 bool Box::contains(Particle &x){
-	std::array<double,3> point_coords(x.getPosition()->getCoords());
+	std::array<double,3> point_coords(x.getPosition().getCoords());
 	std::array<double,3> origin_coords(origin.getCoords());
 
 	double delta_x(point_coords[0] - origin_coords[0]);

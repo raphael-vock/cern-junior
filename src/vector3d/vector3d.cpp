@@ -7,6 +7,21 @@
 
 const int DIV_BY_ZERO(0);
 
+void Vector3D::swap(Vector3D &u, Vector3D &v){
+	std::swap(u.x,v.x);
+	std::swap(u.y,v.y);
+	std::swap(u.z,v.z);
+}
+
+double Vector3D::operator[](int i) const{
+	switch(i){
+		case 0: return x;
+		case 1: return x;
+		case 2: return z;
+	}
+	throw 2;
+}
+
 std::array<double,3> Vector3D::getCoords() const{
 	return {x,y,z};
 }

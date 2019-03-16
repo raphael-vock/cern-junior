@@ -66,13 +66,12 @@ class Particle{
 
 		RGB getColor(void) const;
 
-		const Vector3D* getPosition(void) const;
-		const Vector3D* getVelocity(void) const;
-		Vector3D getMomentum(void) const;
-		const Vector3D* getForce(void) const;
+		Vector3D getPosition(void) const;
+		Vector3D getVelocity(void) const;
+		Vector3D getForce(void) const;
 		
 		void reset_force(void); // sets force to zero-vector
-		void add_force(const Vector3D & my_F);
+		void add_force(const Vector3D& my_F);
 		void add_magnetic_force(const Vector3D& B, double dt);
 		void add_gravitational_force(Particle& P) const; // increments force of P by the gravitational force exerted by *this
 

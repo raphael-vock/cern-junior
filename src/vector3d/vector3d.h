@@ -12,8 +12,11 @@ class Vector3D{
 		// Constructor, getters, setters:
 		Vector3D(double a = 0, double b = 0, double c = 0) : x(a), y(b), z(c){}
 
-		// void setCoords(double a, double b, double c); // intialise instance of Vector3D to the given coords
+		double operator[](int i) const;
+
 		std::array<double,3> getCoords(void) const; // return coords in an array
+
+		static void swap(Vector3D &u, Vector3D &v);
 
 		// Algebraic operators:
 		Vector3D operator-(void) const; // returns the additive inverse
@@ -46,10 +49,6 @@ class Vector3D{
 		// Constants:
 		static constexpr double EPSILON = 1e-5;
 		static const Vector3D ZERO_VECTOR;
-		/* // the three unit vectors: */
-		/* const extern Vector3D X_VECTOR; */
-		/* const extern Vector3D Y_VECTOR; */
-		/* const extern Vector3D Z_VECTOR; */
 };
 
 Vector3D operator*(const double &, const Vector3D&); // scalar multiplication, with the scalar coming BEFORE

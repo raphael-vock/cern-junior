@@ -9,7 +9,7 @@ void OpenGLView::draw(const Content &to_draw){
 	QMatrix4x4 matrix;
 	for(Particle* p : *to_draw.getUniverse()->getParticle_list()){
 		if(p->alive){
-			std::array<double,3> coords(p->getPosition()->getCoords());
+			std::array<double,3> coords(p->getPosition().getCoords());
 
 			matrix.translate(coords[0], coords[1], coords[2]);
 			matrix.scale(p->getRadius());

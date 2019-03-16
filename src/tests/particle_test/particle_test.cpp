@@ -23,8 +23,8 @@ int main(){
 	p1.add_magnetic_force(B, dt);
 	p2.add_magnetic_force(B, dt);
 	cout << "Resultant forces on particles 1 and 2:\n";
-	cout << "  F_1 = " << *(p1.getForce());
-	cout << "\n\n  F_2 = " << *(p2.getForce()) << "\n\n";
+	cout << "  F_1 = " << p1.getForce();
+	cout << "\n\n  F_2 = " << p2.getForce() << "\n\n";
 
 	p1.evolve(dt);
 	p2.evolve(dt);

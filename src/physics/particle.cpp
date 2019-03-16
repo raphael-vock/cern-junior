@@ -23,20 +23,16 @@ RGB Particle::getColor(void) const{
 	return color;
 }
 
-const Vector3D* Particle::getPosition(void) const{
-	return &r;
+Vector3D Particle::getPosition(void) const{
+	return r;
 }
 
-const Vector3D* Particle::getVelocity(void) const{
-	return &v;
+Vector3D Particle::getVelocity(void) const{
+	return v;
 }
 
-Vector3D Particle::getMomentum(void) const{
-	return mass * v;
-}
-
-const Vector3D* Particle::getForce(void) const{
-	return &F;
+Vector3D Particle::getForce(void) const{
+	return F;
 }
 
 double Particle::getCharge(void) const{
@@ -71,10 +67,10 @@ void Particle::evolve(double dt){
 	if(f > 1.0) f = 1.0;
 	color = {0.1+f, 0.3+f*f*f, 1.0};
 
-	std::swap(v, v_p);
+	Vector3D::swap(v, v_p);
 	v = v_p + (dt / (gamma()*mass)) * F;
 
-	std::swap(r, r_p);
+	Vector3D::swap(r, r_p);
 	r = r_p + (dt * v);
 	reset_force();
 }
@@ -83,10 +79,10 @@ void Particle::swallow(Particle& q){
 	double q_mass(q.getMass());
 
 	v *= mass;
-	v += q_mass*(*q.getVelocity());
+	v += q_mass*(q.getVelocity());
 
 	r *= mass;
-	r += q_mass*(*q.getPosition());
+	r += q_mass*(q.getPosition());
 
 	mass += q_mass;
 
@@ -121,13 +117,13 @@ double Particle::energy(void) const{
 }
 
 std::ostream& operator<<(std::ostream& output, Particle const& particle){                 
-	output << "  Position : " << *particle.getPosition()
-	<< "\n  Velocity : " << *particle.getVelocity()
+	output << "  Position : " << particle.getPosition()
+	<< "\n  Velocity : " << particle.getVelocity()
 	<< "\n  Energy (GeV) : " << particle.energy()/GeV
 	<< "\n  Gamma : " << particle.gamma()
 	<< "\n  Mass (GeV/c^2) : " << particle.getMass() * (C*C/GeV)
 	<< "\n  Charge : " << particle.getCharge()
-	<< "\n  Force : " << *particle.getForce()
+	<< "\n  Force : " << particle.getForce()
 	<< std::endl;
 	return output; 
 }      

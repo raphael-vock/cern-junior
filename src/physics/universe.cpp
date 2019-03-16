@@ -44,7 +44,7 @@ void Universe::print_tree(void) const{
 void Universe::print_particles(void) const{
 	for(size_t i(0); i <= particle_count-1; ++i){
 		std::cout << "-------------\nParticle " << i+1 << ": ";
-		std::cout << *particle_list[i]->getPosition() << std::endl;
-		std::cout << "F = " << *particle_list[i]->getForce() << "\n";
+		std::cout << particle_list[i]->getPosition() << std::endl;
+		std::cout << "F = " << particle_list[i]->getForce() << "\n";
 	}
 }
