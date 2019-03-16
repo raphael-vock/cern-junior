@@ -9,6 +9,8 @@
 #include "../physics/physical_constants.h"
 #include "../physics/universe.h"
 
+using namespace phcst;
+
 int main(int argc, char* argv[]){
 	QApplication a(argc, argv);
 

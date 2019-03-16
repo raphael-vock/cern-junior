@@ -3,6 +3,8 @@
 
 #include "particle.h"
 
+using namespace phcst;
+
 int GRAVITATIONAL_SINGULARITY(1);
 
 double Particle::getMass(void) const{
@@ -70,7 +72,7 @@ void Particle::evolve(double dt){
 	color = {0.1+f, 0.3+f*f*f, 1.0};
 
 	std::swap(v, v_p);
-	v = v_p + (dt / mass) * F;
+	v = v_p + (dt / (gamma()*mass)) * F;
 
 	std::swap(r, r_p);
 	r = r_p + (dt * v);
@@ -101,11 +103,13 @@ void Particle::add_force(const Vector3D & my_F){
 }
 
 void Particle::add_magnetic_force(const Vector3D &B, double dt){
-	if(F.is_zero() and dt > 1e-19){
-		add_force(charge*(v^B));
-	}else if(dt > 1e-19){
-		add_force(charge*(v^B).rotate(v^F, asin(dt * F.norm()/(2*gamma() * mass * v.norm()))));
+	if(dt <= ZERO_TIME) return;
+	Vector3D magnetic_force(charge*(v^B));
+	Vector3D axis(v^magnetic_force);
+	if(not axis.is_zero()){
+		magnetic_force.rotate(axis,asin(dt*magnetic_force.norm()/(2*gamma()*mass*v.norm())));
 	}
+	add_force(magnetic_force);
 }
 
 double Particle::gamma(void) const{

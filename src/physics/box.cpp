@@ -26,7 +26,7 @@ Box Box::octant(bool right, bool back, bool top){
 	std::array<double,3> originCoords(origin.getCoords());
 
 	if(right) originCoords[0] += width*0.5;
-	if(back) originCoords[1] += height*0.5;
+	if(back) originCoords[1] += depth*0.5;
 	if(top) originCoords[2] += height*0.5;
 
 	return Box(originCoords[0], originCoords[1], originCoords[2], width*0.5, depth*0.5, height*0.5);
