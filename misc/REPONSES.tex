@@ -57,7 +57,7 @@ Si l'on choisit la première option, l'unique avantage des sphériques serait pe
 
 \item L'opérateur de comparaison \T{==} est défini à partir de la méthode \T{is\_zero()} (cf. \S1.1). L'opérateur \T{!=} retourne la négation logique de \T{==}.
 
-\item L'opérateur d'indexage \T{[]} est surchargé pour permettre un accès direct (mais protégé) à chaque coordonnée sans devoir passer par \T{getCoords()}. Ainsi \T{u[0]}, \T{u[1]}, \T{u[1]} retournent des \textit{copies} de \T{x}, \T{y}, \T{z} respectivement. Une exception est bien-sûr lancée si l'indice n'est pas \T{0}, \T{1} ou \T{2}.
+\item L'opérateur d'indexage \T{[]} est surchargé pour permettre un accès direct (mais protégé) à chaque coordonnée sans devoir passer par \T{getCoords()}. Ainsi \T{u[0]}, \T{u[1]}, \T{u[1]} retourne une \textit{copie} de \T{x}, \T{y}, \T{z} respectivement. Une exception est bien-sûr lancée si l'indice n'est pas \T{0}, \T{1} ou \T{2}.
 \end{itemize}
 
 \section{La classe \T{Particle}}
