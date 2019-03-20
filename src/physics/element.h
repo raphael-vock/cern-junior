@@ -5,14 +5,14 @@
 
 class Element {
 	private :
-	Vector3D pos_en; // entry position
-	Vector3D pos_ex; // exit position
+	Vector3D entry_point; // entry position
+	Vector3D exit_point; // exit position
 	double radius; // radius of the vaccum chamber
 	std::unique_ptr<Element> next_element; // points to the following element
 	
 	public :
-	Vector3D getPos_en(void) const;
-	Vector3D getPos_ex(void) const;
+	Vector3D getEntry_point(void) const;
+	Vector3D getExit_point(void) const;
 	double getRadius(void) const;
 
 	virtual double shortest_distance(const Particle& p) const = 0; // returns the distance between p and the optimal path
@@ -27,7 +27,7 @@ class Curve : public Element {
 	
 	public :
 	double shortest_distance(const Particle& p) const override;
-	Vector3D curv_center(void) const; // returns the center of curvature as a vector
+	Vector3D curvature_center(void) const; // returns the center of curvature as a vector
 
 	bool collision_edge(const Particle& p) const override;
 	Vector3D Vector_field(const Vector3D& pos); // returns the vector assigned at position pos in the vector field
