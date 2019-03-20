@@ -30,7 +30,7 @@
 
 \item \T{unitary()} est une méthode qui retourne le vecteur directeur de même sens et de même direction (et lance une exception si l'instance est le vecteur nul ; voir point suivant).
 
-\item \T{is\_zero()} est une méthode qui retourne un bool indiquant si l'instance est plus petite (en norme au carré) qu'une (petite) constante \T{EPSILON} de type \double.
+\item \T{is\_zero()} est une méthode qui retourne un bool indiquant si l'instance est plus petite (en norme au carré) qu'une (petite) constante de classe \T{EPSILON} de type \double.
 \end{itemize}
 
 \subsection{Constructeur, constructeur de copie}
@@ -57,7 +57,7 @@ Si l'on choisit la première option, l'unique avantage des sphériques serait pe
 
 \item L'opérateur de comparaison \T{==} est défini à partir de la méthode \T{is\_zero()} (cf. \S1.1). L'opérateur \T{!=} retourne la négation logique de \T{==}.
 
-\item L'opérateur d'indexage \T{[]} est surchargé pour permettre un accès direct (mais protégé) à chaque coordonnée sans devoir passer par \T{getCoords()}. Ainsi \T{u[0]}, \T{u[1]}, \T{u[1]} retourne une \textit{copie} de \T{x}, \T{y}, \T{z} respectivement. Une exception est bien-sûr lancée si l'indice n'est pas \T{0}, \T{1} ou \T{2}.
+\item L'opérateur d'indexage \T{[]} est surchargé pour permettre un accès direct (mais protégé) à chaque coordonnée sans devoir passer par \T{getCoords()}. Ainsi \T{u[0]}, \T{u[1]}, \T{u[2]} retourne une \textit{copie} de \T{x}, \T{y}, \T{z} respectivement. Une exception est bien-sûr lancée si l'indice n'est pas \T{0}, \T{1} ou \T{2}.
 \end{itemize}
 
 \section{La classe \T{Particle}}
@@ -75,7 +75,7 @@ L'implémentation du facteur gamma et de l'énergie dans la classe \T{Particle} 
 \subitem $\ominus$ Conceptuellement c'est un non sens ; voir ci-dessous.
 
 \item \textbf{Sous forme de méthode:}
-\subitem $\oplus$ La masse et la vitesse sont des grandeurs \textit{essentielles} d'une particule tandis que le gamma et l'énergie en découlent via des fonctions mathématiques. Conceptuellement, les attributs d'une classe devraient devraient être reservées aux variables \textit{libres} et les méthodes aux variables \textit{liées}.
+\subitem $\oplus$ La masse et la vitesse sont des grandeurs \textit{essentielles} d'une particule tandis que le gamma et l'énergie en découlent via des fonctions mathématiques. Conceptuellement, les attributs d'une classe devraient être reservées aux variables \textit{libres} et les méthodes aux variables \textit{liées}.
 
 \subitem $\oplus$ Stockées sous forme de méthodes, on calcule leur valeur précisément lorsqu'on en a besoin, donc on ne stocke jamais d'information redondante.
 
