@@ -44,7 +44,7 @@ class Element{
 
 		void link(Element &next_element);	
 
-		Vector3D center(void) const; // returns the center of circular element assuming curvature is finite
+		Vector3D center(void) const; // returns the center of circular element assuming curvature is non-zero
 
 		bool has_collided(const Particle& p) const; // returns true iff p has collided with the element's edge
 		bool has_left(const Particle& p) const; // returns true iff p has passed to the next element
