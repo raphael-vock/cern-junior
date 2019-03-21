@@ -32,16 +32,31 @@ bool Straight_element::is_on_edge(const Particle& p) const{
 }
 
 bool Curved_element::is_on_edge(const Particle& p) const{
-	Vector3D e3(0.0,0.0,1.0);
-	return ((p.getPosition() - curvature_center()) - (1.0/k) * (p.getPosition() - curvature_center()) - (p.getPosition() - curvature_center())[2]*e3).norm() > radius; 
+	return ((p.getPosition() - curvature_center()) - (1.0/k) * (p.getPosition() - curvature_center()) - (p.getPosition() - curvature_center())[2]*Vector3D::Z_VECTOR).norm() > radius; 
 }
 
 bool Curved_element::is_outside(const Particle& p) const{
-	Vector3D e3(0.0,0.0,1.0);
-	return Vector3D::mixed_prod(e3, p.getPosition(), exit_point) > 0;
+	return Vector3D::mixed_prod(Vector3D::Z_VECTOR, p.getPosition(), exit_point) > 0;
 }
 
 bool Straight_element::is_outside(const Particle& p) const{
-	Vector3D e3(0.0,0.0,1.0);
-	return Vector3D::mixed_prod(e3, p.getPosition(), exit_point) > 0;
+	return Vector3D::mixed_prod(Vector3D::Z_VECTOR, p.getPosition(), exit_point) > 0;
+}
+
+Vector3D Curved_element::electric_field(const Vector3D& position) const{
+	return Vector3D::ZERO_VECTOR;
+}
+
+Vector3D Straight_element::electric_field(const Vector3D& position) const{
+	switch(type) {
+		case MAGNETIC : return Vector3D::ZERO_VECTOR;
+		case ELECTRIC : return Vector3D::X_VECTOR; // temporary	
+	}
+}
+
+Vector3D Straight_element::magnetic_field(const Vector3D& position) const{
+	switch(type) {
+		case ELECTRIC : return Vector3D::ZERO_VECTOR; 
+		case MAGNETIC : return Vector3D::X_VECTOR; // temporary
+	}
 }
