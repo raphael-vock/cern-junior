@@ -1,27 +1,20 @@
 #include "../vector3d/vector3d.h"
 #include "../physics/particle.h"
-#include "element.h"
+
 #include <cmath>
 
+#include "element.h"
+
 using namespace basicvector;
+using namespace excptn;
 
-/* Vector3D Element::getEntry_point(void) const{ */
-/* 	return entry_point; */
-/* } */
-/* Vector3D Element::getExit_point(void) const{ */
-/* 	return exit_point; */
-/* } */
-/* double Element::getRadius(void) const{ */
-/* 	return radius; */
-/* } */
-
-/* double Straight_element::shortest_distance(const Particle& p) const{ // we use Heron's rule to find the height of the triangle p - entry_point - exit_point */
-/* 	double s = ((entry_point - p.getPosition()).norm() + (p.getPosition() - exit_point).norm() + (exit_point - entry_point).norm()); */ 
-/* 	return (2.0/(exit_point - entry_point).norm()) * sqrt(s * (s- (entry_point - p.getPosition()).norm()) * (s- (p.getPosition() - exit_point).norm()) * (s- (exit_point - entry_point).norm())); */
-/* } */
+void Element::link(Element &next_element){
+	if(exit_point != next_element.entry_point) throw NON_MATCHING_LINK_POINTS;
+	successor = &next_element;
+}
 
 Vector3D Element::center(void) const{
-	if(isinf(curvature)) throw 4;
+	if(isinf(curvature)) throw INFINITE_CURVATURE_CENTER;
 	Vector3D direction(exit_point - entry_point);
 	return 0.5*(entry_point + exit_point) + (1.0/curvature)*sqrt(1.0-curvature*curvature*direction.norm2()/4.0)*(direction.unitary()^Z_VECTOR);
 }

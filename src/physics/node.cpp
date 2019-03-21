@@ -1,4 +1,5 @@
 #include <cmath> // for pow
+#include <assert.h>
 
 #include "node.h"
 
@@ -10,6 +11,7 @@ void Node::subdivide(void){
 }
 
 bool Node::insert(Particle* my_particle){
+	assert(my_particle);
 	if(not domain.contains(*my_particle)) return false;
 	switch(type){
 		case INT:{

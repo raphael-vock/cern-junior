@@ -4,8 +4,9 @@
 #include <cmath>
 
 #include "vector3d.h"
+#include "../general/exceptions.h"
 
-const int DIV_BY_ZERO(0);
+using namespace excptn;
 
 void Vector3D::swap(Vector3D &u, Vector3D &v){
 	std::swap(u.x,v.x);
@@ -19,7 +20,7 @@ double Vector3D::operator[](int i) const{
 		case 1: return y;
 		case 2: return z;
 	}
-	throw 2;
+	throw BAD_VECTOR3D_ACCESS;
 }
 
 std::array<double,3> Vector3D::getCoords() const{
@@ -105,7 +106,7 @@ bool Vector3D::operator!=(const Vector3D& v) const{
 }
 
 Vector3D Vector3D::unitary(void) const{
-	if(this->is_zero()) throw DIV_BY_ZERO;
+	if(this->is_zero()) throw ZERO_VECTOR_UNITARY;
 	else return (*this) * (1/this->norm());
 }
 

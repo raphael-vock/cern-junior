@@ -5,6 +5,7 @@
 #include <vector>
 #include <cmath> // for isinf
 
+#include "../general/exceptions.h"
 #include "../vector3d/vector3d.h"
 #include "../physics/particle.h"
 
@@ -17,22 +18,24 @@ class Element{
 		Vector3D exit_point; // exit position
 
 		double radius; // radius of the vaccum chamber
-		double curvature; // radial curvature (potentially infinite)
+		double curvature; // radial curvature (potentially infinite in the case of a straight line)
 
-		std::shared_ptr<Element> successor; // points to the following element
+		Element* successor; // points to the following element
 
 		std::vector<std::unique_ptr<Particle>> particle_list; // list of particles contained inside
 
 	public:
 		static constexpr double INFINITE_RADIUS = std::numeric_limits<double>::infinity();
 
-		Element(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<Element> my_successor) :
+		Element(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor) :
 			entry_point(entry),
 			exit_point(exit),
 			radius(my_radius),
 			curvature(my_curvature),
 			successor(my_successor)
 		{}
+
+		void link(Element &next_element);	
 
 		Vector3D center(void) const; // returns the center of circular element assuming curvature is finite
 
@@ -47,7 +50,7 @@ class Electric_element : public Element{
 	private:
 		VectorField E; // electric field
 	public:
-		Electric_element(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<Element> my_successor, VectorField electric_field) :
+		Electric_element(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor, VectorField electric_field) :
 			Element(entry,exit,my_radius,my_curvature,my_successor),
 			E(electric_field)
 		{}
@@ -58,7 +61,7 @@ class Magnetic_element : public Element{
 	private:
 		VectorField B; // magnetic field
 	public:
-		Magnetic_element(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<Element> my_successor, VectorField magnetic_field) :
+		Magnetic_element(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor, VectorField magnetic_field) :
 			Element(entry,exit,my_radius,my_curvature,my_successor),
 			B(magnetic_field)
 		{}
@@ -67,5 +70,25 @@ class Magnetic_element : public Element{
 
 class Dipole : public Magnetic_element{
 	public:
-		Dipole(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<Element> my_successor, double magnetic_amplitude) : Magnetic_element(entry,exit,my_radius,my_curvature,my_successor,[=](Vector3D v){ return magnetic_amplitude*basicvector::Z_VECTOR;}){ if(isinf(curvature)) throw 5; }
+		Dipole(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor, double magnetic_amplitude) :
+			Magnetic_element(entry,exit,my_radius,my_curvature,my_successor,[=](Vector3D v){ return magnetic_amplitude*basicvector::Z_VECTOR;})
+		{
+			if(isinf(curvature)) throw excptn::INFINITE_CURVATURE_DIPOLE;
+		}
+};
+
+class Accelerator{
+	private:
+		std::vector<Element> element_list; // (ordered) list of elements that make up the accelerator
+		std::vector<Particle*> particle_list; // list of particles
+	public:
+		Accelerator(std::vector<Element> my_element_list = {}, std::vector<Particle*> my_particle_list = {}) : element_list(my_element_list), particle_list(my_particle_list){
+			int N(element_list.size());
+			try{
+				for(size_t i(0); i <= N-2; ++i){
+					element_list[i].link(element_list[i+1]);
+				}
+			}
+			catch(...){ throw; }
+		}
 };
