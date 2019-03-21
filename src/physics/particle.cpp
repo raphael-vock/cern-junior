@@ -107,6 +107,10 @@ void Particle::add_magnetic_force(const Vector3D &B, double dt){
 	add_force(magnetic_force);
 }
 
+void Particle::add_electric_force(const Vector3D &E){
+	add_force(charge*E);
+}
+
 double Particle::gamma(void) const{
 	return 1.0/(sqrt(1.0-v.norm2()/(C*C)));
 }
@@ -116,13 +120,13 @@ double Particle::energy(void) const{
 }
 
 std::ostream& operator<<(std::ostream& output, Particle const& particle){                 
-	output << "  Position : " << particle.getPosition()
-	<< "\n  Velocity : " << particle.getVelocity()
-	<< "\n  Energy (GeV) : " << particle.energy()/GeV
-	<< "\n  Gamma : " << particle.gamma()
-	<< "\n  Mass (GeV/c^2) : " << particle.getMass() * (C*C/GeV)
-	<< "\n  Charge : " << particle.getCharge()
-	<< "\n  Force : " << particle.getForce()
+	output << "   Position : " << particle.getPosition()
+	<< "\n   Velocity : " << particle.getVelocity()
+	<< "\n   Energy (GeV) : " << particle.energy()/GeV
+	<< "\n   Gamma : " << particle.gamma()
+	<< "\n   Mass (GeV/c^2) : " << particle.getMass() * (C*C/GeV)
+	<< "\n   Charge : " << particle.getCharge()
+	<< "\n   Force : " << particle.getForce()
 	<< std::endl;
 	return output; 
 }      

@@ -3,10 +3,6 @@
 #include <QMatrix4x4>
 #include "glwidget.h"
 
-void GLWidget::setUniverse(Universe my_universe){
-	content.setUniverse(my_universe);
-}
-
 void GLWidget::initializeGL(){
 	view.init();
 }
@@ -15,8 +11,6 @@ void GLWidget::timerEvent(QTimerEvent* event){
 	if(not isPaused){
 		Q_UNUSED(event);
 		double dt = stopwatch.restart() / 1000.0;
-
-		content.evolve(dt);
 
 		update();
 	}

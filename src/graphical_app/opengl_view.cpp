@@ -7,18 +7,7 @@ void OpenGLView::draw(const Content &to_draw){
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);// skeleton polygons
 
 	QMatrix4x4 matrix;
-	for(Particle* p : *to_draw.getUniverse()->getParticle_list()){
-		if(p->alive){
-			std::array<double,3> coords(p->getPosition().getCoords());
-
-			matrix.translate(coords[0], coords[1], coords[2]);
-			matrix.scale(p->getRadius());
-
-			drawSphere(matrix, p->getColor());
-
-			matrix.setToIdentity();
-		}
-	}
+	// ...
 }
 
 void OpenGLView::init(){

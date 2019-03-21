@@ -65,6 +65,7 @@ class Particle{
 		void reset_force(void); // sets force to zero-vector
 		void add_force(const Vector3D& my_F);
 		void add_magnetic_force(const Vector3D& B, double dt);
+		void add_electric_force(const Vector3D &E);
 		void add_gravitational_force(Particle& P) const; // increments force of P by the gravitational force exerted by *this
 
 		double gamma(void) const;

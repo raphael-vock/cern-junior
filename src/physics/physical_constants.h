@@ -5,5 +5,6 @@ namespace phcst{
 	static constexpr double C(3e8);
 	static constexpr double GeV(6.24e9);
 
+	static constexpr double ZERO_DISTANCE(1e-10);
 	static constexpr double ZERO_TIME(1e-12);
 }

@@ -6,8 +6,6 @@ INCLUDEPATH += \
 	../vector3d \
 	../physics \
 
-SOURCES = content.cpp
-
 HEADERS += \
 	content.h \
 	drawable.h \

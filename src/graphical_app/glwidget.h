@@ -7,9 +7,8 @@
 
 class GLWidget : public QOpenGLWidget{
 	public:
-		GLWidget(QWidget* parent, Universe& my_universe) : QOpenGLWidget(parent), content(&view, my_universe){}
+		GLWidget(QWidget* parent) : QOpenGLWidget(parent), content(&view){}
 		virtual ~GLWidget(){}
-		void setUniverse(Universe my_universe);
 
 	private:
 		virtual void initializeGL()                  override;

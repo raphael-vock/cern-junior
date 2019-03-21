@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DRAWABLE_H
+#define DRAWABLE_H
 
 class Canvas;
 
@@ -11,3 +12,5 @@ class Drawable{
 	protected:
 		Canvas* canvas;
 };
+
+#endif
