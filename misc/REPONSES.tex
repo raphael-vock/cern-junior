@@ -28,7 +28,7 @@
 
 \item \T{distance(x,y)} et \T{distance2(x,y)} sont des méthodes statiques qui retournent la distance euclidienne (resp. distance euclidienne au carré) entre les deux arguments.
 
-\item \T{unitary()} est une méthode qui retourne le vecteur directeur de même sens et de même direction (et lance une exception si l'instance est le vecteur nul ; voir point suivant).
+\item \T{unitary()} est une méthode qui retourne le vecteur unitaire de même sens et de même direction (et lance une exception si l'instance est le vecteur nul ; voir point suivant).
 
 \item \T{is\_zero()} est une méthode qui retourne un bool indiquant si l'instance est plus petite (en norme au carré) qu'une (petite) constante de classe \T{EPSILON} de type \double.
 \end{itemize}
@@ -44,7 +44,7 @@ Mais le problème fondamental est le suivant : un repère sphérique est intextr
 \item ou bien de faire un choix canonique de $O$ qui ne changerait pas du début à la fin
 \item ou bien de préciser $O$ en le passant comme argument.
 \end{itemize}
-Si l'on choisit la première option, l'unique avantage des sphériques serait perdue car on ne serait plus en mesure de choisir l'origine à notre gré pour simplifier, entre autres, des expressions de force (e.g. en choisissant $O$ l'origine d'un champ de force central). Mais la deuxième option serait coûteuse à implémenter et lourde à utiliser, pour des avantages qui finalement n'en vaudraient pas le coup.
+Si l'on choisit la première option, l'unique avantage des sphériques serait perdue car on ne serait plus en mesure de choisir l'origine à notre gré pour simplifier, entre autres, des expressions de force (e.g. en choisissant $O$ l'origine d'un champ de force central). Mais la deuxième option serait coûteuse à implémenter et lourde à utiliser, pour des avantages qui, selon nous, n'en vaudraient pas le coup.
 
 \subsection{Surcharge des opérateurs}
 \noindent \textbf{(P4.3)}
@@ -82,7 +82,7 @@ L'implémentation du facteur gamma et de l'énergie dans la classe \T{Particle} 
 \subitem $\ominus$ \ldots quitte à effectuer inutilement plusieurs fois le même calcul.
 \end{itemize}
 \bigskip
-Certes, il s'agit de calculs simples avec des \double\ donc les arguments de complexité et de poids sont probablement négligeables pour un ordinateur moderne. Moyennant le pour et le contre, et en se focalisant surtout sur la clarté conceptuelle, \textbf{nous avons opté pour des méthodes.}
+Certes, il s'agit de calculs simples avec des \double\ donc les arguments de complexité et de poids seront probablement négligeables à l'échelle de l'executable final. Moyennant le pour et le contre, et en se focalisant surtout sur la clarté conceptuelle, \textbf{nous avons opté pour des méthodes.}
 
 \section{Premiers éléments}
 
@@ -96,30 +96,29 @@ Certes, il s'agit de calculs simples avec des \double\ donc les arguments de com
 
 \end{itemize}
 
-\noindent Ces deux sous-classes seront ensuites spécifiées en des sous-sous-classes vraiment concrètes (e.g. dipôle) et ceci sans avoir à dupliquer à chaque fois le code correspondant à l'ajout de force sur les particules affectées.
+\noindent Ces deux sous-classes peuvent ensuite être spécifiées en des sous-sous-classes vraiment concrètes (e.g. dipôle) sans avoir à dupliquer à chaque fois le code correspondant à l'ajout de force sur les particules affectées.
 
 \ \linebreak
-\textbf{(P6.2)} En ce qui concerne la représentation des champs nous avons pris une approche fonctionnelle via certaines nouveautés du \T{C++11} : à savoir les \T{std::function} et les lambdas. En bref : le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de manipuler des objets de type fonction sans indirection, et les les lambdas permettent d'instancier des fonctions génériques, \textit{inline}, et avec la possibilité ``d'attraper'' des variables dans la portée. Cela nous procure une représentation légère et puissante champs vectoriels (et en particulier des champs électriques ou magnétiques):
+\textbf{(P6.2)} En ce qui concerne la représentation des champs nous avons pris une approche fonctionnelle grâce à certaines nouveautés du \T{C++11} : à savoir les \T{std::function} et les lambdas. En bref : le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de manipuler des objets de type fonction sans indirection, et les les lambdas permettent d'instancier des fonctions génériques, \textit{inline}, et avec la possibilité ``d'attraper'' des variables dans la portée. Cela nous procure une représentation puissante et relativement légère des champs vectoriels (et en particulier des champs électriques ou magnétiques):
 \begin{align*}
 	&\T{\#include <functional>}\\
-	&\T{// déclare un type pour représenter les champs vectoriels : }\\
+	&\T{// déclare une classe pour représenter les champs vectoriels : }\\
 	&\T{typedef std::function<Vector3D(const Vector3D \&)> VectorField;}\\ \\
-	&\T{const Vector3D B\_0(1.0,2.0,0.0);}\\ \\
+	&\T{const Vector3D X\_0(1.0,2.0,0.0);}\\ \\
 	&\T{// initialise un champ vectoriel constant via un lambda : }\\
-	&\T{VectorField B = [\&](Vector3D)\{ return B\_0; \}}
+	&\T{VectorField X = [\&](Vector3D)\{ return X\_0; \}}
 \end{align*}
 
-\noindent Bien entendu, on peut utiliser des lambdas pour instancier des champs vecteoriels non constants et aussi compliqués que l'on souhaite.
-
-Muni de cette représentation, l'implémentation de sous-classes spécifiques d'\T{Element} devient très concise. Il n'y a aucune méthode à redéfinir car il suffit de mettre en attribut les éventuels paramètres spécifiques de l'élément puis d'écrire le calcul du champ électrique (resp. magnétique) dans le corps d'un lambda représentant le champ vectoriel que l'on passe en argument (parmi d'autres) au constructeur de \T{Electric\_element} (resp. \T{Magnetic\_element}). Illustrons ceci avec la définition simplifiée de la classe dipôle :
+\noindent Bien entendu, on peut utiliser des lambdas pour instancier des champs vecteoriels non constants et aussi compliqués que l'on souhaite.\\ \indent Muni de cette représentation, l'implémentation de sous-classes spécifiques d'\T{Element} devient très concise. Il n'y a aucune méthode à redéfinir car il suffit de mettre en attribut les éventuels paramètres spécifiques de l'élément puis d'écrire le calcul du champ électrique (resp. magnétique) dans le corps d'un lambda représentant le champ vectoriel que l'on passe en argument (parmi d'autres) au constructeur de \T{Electric\_element} (resp. \T{Magnetic\_element}).\linebreak \indent Illustrons ceci par la définition simplifiée de la classe dipôle (qui, rappelons-le, a un champ magnétique vertical constant et d'amplitude donné par un paramètre) :
 \begin{align*}
 	&\T{class Dipole : public Magnetic\_field \{}\\
 	&\indent \T{private:}\\
-	& \indent \indent \T{double B\_0; // amplitude du champ constant}\\
+	& \indent \indent \T{double B\_0; // amplitude (signée) du champ constant}\\
 	&\indent \T{public:}\\
 	& \indent \indent \T{Dipole(parametres\_generiques, double amplitude)} :\\
 	& \indent \indent \T{Magnetic\_element( // constructeur de la super-classe}\\
 	& \indent \indent \indent \T{attributs\_generiques(parametres\_generiques),}\\
+	& \indent \indent \indent \T{// affectation de B via un lambda :}\\
 	& \indent \indent \indent \T{B([\&](Vector3D)\{ return Vector3D(0.0, 0.0, amplitude); \} }\\
 	& \indent \indent \T{)}\\
 	& \indent \indent \T{B\_0(amplitude)\{\}}\\
