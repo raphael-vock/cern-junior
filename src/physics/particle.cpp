@@ -67,11 +67,9 @@ void Particle::evolve(double dt){
 	if(f > 1.0) f = 1.0;
 	color = {0.1+f, 0.3+f*f*f, 1.0};
 
-	Vector3D::swap(v, v_p);
-	v = v_p + (dt / (gamma()*mass)) * F;
+	v += (dt / (gamma()*mass)) * F;
+	r += dt * v;
 
-	Vector3D::swap(r, r_p);
-	r = r_p + (dt * v);
 	reset_force();
 }
 
