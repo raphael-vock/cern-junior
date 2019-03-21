@@ -1,26 +1,20 @@
 #pragma once
 
 #include "../vector3d/vector3d.h"
-#include "particle.h"
+#include "../physics/particle.h"
 #include <memory>
 
-<<<<<<< HEAD
 class Element{
 	protected :
 		Vector3D entry_point; // entry position
 		Vector3D exit_point; // exit position
 		double radius; // radius of the vaccum chamber
-		std::unique_ptr<Element> next_element; // points to the following element
-=======
-class Element {
-	protected :
-	Vector3D entry_point; // entry position
-	Vector3D exit_point; // exit position
-	double radius; // radius of the vaccum chamber
-	std::unique_ptr<Element> next_element; // points to the following element
->>>>>>> c11cba6c72f4c7ab3da23a1dfbc028883f326c41
+		std::shared_ptr<Element> next_element; // points to the following element
 	
 	public :
+		Element(const Vector3D& entry, const Vector3D& exit, double n_radius, std::shared_ptr<Element> n_element = nullptr)
+			: entry_point(entry), exit_point(exit), radius(n_radius), next_element(n_element) {}
+
 		Vector3D getEntry_point(void) const;
 		Vector3D getExit_point(void) const;
 		double getRadius(void) const;
@@ -36,6 +30,9 @@ class Curved_element : public Element {
 		double const k; // curvature
 	
 	public :
+		Curved_element(const Vector3D& entry, const Vector3D& exit, double n_radius, double n_k, std::shared_ptr<Element> n_element = nullptr)
+		: Element(entry, exit, n_radius, n_element), k(n_k) {}
+
 		double shortest_distance(const Particle& p) const override;
 		Vector3D curvature_center(void) const; // returns the center of curvature as a vector
 
@@ -45,6 +42,9 @@ class Curved_element : public Element {
 
 class Straight_element : public Element {
 	public :
+		Straight_element(const Vector3D& entry, const Vector3D& exit, double n_radius, std::shared_ptr<Element> n_element = nullptr)
+		: Element(entry, exit, n_radius, n_element) {}
+
 		double shortest_distance(const Particle& p) const override;
 		bool is_on_edge(const Particle& p) const override;
 		bool is_outside(const Particle& p) const override;
