@@ -1,78 +1,71 @@
 #pragma once
 
-#include "../vector3d/vector3d.h"
-#include "../physics/particle.h"
+#include <functional> // for std::function
 #include <memory>
 #include <vector>
+#include <cmath> // for isinf
+
+#include "../vector3d/vector3d.h"
+#include "../physics/particle.h"
+
+typedef std::function<double(Vector3D)> ScalarField;
+typedef std::function<Vector3D(Vector3D)> VectorField; 
 
 class Element{
-	protected :
-		enum element_type { MAGNETIC, ELECTRIC };
-		element_type type;
+	protected:
 		Vector3D entry_point; // entry position
 		Vector3D exit_point; // exit position
+
 		double radius; // radius of the vaccum chamber
+		double curvature; // radial curvature (potentially infinite)
 
-		std::shared_ptr<Element> next_element; // points to the following element
-		std::vector<std::unique_ptr<Particle>> particle_list; // ensures that a particle is contained in a single element
+		std::shared_ptr<Element> successor; // points to the following element
 
-	public :
-		Element(const Vector3D& entry, const Vector3D& exit, double n_radius, element_type n_type, std::shared_ptr<Element> n_element = nullptr) :
+		std::vector<std::unique_ptr<Particle>> particle_list; // list of particles contained inside
+
+	public:
+		static constexpr double INFINITE_RADIUS = std::numeric_limits<double>::infinity();
+
+		Element(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<Element> my_successor) :
 			entry_point(entry),
 			exit_point(exit),
-			radius(n_radius),
-			next_element(n_element)
+			radius(my_radius),
+			curvature(my_curvature),
+			successor(my_successor)
 		{}
 
-		Vector3D getEntry_point(void) const;
-		Vector3D getExit_point(void) const;
-		double getRadius(void) const;
+		Vector3D center(void) const; // returns the center of circular element assuming curvature is finite
 
-		virtual double shortest_distance(const Particle& p) const = 0; // returns the distance between p and the optimal path
-
-		virtual bool is_on_edge(const Particle& p) const = 0;
-		virtual bool is_outside(const Particle& p) const; // returns true if p is after pos_ex
+		bool has_collided(const Particle& p) const; // returns true iff p has collided with the element's edge
+		bool has_left(const Particle& p) const; // returns true iff p has passed to the next element
 		
-		virtual Vector3D magnetic_field(const Vector3D& position) const = 0; // vector fields are seen as methods
-		virtual Vector3D electric_field(const Vector3D& position) const = 0;
+		virtual Vector3D lorentz_force(const Particle& p) const = 0;
+		void add_lorentz_force(Particle &p) const;
 }; 
 
-class Curved_element : public Element {
-	protected :
-		double const k; // curvature
-	
-	public :
-		Curved_element(const Vector3D& entry, const Vector3D& exit, double n_radius, element_type n_type, double n_k, std::shared_ptr<Element> n_element = nullptr)
-		: Element(entry, exit, n_radius, n_type, n_element), k(n_k) {}
+class Electric_element : public Element{
+	private:
+		VectorField E; // electric field
+	public:
+		Electric_element(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<Element> my_successor, VectorField electric_field) :
+			Element(entry,exit,my_radius,my_curvature,my_successor),
+			E(electric_field)
+		{}
+		virtual Vector3D lorentz_force(const Particle& p) const override;
+};
 
-		double shortest_distance(const Particle& p) const override;
-		Vector3D curvature_center(void) const; // returns the center of curvature as a vector
+class Magnetic_element : public Element{
+	private:
+		VectorField B; // magnetic field
+	public:
+		Magnetic_element(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<Element> my_successor, VectorField magnetic_field) :
+			Element(entry,exit,my_radius,my_curvature,my_successor),
+			B(magnetic_field)
+		{}
+		virtual Vector3D lorentz_force(const Particle& p) const override;
+};
 
-		bool is_on_edge(const Particle& p) const override;
-		bool is_outside(const Particle& p) const override;
-
-		Vector3D magnetic_field(const Vector3D& position) const override; 
-		Vector3D electric_field(const Vector3D& position) const override;
-}; 
-
-class Straight_element : public Element {
-	public :
-		Straight_element(const Vector3D& entry, const Vector3D& exit, double n_radius, element_type n_type, std::shared_ptr<Element> n_element = nullptr)
-		: Element(entry, exit, n_radius, n_type, n_element) {}
-
-		double shortest_distance(const Particle& p) const override;
-		bool is_on_edge(const Particle& p) const override;
-		bool is_outside(const Particle& p) const override;
-
-		Vector3D magnetic_field(const Vector3D& position) const override; 
-		Vector3D electric_field(const Vector3D& position) const override;
-}; 
-
-class Dipole : public Curved_element {
-	
-}; 
-
-// note : je mettrai à jour le fichier réponse d'ici ce weekend, je voulais avoir ton avis :
-// je pensais qu'il était mieux de considerer un champ comme une méthode
-// la méthode shortest_distance est un plus qui sera peut être utile à l'avenir mais sinon on pourra juste la supprimer
-// particle_list à developper dans le constructeur d'élement
+class Dipole : public Magnetic_element{
+	public:
+		Dipole(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<Element> my_successor, double magnetic_amplitude) : Magnetic_element(entry,exit,my_radius,my_curvature,my_successor,[=](Vector3D v){ return magnetic_amplitude*basicvector::Z_VECTOR;}){ if(isinf(curvature)) throw 5; }
+};

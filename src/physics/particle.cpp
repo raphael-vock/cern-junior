@@ -4,6 +4,7 @@
 #include "particle.h"
 
 using namespace phcst;
+using namespace basicvector;
 
 int GRAVITATIONAL_SINGULARITY(1);
 
@@ -40,7 +41,7 @@ double Particle::getCharge(void) const{
 }
 
 void Particle::reset_force(void){
-	F = Vector3D::ZERO_VECTOR;
+	F = ZERO_VECTOR;
 }
 
 bool Particle::is_touching(const Particle& q) const{

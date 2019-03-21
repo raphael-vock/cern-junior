@@ -47,11 +47,14 @@ class Vector3D{
 
 		// Constants:
 		static constexpr double EPSILON = 1e-5;
-		static const Vector3D ZERO_VECTOR;
-		static const Vector3D X_VECTOR;
-		static const Vector3D Y_VECTOR;
-		static const Vector3D Z_VECTOR;
 };
 
 Vector3D operator*(const double &, const Vector3D&); // scalar multiplication, with the scalar coming BEFORE
 std::ostream& operator<<(std::ostream& output, Vector3D const& v); // prints to output (e.g. std::cout or std::ofstream)
+
+namespace basicvector{
+	static const Vector3D ZERO_VECTOR = Vector3D(0.0,0.0,0.0);
+	static const Vector3D X_VECTOR(1.0,0.0,0.0);
+	static const Vector3D Y_VECTOR(0.0,1.0,0.0);
+	static const Vector3D Z_VECTOR(0.0,0.0,1.0);
+}

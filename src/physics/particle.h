@@ -39,7 +39,7 @@ class Particle{
 			color(WHITE)
 			{}
 
-		Particle(Vector3D x_0, Vector3D v_0 = Vector3D::ZERO_VECTOR, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
+		Particle(Vector3D x_0, Vector3D v_0 = basicvector::ZERO_VECTOR, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
 			r(Vector3D(x_0)),
 			v(Vector3D(v_0)),
 			F(Vector3D()),
