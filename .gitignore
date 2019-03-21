@@ -34,3 +34,4 @@ src/vector3d/Makefile
 *.log
 *.gz
 *.aux
+src/graphical_app/graphical_app
