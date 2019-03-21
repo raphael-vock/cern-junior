@@ -1,42 +1,44 @@
 #pragma once
+
 #include "../vector3d/vector3d.h"
 #include "particle.h"
 #include <memory>
 
-class Element {
-	private :
-	Vector3D entry_point; // entry position
-	Vector3D exit_point; // exit position
-	double radius; // radius of the vaccum chamber
-	std::unique_ptr<Element> next_element; // points to the following element
+class Element{
+	protected :
+		Vector3D entry_point; // entry position
+		Vector3D exit_point; // exit position
+		double radius; // radius of the vaccum chamber
+		std::unique_ptr<Element> next_element; // points to the following element
 	
 	public :
-	Vector3D getEntry_point(void) const;
-	Vector3D getExit_point(void) const;
-	double getRadius(void) const;
+		Vector3D getEntry_point(void) const;
+		Vector3D getExit_point(void) const;
+		double getRadius(void) const;
 
-	virtual double shortest_distance(const Particle& p) const = 0; // returns the distance between p and the optimal path
+		virtual double shortest_distance(const Particle& p) const = 0; // returns the distance between p and the optimal path
 
-	virtual bool collision_edge(const Particle& p) const = 0; // returns true if dist_opti(p) > radius
-	bool isNext(const Particle& p) const; // returns true if p is after pos_ex
+		virtual bool is_on_edge(const Particle& p) const = 0;
+		virtual bool is_outside(const Particle& p) const; // returns true if p is after pos_ex
 }; 
 
-class Curve : public Element {
+class Curved_element : public Element {
 	private :
-	double const k; // curvature
+		double const k; // curvature
 	
 	public :
-	double shortest_distance(const Particle& p) const override;
-	Vector3D curvature_center(void) const; // returns the center of curvature as a vector
+		double shortest_distance(const Particle& p) const override;
+		Vector3D curvature_center(void) const; // returns the center of curvature as a vector
 
-	bool collision_edge(const Particle& p) const override;
-	Vector3D Vector_field(const Vector3D& pos); // returns the vector assigned at position pos in the vector field
+		bool is_on_edge(const Particle& p) const override;
+		Vector3D Vector_field(const Vector3D& pos); // returns the vector assigned at position pos in the vector field
 }; 
 
-class Straight : public Element {
+class Straight_element : public Element {
 	public :
-	double shortest_distance(const Particle& p) const override;
-	bool collision_edge(const Particle& p) const override;
+		double shortest_distance(const Particle& p) const override;
+		bool is_on_edge(const Particle& p) const override;
+		bool is_outside(const Particle& p) const override;
 }; 
 
 // note : je mettrai à jour le fichier réponse d'ici ce weekend, je voulais avoir ton avis :
