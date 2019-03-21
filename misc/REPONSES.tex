@@ -1,6 +1,6 @@
 \documentclass[12pt, letterpaper, twoside]{article}
 \usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
-\usepackage{amsmath}
+\usepackage[fleqn]{amsmath}
 \usepackage{amssymb}
 
 \usepackage[utf8]{inputenc}
@@ -83,5 +83,33 @@ L'implémentation du facteur gamma et de l'énergie dans la classe \T{Particle} 
 \end{itemize}
 \bigskip
 Certes, il s'agit de calculs simples avec des \double\ donc les arguments de complexité et de poids sont probablement négligeables pour un ordinateur moderne. Moyennant le pour et le contre, et en se focalisant surtout sur la clarté conceptuelle, \textbf{nous avons opté pour des méthodes.}
+
+\section{Premiers éléments}
+
+\subsection{Les éléments en général}
+\noindent \textbf{(P6.1)} Dans la hiérarchie des classes représentant les divers éléments de l'accélérateur, nous avons mis comme nœud une classe abstraite nommée \T{Element} dont les attributs représentent les paramètres purement géométriques (points d'entrée et de sortie, rayon, paramètre de courbure) et relationnels (l'addresse de l'élément suivant, une liste des addresses des \T{Particle} contenues dans l'instance). Nous ne distinguons pas \textit{a priori} les éléments courbes des éléments droits, en sachant qu'en prenant une courbure nulle l'instance dégénère en un élément droit. Nous définissons entre autres une méthode virtuelle pure \T{add\_lorentz\_force(Particle \&p, double dt)} pour mettre en œuvre les intéractions élément-particule ; son comportement est relégué aux sous-classes suivantes:
+
+\begin{itemize}
+\item \T{Electric\_element} est une sous-classe d'\T{Element} avec un attribut supplémentaire, un champ de électrique \T{E} (dont nous discuterons de la représentation au passage suivant). Ainsi nous spécalisons la méthode \T{add\_lorentz\_force(Particle \&p)} en évaluant le champ vectoriel \T{E} au point où se trouve $\T{p}$ et en incrémentant la force résultante de \T{p} via la relation $\boldsymbol{\mathrm{F}}=q\boldsymbol{\mathrm{E}}$.
+
+\item \T{Magnetic\_element}, quant à elle, a comme attribut supplémentaire un champ magnétique \T{B}. Dans ce cas nous spécalisons \T{add\_lorentz\_force(Particle \&p)} en évaluant $\T{B}$ en $\T{p}$ puis en appliquant la méthode relativiste $$\T{Particle::add\_magnetic\_force(const Vector3D \&B, double dt)}$$ définie auparavant dans \T{particle.h}.
+
+\end{itemize}
+
+\noindent Ces deux sous-classes seront ensuites spécifiées en des sous-classes vraiment concrètes (e.g. dipôle) et ceci sans avoir à dupliquer à chaque fois le code correspondant à l'ajout de force sur les particules affectées.
+
+\textbf{(P6.2)} En ce qui concerne la représentation des champs nous avons pris une approche fonctionnelle via certaines nouveautés du \T{C++11} : à savoir les \T{std::function} et les lambdas. En bref, la classe \T{std::function} (donnée par l'en-tête \T{<functional>}) permet de manipuler des objets de type fonction sans indirection, et les les lambdas permettent d'instancier des fonctions génériques, \textit{inline}, et avec la possibilité ``d'attraper'' des variables dans la portée. Cela nous donne une façon légère et puissante de représenter et de manipuler des champs vectoriels (et en particulier des champs électriques ou magnétiques):
+\begin{align*}
+	&\T{\#include <functional>}\\
+	&\T{// déclare un type pour représenter les champs vectoriels : }\\
+	&\T{typedef std::function<Vector3D(const Vector3D \&)> VectorField;}\\ \\
+	&\T{const Vector3D B\_0(1.0,2.0,0.0);}\\ \\
+	&\T{// initialise un champ vectoriel constant via un lambda : }\\
+	&\T{VectorField B = [\&](Vector3D)\{ return B\_0; \}}
+\end{align*}
+
+\noindent Bien entendu, on peut utiliser des lambdas pour instancier des champs vecteoriels non constants, et aussi compliqués que l'on souhaite.
+
+Muni de cette représentation, l'implémentation de sous-classes spécifiques d'\T{Element} devient très concise. Il n'y a aucune méthode à redéfinir car il suffit de mettre en attribut les éventuels paramètres spécifiques de l'élément puis d'écrire le calcul du champ électrique (resp. magnétique) dans le corps d'un lambda que l'on passe en argument (parmi d'autres) au constructeur de \T{Electric\_element} (resp. \T{Magnetic\_element}).
 
 \end{document}

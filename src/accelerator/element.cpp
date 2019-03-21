@@ -16,7 +16,7 @@ std::ostream& Element::print(std::ostream& output) const{
 	cout << "   Entry point: " << entry_point
 	     << "\n   Exit point: " << exit_point
 	     << "\n   Chamber radius: " << radius
-	     << "\n   Curvature radius: " << curvature;
+	     << "\n   Curvature: " << curvature;
 	if(not is_straight()){
 		cout << "\n   Center of curvature: " << center();
 	}
