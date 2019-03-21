@@ -92,14 +92,14 @@ Certes, il s'agit de calculs simples avec des \double\ donc les arguments de com
 \begin{itemize}
 \item \T{Electric\_element} est une sous-classe d'\T{Element} avec un attribut supplémentaire, un champ de électrique \T{E} (dont nous discuterons de la représentation au passage suivant). Ainsi nous spécalisons la méthode \T{add\_lorentz\_force(Particle \&p)} en évaluant le champ vectoriel \T{E} au point où se trouve $\T{p}$ et en incrémentant la force résultante de \T{p} via la relation $\boldsymbol{\mathrm{F}}=q\boldsymbol{\mathrm{E}}$.
 
-\item \T{Magnetic\_element}, quant à elle, a comme attribut supplémentaire un champ magnétique \T{B}. Dans ce cas nous spécalisons \T{add\_lorentz\_force(Particle \&p)} en évaluant $\T{B}$ en $\T{p}$ puis en appliquant la méthode relativiste $$\T{Particle::add\_magnetic\_force(const Vector3D \&B, double dt)}$$ définie auparavant dans \T{particle.h}.
+\item \T{Magnetic\_element}, quant à elle, a comme attribut supplémentaire un champ magnétique \T{B}. Dans ce cas nous spécalisons \T{add\_lorentz\_force(Particle \&p)} en évaluant $\T{B}$ en $\T{p}$ puis en appliquant la méthode relativiste $$\T{Particle::add\_magnetic\_force(const Vector3D \&B, double dt)}$$ déclarée auparavant dans \T{particle.h}.
 
 \end{itemize}
 
 \noindent Ces deux sous-classes seront ensuites spécifiées en des sous-sous-classes vraiment concrètes (e.g. dipôle) et ceci sans avoir à dupliquer à chaque fois le code correspondant à l'ajout de force sur les particules affectées.
 
 \ \linebreak
-\textbf{(P6.2)} En ce qui concerne la représentation des champs nous avons pris une approche fonctionnelle via certaines nouveautés du \T{C++11} : à savoir les \T{std::function} et les lambdas. En bref, le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de manipuler des objets de type fonction sans indirection, et les les lambdas permettent d'instancier des fonctions génériques, \textit{inline}, et avec la possibilité ``d'attraper'' des variables dans la portée. Cela nous donne une façon légère et puissante de représenter et de manipuler des champs vectoriels (et en particulier des champs électriques ou magnétiques):
+\textbf{(P6.2)} En ce qui concerne la représentation des champs nous avons pris une approche fonctionnelle via certaines nouveautés du \T{C++11} : à savoir les \T{std::function} et les lambdas. En bref : le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de manipuler des objets de type fonction sans indirection, et les les lambdas permettent d'instancier des fonctions génériques, \textit{inline}, et avec la possibilité ``d'attraper'' des variables dans la portée. Cela nous procure une représentation légère et puissante champs vectoriels (et en particulier des champs électriques ou magnétiques):
 \begin{align*}
 	&\T{\#include <functional>}\\
 	&\T{// déclare un type pour représenter les champs vectoriels : }\\
@@ -109,12 +109,27 @@ Certes, il s'agit de calculs simples avec des \double\ donc les arguments de com
 	&\T{VectorField B = [\&](Vector3D)\{ return B\_0; \}}
 \end{align*}
 
-\noindent Bien entendu, on peut utiliser des lambdas pour instancier des champs vecteoriels non constants, et aussi compliqués que l'on souhaite.
+\noindent Bien entendu, on peut utiliser des lambdas pour instancier des champs vecteoriels non constants et aussi compliqués que l'on souhaite.
 
-Muni de cette représentation, l'implémentation de sous-classes spécifiques d'\T{Element} devient très concise. Il n'y a aucune méthode à redéfinir car il suffit de mettre en attribut les éventuels paramètres spécifiques de l'élément puis d'écrire le calcul du champ électrique (resp. magnétique) dans le corps d'un lambda que l'on passe en argument (parmi d'autres) au constructeur de \T{Electric\_element} (resp. \T{Magnetic\_element}).
+Muni de cette représentation, l'implémentation de sous-classes spécifiques d'\T{Element} devient très concise. Il n'y a aucune méthode à redéfinir car il suffit de mettre en attribut les éventuels paramètres spécifiques de l'élément puis d'écrire le calcul du champ électrique (resp. magnétique) dans le corps d'un lambda représentant le champ vectoriel que l'on passe en argument (parmi d'autres) au constructeur de \T{Electric\_element} (resp. \T{Magnetic\_element}). Illustrons ceci avec la définition simplifiée de la classe dipôle :
+\begin{align*}
+	&\T{class Dipole : public Magnetic\_field \{}\\
+	&\indent \T{private:}\\
+	& \indent \indent \T{double B\_0; // amplitude du champ constant}\\
+	&\indent \T{public:}\\
+	& \indent \indent \T{Dipole(parametres\_generiques, double amplitude)} :\\
+	& \indent \indent \T{Magnetic\_element( // constructeur de la super-classe}\\
+	& \indent \indent \indent \T{attributs\_generiques(parametres\_generiques),}\\
+	& \indent \indent \indent \T{B([\&](Vector3D)\{ return Vector3D(0.0, 0.0, amplitude); \} }\\
+	& \indent \indent \T{)}\\
+	& \indent \indent \T{B\_0(amplitude)\{\}}\\
+	& \T{\};}
+\end{align*}
+
+\noindent (On conservera toujours la donnée ``brute'' des paramètres sous forme d'attributs de sorte à pouvoir les afficher avec les instances lors de l'affichage texte.)
 
 \ \linebreak
 \ \linebreak
-\textbf{(P6.3)} Afin d'alléger par la suite le corps de certaines méthodes, \textbf{nous avons implémenté le calcul du centre de courbure} via la méthode \T{Element::center(void)}. Celui-ci n'a de sens que si la courbure est non nulle (i.e. l'élément est courbe) donc une exception est lancée dans le cas contraire.
+\textbf{(P6.3)} Afin d'alléger par la suite le corps de certaines méthodes, \textbf{nous avons implémenté le calcul du centre de courbure} avec la méthode \T{Element::center(void)}. Celui-ci n'a de sens que si la courbure est non nulle (i.e. l'élément est courbe) donc une exception est lancée dans le cas contraire.
 
 \end{document}
