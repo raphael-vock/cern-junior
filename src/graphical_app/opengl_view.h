@@ -1,5 +1,4 @@
-#ifndef OPENGL_VIEW
-#define OPENGL_VIEW
+#pragma once
 
 #include <QOpenGLShaderProgram> // shaders
 #include <QMatrix4x4>
@@ -38,5 +37,3 @@ class OpenGLView : public Canvas{
 		// Camera
 		QMatrix4x4 pov_matrix;
 };
-
-#endif

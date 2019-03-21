@@ -1,5 +1,4 @@
-#ifndef GLSPHERE_H
-#define GLSPHERE_H
+#pragma once
 
 #include <QGLBuffer>
 #include <QOpenGLShaderProgram>
@@ -20,5 +19,3 @@ class GLSphere{
 		GLuint vbo_sz;
 		GLuint ibo_sz[3];
 };
-
-#endif

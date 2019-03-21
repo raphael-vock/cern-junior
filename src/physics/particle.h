@@ -1,5 +1,4 @@
-#ifndef PARTICLE_H
-#define PARTICLE_H
+#pragma once
 
 #include <array>
 
@@ -87,5 +86,3 @@ class Particle{
 };
 
 std::ostream& operator<<(std::ostream& output, Particle const& particle);
-
-#endif

@@ -4,7 +4,7 @@ double Box::volume(void) const{
 	return width*depth*height;
 }
 
-bool Box::contains(Particle &x){
+bool Box::contains(const Particle &x) const{
 	std::array<double,3> point_coords(x.getPosition().getCoords());
 	std::array<double,3> origin_coords(origin.getCoords());
 
@@ -22,7 +22,7 @@ void Box::print(void) const{
 	std::cout << "\n";
 }
 
-Box Box::octant(bool right, bool back, bool top){
+Box Box::octant(bool right, bool back, bool top) const{
 	std::array<double,3> originCoords(origin.getCoords());
 
 	if(right) originCoords[0] += width*0.5;

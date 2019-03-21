@@ -1,5 +1,4 @@
-#ifndef TEXT_VIEWER_H
-#define TEXT_VIEWER_H
+#pragma once
 
 #include <iostream>
 #include "../general/canvas.h"
@@ -14,5 +13,3 @@ class TextViewer : public Canvas {
 	private:
 		std::ostream& stream;
 };
-
-#endif
