@@ -9,10 +9,7 @@
 class Particle{
 	private:
 		Vector3D r; // position at time t
-		Vector3D r_p; // position at time t-dt
-
 		Vector3D v; // velocity at time t 
-		Vector3D v_p; // velocity at time t-dt
 
 		Vector3D F; // resultant force being applied 
 
@@ -34,9 +31,7 @@ class Particle{
 
 		Particle(double x = 0, double y = 0, double z = 0, double v_x = 0.0, double v_y = 0.0, double v_z = 0.0, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
 			r(Vector3D(x,y,z)),
-			r_p(Vector3D(x,y,z)),
 			v(Vector3D(v_x,v_y,v_z)),
-			v_p(Vector3D(v_x,v_y,v_z)),
 			F(Vector3D()),
 			mass(my_mass),
 			charge(my_charge),
@@ -46,9 +41,7 @@ class Particle{
 
 		Particle(Vector3D x_0, Vector3D v_0 = Vector3D::ZERO_VECTOR, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
 			r(Vector3D(x_0)),
-			r_p(Vector3D(x_0)),
 			v(Vector3D(v_0)),
-			v_p(Vector3D(v_0)),
 			F(Vector3D()),
 			mass(my_mass),
 			charge(my_charge),
