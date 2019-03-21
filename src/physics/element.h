@@ -4,7 +4,7 @@
 #include <memory>
 
 class Element {
-	private :
+	protected :
 	Vector3D entry_point; // entry position
 	Vector3D exit_point; // exit position
 	double radius; // radius of the vaccum chamber
