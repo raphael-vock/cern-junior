@@ -4,12 +4,21 @@
 #include "particle.h"
 #include <memory>
 
+<<<<<<< HEAD
 class Element{
 	protected :
 		Vector3D entry_point; // entry position
 		Vector3D exit_point; // exit position
 		double radius; // radius of the vaccum chamber
 		std::unique_ptr<Element> next_element; // points to the following element
+=======
+class Element {
+	protected :
+	Vector3D entry_point; // entry position
+	Vector3D exit_point; // exit position
+	double radius; // radius of the vaccum chamber
+	std::unique_ptr<Element> next_element; // points to the following element
+>>>>>>> c11cba6c72f4c7ab3da23a1dfbc028883f326c41
 	
 	public :
 		Vector3D getEntry_point(void) const;
