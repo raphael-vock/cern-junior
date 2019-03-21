@@ -37,6 +37,7 @@ class Curved_element : public Element {
 		Vector3D curvature_center(void) const; // returns the center of curvature as a vector
 
 		bool is_on_edge(const Particle& p) const override;
+		bool is_outside(const Particle& p) const override;
 		Vector3D Vector_field(const Vector3D& pos); // returns the vector assigned at position pos in the vector field
 }; 
 

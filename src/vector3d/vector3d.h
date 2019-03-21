@@ -48,6 +48,9 @@ class Vector3D{
 		// Constants:
 		static constexpr double EPSILON = 1e-5;
 		static const Vector3D ZERO_VECTOR;
+		static const Vector3D X_VECTOR;
+		static const Vector3D Y_VECTOR;
+		static const Vector3D Z_VECTOR;
 };
 
 Vector3D operator*(const double &, const Vector3D&); // scalar multiplication, with the scalar coming BEFORE

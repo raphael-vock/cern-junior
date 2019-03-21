@@ -148,3 +148,6 @@ std::ostream& operator<<(std::ostream& output, Vector3D const& v){
 }
 
 const Vector3D Vector3D::ZERO_VECTOR(0.0,0.0,0.0);
+const Vector3D Vector3D::X_VECTOR(1.0, 0.0, 0.0);
+const Vector3D Vector3D::Y_VECTOR(0.0, 1.0, 0.0);
+const Vector3D Vector3D::Z_VECTOR(0.0, 0.0, 1.0);
