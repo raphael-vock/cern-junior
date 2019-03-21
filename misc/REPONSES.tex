@@ -99,7 +99,7 @@ Certes, il s'agit de calculs simples avec des \double\ donc les arguments de com
 \noindent Ces deux sous-classes peuvent ensuite être spécifiées en des sous-sous-classes vraiment concrètes (e.g. dipôle) sans avoir à dupliquer à chaque fois le code correspondant à l'ajout de force sur les particules affectées.
 
 \ \linebreak
-\textbf{(P6.2)} En ce qui concerne la représentation des champs nous avons profité du paradigme fonctionnel que propose le \T{C++11} : notamment avec \T{std::function} et le lambda-calcul. En bref : le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de manipuler des objets de type fonction sans indirection, et les les lambdas permettent d'instancier des fonctions génériques, \textit{inline}, et avec la possibilité ``d'attraper'' des variables dans la portée. Cela nous procure une représentation puissante et relativement légère des champs vectoriels (et en particulier des champs électriques ou magnétiques):
+\textbf{(P6.2)} En ce qui concerne la représentation des champs nous avons profité du paradigme fonctionnel que propose le \T{C++11}, notamment avec \T{std::function} et le lambda-calcul. En bref : le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de manipuler des objets de type fonction sans indirection, et les les lambdas permettent d'instancier des fonctions génériques, \textit{inline}, et avec la possibilité ``d'attraper'' des variables dans la portée. Cela nous procure une représentation puissante et relativement légère des champs vectoriels (et en particulier des champs électriques ou magnétiques):
 \begin{align*}
 	&\T{\#include <functional>}\\
 	&\T{// déclare une classe pour représenter les champs vectoriels : }\\
