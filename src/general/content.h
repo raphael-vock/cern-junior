@@ -1,5 +1,4 @@
-#ifndef CONTENT_H
-#define CONTENT_H
+#pragma once
 
 #include "drawable.h"
 #include "canvas.h"
@@ -22,5 +21,3 @@ class Content : public Drawable{
 		void setUniverse(Universe omega);
 		Universe* getUniverse(void) const;
 };
-
-#endif

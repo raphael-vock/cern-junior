@@ -1,5 +1,4 @@
-#ifndef PHYSICAL_CONSTANTS_H
-#define PHYSICAL_CONSTANTS_H
+#pragma once
 
 namespace phcst{
 	static constexpr double G(1e-1);
@@ -8,5 +7,3 @@ namespace phcst{
 
 	static constexpr double ZERO_TIME(1e-12);
 }
-
-#endif

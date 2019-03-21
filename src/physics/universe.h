@@ -1,5 +1,4 @@
-#ifndef UNIVERSE_H
-#define UNIVERSE_H
+#pragma once
 
 #include <vector>
 
@@ -32,5 +31,3 @@ class Universe{
 		void print_particles(void) const;
 		void print_tree(void) const;
 };
-
-#endif

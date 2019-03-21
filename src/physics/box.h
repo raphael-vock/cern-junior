@@ -1,5 +1,4 @@
-#ifndef BOX_H
-#define BOX_H
+#pragma once
 
 #include <iostream>
 #include "../vector3d/vector3d.h"
@@ -18,9 +17,7 @@ class Box{
 
 		double volume(void) const;
 
-		bool contains(Particle &x);
+		bool contains(const Particle &x) const;
 		void print(void) const;
-		Box octant(bool right, bool back, bool top);
+		Box octant(bool right, bool back, bool top) const;
 };
-
-#endif

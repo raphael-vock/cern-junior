@@ -1,5 +1,4 @@
-#ifndef GLWIDGET_H
-#define GLWIDGET_H
+#pragma once
 
 #include <QOpenGLWidget>
 #include <QTime>
@@ -36,5 +35,3 @@ class GLWidget : public QOpenGLWidget{
 		// to be drawn
 		Content content;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef VECTOR3D_H
-#define VECTOR3D_H
+#pragma once
 
 #include <array>
 
@@ -53,5 +52,3 @@ class Vector3D{
 
 Vector3D operator*(const double &, const Vector3D&); // scalar multiplication, with the scalar coming BEFORE
 std::ostream& operator<<(std::ostream& output, Vector3D const& v); // prints to output (e.g. std::cout or std::ofstream)
-
-#endif

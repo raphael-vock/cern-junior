@@ -1,5 +1,4 @@
-#ifndef CANVAS_H
-#define CANVAS_H
+#pragma once
 
 class Content;
 
@@ -9,5 +8,3 @@ class Canvas{
 
 		virtual void draw(Content const& to_draw) = 0;
 };
-
-#endif
