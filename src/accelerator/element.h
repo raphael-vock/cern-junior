@@ -96,7 +96,7 @@ class Dipole : public Magnetic_element{
 		Dipole(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor, double my_B_0) :
 			Magnetic_element(
 				entry, exit, my_radius, my_curvature, my_successor,
-				[&](Vector3D){ return my_B_0*basicvector::Z_VECTOR; } // this lambda returns a constant magnetic field determined by B_0
+				[&](const Vector3D &){ return my_B_0*basicvector::Z_VECTOR; } // this lambda returns a constant magnetic field determined by B_0
 			)
 		{
 			if(is_straight()) throw excptn::ZERO_CURVATURE_DIPOLE;
