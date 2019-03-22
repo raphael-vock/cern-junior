@@ -103,7 +103,7 @@ La solution évidente est par des méthodes virtuelles pures, que l'on spéciali
 
 Cette approche \textit{ad hoc} et très peu généralisable. Si l'on souhaite en plus visualiser d'autres champs pas nécessairement liés aux éléments, par exemple les champ magnétiques générés par une particules, on serait alors contraint de copier-coller toute la partie liée à la représentation des lignes de champs dans la méthode dessin de la classe \T{Particle} en changeant l'expression du champ magnétique en question. Ce qu'on a envie de faire, c'est déléguer la partie liée au dessin des champs de force à une fonction externe qui prend en argument un champ vectoriel et se charge de le tracer d'une manière ou d'une autre. Mais dans ce scénario que nous décrivons les champs vectoriels sont des méthodes, donc ne peuvent pas être passés en argument !
 
-Force est de constater que les champs vectoriels \T{B} et \T{E}, bien qu'ils aient la vocation de se comporter comme des fonctions, apparaissent conceptuellement comme des attributs : elles contiennent \textit{de l'information qui caractérise l'instance}. Par ailleurs ce sont des \textit{objets fonctionnels purs} : en les évaluant en un point on ne modifie pas l'instance. On a donc très envie de les représenter comme des \textit{attributs de classe de type fonctionnel} en non comme des méthodes.
+Force est de constater que les champs vectoriels \T{B} et \T{E}, bien qu'ils aient la vocation de se comporter comme des fonctions, apparaissent conceptuellement comme des attributs : elles contiennent \textit{de l'information qui caractérise l'instance}. Par ailleurs ce sont des \textit{objets fonctionnels purs} : en les évaluant en un point on ne modifie pas l'instance. On a donc très envie de les représenter comme des \textit{attributs de classe de type fonctionnel} et non comme des méthodes.
 
 Ceci est possible grâce au paradigme fonctionnel que propose la norme C++11, notamment avec \T{std::function} et la notation lambda. En bref : le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de manipuler des objets de type fonction sans indirection, et les les lambdas permettent d'instancier des fonctions génériques, \textit{inline}, et avec la possibilité ``d'attraper'' des variables dans la portée. Cela nous procure une représentation fonctionnelle des champs vectoriels (et en particulier des champs électriques ou magnétiques):
 \begin{align*}
@@ -115,13 +115,13 @@ Ceci est possible grâce au paradigme fonctionnel que propose la norme C++11, no
 	&\T{VectorFunction X = [\&](Vector3D)\{ return X\_0; \}}
 \end{align*}
 
-\noindent Pour représenter l'\textit{objet} correspondant au champ vectoriel nous voulons une méthode générique pour pouvoir le dessiner. On va donc encapsuler un attribut de type \T{VectorFunction} dans une sous-classe de la class abstraite \T{Drawable}. Par ailleurs le C++ permet de surcharger l'opérateur d'appel ce qui permet de maintenir l'interface ``fonctionnelle'' de l'objet.
+\noindent Pour représenter l'\textit{objet} correspondant au champ vectoriel nous voulons une méthode générique pour pouvoir le dessiner. On va donc encapsuler un attribut de type \T{VectorFunction} dans une sous-classe de la class abstraite \T{Drawable}. Par ailleurs le C++ donne la possibilité de surcharger l'opérateur d'appel ce qui permet de maintenir l'interface ``fonctionnelle'' de l'objet.
 \begin{align*}
 	&\T{class VectorField : public Drawable \{}\\
 	&\indent \T{private:}\\
 	& \indent \indent \T{VectorFunction F;}\\
 	&\indent \T{public:}\\
-	& \indent \indent \T{VectorField(VectorFunction f) : f(F)\{\}}\\
+	& \indent \indent \T{VectorField(VectorFunction f) : F(f)\{\}}\\
 	& \indent \indent \T{// surcharge de l'opérateur d'appel :}\\
 	& \indent \indent \T{Vector3D operator()(const Vector3D \&v)\ const\{ return F(v); \} }\\
 	& \indent \indent \T{// dessine les lignes de champ :}\\
