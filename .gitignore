@@ -35,6 +35,9 @@ src/vector3d/Makefile
 *.gz
 *.aux
 src/graphical_app/graphical_app
+<<<<<<< HEAD
 src/test/Makefile
 src/tests/Makefile
 *.swo
+=======
+>>>>>>> ae0da35057244e02d0496d862d7c301672e4ac1d
