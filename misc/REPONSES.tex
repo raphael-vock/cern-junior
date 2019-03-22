@@ -87,7 +87,7 @@ Certes, il s'agit de calculs simples avec des \double\ donc les arguments de com
 \section{Premiers éléments}
 
 \subsection{Les éléments en général}
-\noindent \textbf{(P6.1)} Dans la hiérarchie des classes représentant les divers éléments de l'accélérateur, nous avons mis comme nœud une classe abstraite nommée \T{Element} dont les attributs représentent les paramètres purement géométriques (points d'entrée et de sortie, rayon, paramètre de courbure) et relationnels (l'addresse de l'élément suivant, une liste des addresses des \T{Particle} contenues dans l'instance) des éléments. Nous considérons que tous les éléments sont \textit{a priori} courbes, en sachant qu'en prenant une courbure nulle l'instance dégénère en un élément droit. Nous définissons entre autres une méthode virtuelle pure \T{add\_lorentz\_force(Particle \&p, double dt)} pour mettre en œuvre les intéractions élément-particule ; son comportement est relégué aux sous-classes suivantes:
+\noindent \textbf{(P6.1)} Dans la hiérarchie des classes représentant les divers éléments de l'accélérateur, nous avons mis comme nœud une classe abstraite nommée \T{Element} dont les attributs représentent les paramètres purement géométriques (points d'entrée et de sortie, rayon, paramètre de courbure) et relationnels (l'addresse de l'élément suivant, une liste des addresses des \T{Particle} contenues dans l'instance) des éléments. Nous considérons les éléments comme \textit{a priori} courbes, en sachant qu'on peut prendre une courbure nulle et l'instance dégénère en un élément droit. Nous définissons entre autres une méthode virtuelle pure \T{add\_lorentz\_force(Particle \&p, double dt)} pour mettre en œuvre les intéractions élément-particule ; son comportement est délégué aux sous-classes suivantes:
 
 \begin{itemize}
 \item \T{Electric\_element} est une sous-classe d'\T{Element} avec un attribut supplémentaire, un champ de électrique \T{E} (dont nous discuterons de la représentation au passage suivant). Ainsi nous spécalisons la méthode \T{add\_lorentz\_force(Particle \&p)} en évaluant le champ vectoriel \T{E} au point où se trouve $\T{p}$ et en incrémentant la force résultante de \T{p} via la relation $\boldsymbol{\mathrm{F}}=q\boldsymbol{\mathrm{E}}$.
@@ -96,20 +96,40 @@ Certes, il s'agit de calculs simples avec des \double\ donc les arguments de com
 
 \end{itemize}
 
-\noindent Ces deux sous-classes peuvent ensuite être spécifiées en des sous-sous-classes vraiment concrètes (e.g. dipôle) sans avoir à dupliquer à chaque fois le code correspondant à l'ajout de force sur les particules affectées.
-
 \ \linebreak
-\textbf{(P6.2)} En ce qui concerne la représentation des champs nous avons profité du paradigme fonctionnel que propose le \T{C++11}, notamment avec \T{std::function} et le lambda-calcul. En bref : le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de manipuler des objets de type fonction sans indirection, et les les lambdas permettent d'instancier des fonctions génériques, \textit{inline}, et avec la possibilité ``d'attraper'' des variables dans la portée. Cela nous procure une représentation puissante et relativement légère des champs vectoriels (et en particulier des champs électriques ou magnétiques):
+\textbf{(P6.2)} Comment représenter les champs électiques/magnétiques \T{B} et \T{E} ?
+
+La solution évidente est par des méthodes virtuelles pures, que l'on spécialise pour chaque sous-classe concrète d'\T{Element} en fonction de sa nature. Mais supposons que nous ayions envie, à terme, de représenter les champs dans la sortie graphique, par exemple avec des lignes de champ. On rajouterait alors aux méthodes dessin des sous-classes d'\T{Element} le code nécessaire au traçage des lignes de champs en faisant référence aux méthodes \T{B} ou \T{E}.
+
+Cette approche \textit{ad hoc} et très peu généralisable. Si l'on souhaite en plus visualiser d'autres champs pas nécessairement liés aux éléments, par exemple les champ magnétiques générés par une particules, on serait alors contraint de copier-coller toute la partie liée à la représentation des lignes de champs dans la méthode dessin de la classe \T{Particle} en changeant l'expression du champ magnétique en question. Ce qu'on a envie de faire, c'est déléguer la partie liée au dessin des champs de force à une fonction externe qui prend en argument un champ vectoriel et se charge de le tracer d'une manière ou d'une autre. Mais dans ce scénario que nous décrivons les champs vectoriels sont des méthodes, donc ne peuvent pas être passés en argument !
+
+Force est de constater que les champs vectoriels \T{B} et \T{E}, bien qu'ils aient la vocation de se comporter comme des fonctions, apparaissent conceptuellement comme des attributs : elles contiennent \textit{de l'information qui caractérise l'instance}. Par ailleurs ce sont des \textit{objets fonctionnels purs} : en les évaluant en un point on ne modifie pas l'instance. On a donc très envie de les représenter comme des \textit{attributs de classe de type fonctionnel} en non comme des méthodes.
+
+Ceci est possible grâce au paradigme fonctionnel que propose la norme C++11, notamment avec \T{std::function} et la notation lambda. En bref : le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de manipuler des objets de type fonction sans indirection, et les les lambdas permettent d'instancier des fonctions génériques, \textit{inline}, et avec la possibilité ``d'attraper'' des variables dans la portée. Cela nous procure une représentation fonctionnelle des champs vectoriels (et en particulier des champs électriques ou magnétiques):
 \begin{align*}
 	&\T{\#include <functional>}\\
-	&\T{// déclare une classe pour représenter les champs vectoriels : }\\
-	&\T{typedef std::function<Vector3D(const Vector3D \&)> VectorField;}\\ \\
+	&\T{// déclare une classe pour représenter les fonctions vectorielles : }\\
+	&\T{typedef std::function<Vector3D(const Vector3D \&)> VectorFunction;}\\ \\
 	&\T{const Vector3D X\_0(1.0, 2.0, 0.0);}\\ \\
-	&\T{// initialise un champ vectoriel constant via un lambda : }\\
-	&\T{VectorField X = [\&](Vector3D)\{ return X\_0; \}}
+	&\T{// initialise une fonction vectorielle constante via un lambda : }\\
+	&\T{VectorFunction X = [\&](Vector3D)\{ return X\_0; \}}
 \end{align*}
 
-\noindent Bien entendu, on peut utiliser des lambdas pour instancier des champs vecteoriels non constants et aussi compliqués que l'on souhaite.\\ \indent Muni de cette représentation, l'implémentation de sous-classes spécifiques d'\T{Element} devient très concise. Il n'y a aucune méthode à redéfinir car il suffit de mettre en attribut les éventuels paramètres spécifiques de l'élément puis d'écrire le calcul du champ électrique (resp. magnétique) dans le corps d'un lambda représentant le champ vectoriel que l'on passe en argument (parmi d'autres) au constructeur de \T{Electric\_element} (resp. \T{Magnetic\_element}).\linebreak \indent Illustrons ceci par la définition simplifiée de la classe dipôle (qui, rappelons-le, a un champ magnétique vertical constant et d'amplitude donnée par un paramètre) :
+\noindent Pour représenter l'\textit{objet} correspondant au champ vectoriel nous voulons une méthode générique pour pouvoir le dessiner. On va donc encapsuler un attribut de type \T{VectorFunction} dans une sous-classe de la class abstraite \T{Drawable}. Par ailleurs le C++ permet de surcharger l'opérateur d'appel ce qui permet de maintenir l'interface ``fonctionnelle'' de l'objet.
+\begin{align*}
+	&\T{class VectorField : public Drawable \{}\\
+	&\indent \T{private:}\\
+	& \indent \indent \T{VectorFunction F;}\\
+	&\indent \T{public:}\\
+	& \indent \indent \T{VectorField(VectorFunction f) : f(F)\{\}}\\
+	& \indent \indent \T{// surcharge de l'opérateur d'appel :}\\
+	& \indent \indent \T{Vector3D operator()(const Vector3D \&v)\ const\{ return F(v); \} }\\
+	& \indent \indent \T{// dessine les lignes de champ :}\\
+	& \indent \indent \T{virtual draw(void) override;}\\
+	& \T{\};}
+\end{align*}
+
+\indent On peut enfin définir les sous-classes \T{Electric\_field} et \T{Magnetic\_field} en rajoutant un attribut de type \T{VectorField} correspondant au champ électrique et magnétique respectivement. Muni de cette représentation, l'implémentation des sous-classes spécifiques d'\T{Element} devient très concise. Il n'y a aucune méthode à redéfinir car il suffit de mettre en attribut les éventuels paramètres spécifiques de l'élément puis d'écrire le calcul du champ électrique (resp. magnétique) dans le corps d'un lambda représentant le champ vectoriel que l'on passe en argument (parmi d'autres) au constructeur de \T{Electric\_element} (resp. \T{Magnetic\_element}).\\ \indent Illustrons ceci par la définition simplifiée de la classe dipôle (qui, rappelons-le, a un champ magnétique vertical constant et d'amplitude donnée par un paramètre) :
 \begin{align*}
 	&\T{class Dipole : public Magnetic\_field \{}\\
 	&\indent \T{private:}\\
@@ -118,14 +138,12 @@ Certes, il s'agit de calculs simples avec des \double\ donc les arguments de com
 	& \indent \indent \T{Dipole(parametres\_generiques, double amplitude)} :\\
 	& \indent \indent \T{Magnetic\_element( // constructeur de la super-classe}\\
 	& \indent \indent \indent \T{attributs\_generiques(parametres\_generiques),}\\
-	& \indent \indent \indent \T{// affectation de B via un lambda :}\\
+	& \indent \indent \indent \T{// affectation du champ via un lambda :}\\
 	& \indent \indent \indent \T{B([\&](Vector3D)\{ return Vector3D(0.0, 0.0, amplitude); \} }\\
 	& \indent \indent \T{)}\\
 	& \indent \indent \T{B\_0(amplitude)\{\}}\\
 	& \T{\};}
 \end{align*}
-
-\noindent (On conservera toujours la donnée ``brute'' des paramètres sous forme d'attributs de sorte à pouvoir les afficher avec les instances lors de l'affichage texte.)
 
 \ \linebreak
 \ \linebreak
