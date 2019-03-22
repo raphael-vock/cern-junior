@@ -36,3 +36,5 @@ src/vector3d/Makefile
 *.aux
 src/graphical_app/graphical_app
 src/test/Makefile
+src/tests/Makefile
+*.swo
