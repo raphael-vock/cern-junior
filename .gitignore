@@ -41,3 +41,6 @@ src/tests/Makefile
 *.swo
 =======
 >>>>>>> ae0da35057244e02d0496d862d7c301672e4ac1d
+src/tests/accelerator_test/Makefile
+src/tests/particle_test/makefile
+src/tests/vector3d_test/makefile
