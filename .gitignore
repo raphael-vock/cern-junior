@@ -35,3 +35,4 @@ src/vector3d/Makefile
 *.gz
 *.aux
 src/graphical_app/graphical_app
+src/test/Makefile
