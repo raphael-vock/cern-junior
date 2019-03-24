@@ -1,5 +1,7 @@
 #include <cmath>
 
+#include "../misc/exceptions.h"
+
 #include "../vector3d/vector3d.h"
 #include "../physics/particle.h"
 #include "element.h"

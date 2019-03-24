@@ -3,7 +3,7 @@
 #include <QOpenGLShaderProgram> // shaders
 #include <QMatrix4x4>
 
-#include "../general/color.h"
+#include "../misc/color.h"
 
 #include "glsphere.h"
 #include "canvas.h"

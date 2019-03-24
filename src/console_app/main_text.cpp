@@ -1,9 +1,9 @@
 #include <iostream>
 #include "text_viewer.h"
 
+#include "../misc/physical_constants.h"
 #include "../general/canvas.h"
 #include "../physics/particle.h"
-#include "../physics/physical_constants.h"
 
 using namespace std;
 

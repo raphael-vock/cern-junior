@@ -5,10 +5,10 @@
 #include "../general/drawable.h"
 #include "../general/canvas.h"
 
-#include "../general/color.h"
+#include "../misc/color.h"
 
 #include "../vector3d/vector3d.h"
-#include "physical_constants.h"
+#include "../misc/physical_constants.h"
 
 class Particle : public Drawable{
 	private:

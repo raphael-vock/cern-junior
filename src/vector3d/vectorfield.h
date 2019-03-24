@@ -2,7 +2,7 @@
 
 #include "../general/drawable.h"
 #include "../general/canvas.h"
-#include "../vector3d/vector3d.h"
+#include "vector3d.h"
 
 typedef std::function<Vector3D(const Vector3D &)> vector_function;
 

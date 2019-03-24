@@ -5,7 +5,7 @@
 #include <cmath> // for isinf
 
 #include "../general/drawable.h"
-#include "../general/exceptions.h"
+#include "../misc/exceptions.h"
 
 #include "../vector3d/vector3d.h"
 #include "../vector3d/vectorfield.h"

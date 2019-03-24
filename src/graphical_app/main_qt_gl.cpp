@@ -3,10 +3,8 @@
 #include <random>
 #include <cmath>
 
+#include "../misc/physical_constants.h"
 #include "glwidget.h"
-#include "../vector3d/vector3d.h"
-#include "../physics/particle.h"
-#include "../physics/physical_constants.h"
 
 using namespace phcst;
 

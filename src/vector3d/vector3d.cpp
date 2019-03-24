@@ -3,7 +3,7 @@
 #include <cmath>
 
 #include "vector3d.h"
-#include "../general/exceptions.h"
+#include "../misc/exceptions.h"
 
 using namespace excptn;
 
