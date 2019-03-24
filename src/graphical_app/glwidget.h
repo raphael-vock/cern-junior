@@ -2,8 +2,10 @@
 
 #include <QOpenGLWidget>
 #include <QTime>
+
 #include "opengl_view.h"
-#include "content.h"
+#include "../general/drawable.h"
+#include "../accelerator/accelerator.h"
 
 class GLWidget : public QOpenGLWidget{
 	public:
@@ -11,15 +13,14 @@ class GLWidget : public QOpenGLWidget{
 		virtual ~GLWidget(){}
 
 	private:
-		virtual void initializeGL()                  override;
+		virtual void initializeGL() override;
 		virtual void resizeGL(int width, int height) override;
-		virtual void paintGL()                       override;
+		virtual void paintGL() override;
 
 		// Event handling
-		virtual void keyPressEvent(QKeyEvent* event) override;
-		virtual void timerEvent(QTimerEvent*)        override;
-
 		bool isPaused = true;
+		virtual void keyPressEvent(QKeyEvent* event) override;
+		virtual void timerEvent(QTimerEvent*) override;
 
 		// internal handling
 		void pause();
@@ -32,5 +33,5 @@ class GLWidget : public QOpenGLWidget{
 		QTime stopwatch;
 
 		// to be drawn
-		Content content;
+		Accelerator content;
 };

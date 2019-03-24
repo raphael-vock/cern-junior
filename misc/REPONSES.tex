@@ -101,14 +101,14 @@ Certes, il s'agit de calculs simples avec des \double\ donc les arguments de com
 
 La solution évidente est par des méthodes virtuelles pures, que l'on spécialise pour chaque sous-classe concrète d'\T{Element} en fonction de leur nature. Mais supposons que nous ayions envie de représenter les champs dans la sortie graphique, par exemple avec des lignes de champ. On rajouterait alors aux méthodes dessin des sous-classes d'\T{Element} le code nécessaire au traçage des lignes de champs en faisant référence aux méthodes \T{B} ou \T{E}.
 
-Cette approche \textit{ad hoc} et très peu généralisable. Si l'on souhaite en plus visualiser d'autres champs, pas nécessairement liés aux éléments, par exemple le champ magnétique généré par une particule, on serait alors contraint à faire du copier-coller du code lié à la représentation des lignes de champs. Ce qu'on a envie de faire, c'est déléguer la partie liée au dessin des champs de force à une fonction externe qui prend en argument un champ vectoriel et se charge de le dessiner. Mais dans le scénario que nous décrivons, les champs vectoriels sont des méthodes, donc ne peuvent pas être passés en argument !
+Cette approche \textit{ad hoc} et très peu généralisable. Si l'on souhaite en plus visualiser d'autres champs, pas nécessairement liés aux éléments, par exemple le champ magnétique généré par une particule, on serait alors contraint à copier-coller le code lié à la représentation des lignes de champs. Ce qu'on a envie de faire, c'est déléguer la partie liée au dessin des champs de force à une fonction externe qui prend en argument un champ vectoriel et se charge de le dessiner. Mais dans le scénario que nous décrivons, les champs vectoriels sont des méthodes, donc ne peuvent pas être passés en argument !
 
 Force est de constater que les champs vectoriels \T{B} et \T{E}, bien qu'ils aient la vocation de se comporter comme des fonctions, apparaissent conceptuellement comme des attributs : ils contiennent \textit{de l'information qui caractérise l'instance}. Par ailleurs ce sont des \textit{objets fonctionnels purs} : en les évaluant en un point on ne modifie pas l'instance. On a donc très envie de les représenter comme des \textit{attributs de classe de type fonctionnel} et non comme des méthodes.
 
 Ceci est possible grâce au paradigme fonctionnel que propose la norme C++11, notamment avec \T{std::function} et la notation lambda. En bref :
 
 \begin{itemize}
-\item Le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de définir des variables fonctionnelles dites ``de première classe'' (c'est-à-dire qu'on peut manier comme des variables quelconques).
+\item Le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de définir des variables fonctionnelles dites ``de première classe'', c'est-à-dire qu'on peut manier comme des variables quelconques.
 
 \item La notation lambda permet d'instancier des fonctions de première classe génériques, \textit{inline}, et avec la possibilité ``d'attraper'' des variables dans la portée.
 \end{itemize}
@@ -120,7 +120,7 @@ Ensemble, ils nous procurent un puissant moyen de représenter des fonctions pur
 	&\T{typedef std::function<Vector3D(const Vector3D \&)> VectorFunction;}\\
 	&\T{const Vector3D X\_0(1.0, 2.0, 0.0);}\\
 	&\T{// initialise une fonction vectorielle constante via un lambda : }\\
-	&\T{VectorFunction X = [\&](Vector3D)\{ return X\_0; \}}
+	&\T{VectorFunction X = [](Vector3D \&)\{ return X\_0; \}}
 \end{align*}
 
 \noindent Pour représenter l'\textit{objet} correspondant au champ vectoriel nous voulons en plus qu'il ait une méthode permettant de le dessiner. On va donc encapsuler un \T{VectorFunction} dans une sous-classe de la class abstraite \T{Drawable}. Puisque le C++ donne la possibilité de surcharger l'opérateur d'appel, on peut conserver son interface ``fonctionnelle'' malgré l'encapsulation :
@@ -147,7 +147,7 @@ Ensemble, ils nous procurent un puissant moyen de représenter des fonctions pur
 	& \indent \indent \T{Magnetic\_element( // constructeur de la super-classe}\\
 	& \indent \indent \indent \T{attributs\_generiques(parametres\_generiques),}\\
 	& \indent \indent \indent \T{// affectation du champ via un lambda :}\\
-	& \indent \indent \indent \T{B([\&](Vector3D)\{ return Vector3D(0.0, 0.0, amplitude); \} }\\
+	& \indent \indent \indent \T{B([](Vector3D \&)\{ return Vector3D(0.0, 0.0, amplitude); \} }\\
 	& \indent \indent \T{),}\\
 	& \indent \indent \T{B\_0(amplitude)\{\}}\\
 	& \T{\};}

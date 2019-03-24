@@ -1,16 +1,14 @@
-#ifndef DRAWABLE_H
-#define DRAWABLE_H
+#pragma once
+#include <iostream>
 
 class Canvas;
 
 class Drawable{
-	public:
-		Drawable(Canvas* canvas) : canvas(canvas){}
-		virtual ~Drawable(){}
-		virtual void draw() = 0;
-
 	protected:
 		Canvas* canvas;
-};
+	public:
+		Drawable(Canvas* my_canvas) : canvas(my_canvas){}
+		virtual ~Drawable(void){}
 
-#endif
+		virtual void draw(void) = 0;
+};

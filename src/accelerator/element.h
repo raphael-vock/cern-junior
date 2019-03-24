@@ -4,14 +4,14 @@
 #include <vector>
 #include <cmath> // for isinf
 
+#include "../general/drawable.h"
 #include "../general/exceptions.h"
+
 #include "../vector3d/vector3d.h"
+#include "../vector3d/vectorfield.h"
 #include "../physics/particle.h"
 
-typedef std::function<double(const Vector3D &)> ScalarField;
-typedef std::function<Vector3D(const Vector3D &)> VectorField; 
-
-class Element{
+class Element : public Drawable{
 	protected:
 		Vector3D entry_point; // entry position
 		Vector3D exit_point; // exit position
@@ -26,7 +26,8 @@ class Element{
 		bool is_straight(void) const;
 
 	public:
-		Element(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor) :
+		Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor) :
+			Drawable(display),
 			entry_point(entry),
 			exit_point(exit),
 			radius(my_radius),
@@ -54,12 +55,16 @@ class Element{
 
 std::ostream& operator<<(std::ostream& output, const Element &E);
 
-class Straight_element : public Element{
+class StraightSection : public Element{
 	public:
-		Straight_element(const Vector3D& entry, const Vector3D& exit, double my_radius, Element* my_successor) :
-			Element(entry,exit,my_radius,0.0,my_successor)
+		StraightSection(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, Element* my_successor) :
+			Element(display, entry,exit,my_radius,0.0,my_successor)
 		{}
-		virtual ~Straight_element(void) override{}
+		virtual ~StraightSection(void) override{}
+
+		virtual std::ostream& print(std::ostream& output) const override;
+		virtual void draw(void) override{ canvas->draw(*this); }
+
 		virtual void add_lorentz_force(Particle& p, double dt) const override{ return; } // no force fields
 };
 
@@ -67,8 +72,8 @@ class Electric_element : public Element{
 	protected:
 		VectorField E; // electric field
 	public:
-		Electric_element(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor, VectorField electric_field) :
-			Element(entry,exit,my_radius,my_curvature,my_successor),
+		Electric_element(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor, VectorField electric_field) :
+			Element(display, entry,exit,my_radius,my_curvature,my_successor),
 			E(electric_field)
 		{}
 		virtual ~Electric_element(void) override{}
@@ -79,8 +84,8 @@ class Magnetic_element : public Element{
 	protected:
 		VectorField B; // magnetic field
 	public:
-		Magnetic_element(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor, VectorField magnetic_field) :
-			Element(entry,exit,my_radius,my_curvature,my_successor),
+		Magnetic_element(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor, VectorField magnetic_field) :
+			Element(display, entry,exit,my_radius,my_curvature,my_successor),
 			B(magnetic_field)
 		{}
 		virtual ~Magnetic_element(void) override{}
@@ -93,14 +98,14 @@ class Dipole : public Magnetic_element{
 	public:
 		virtual std::ostream& print(std::ostream& output) const override;
 
-		Dipole(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor, double my_B_0) :
+		Dipole(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor, double my_B_0) :
 			Magnetic_element(
-				entry, exit, my_radius, my_curvature, my_successor,
-				[&](const Vector3D &){ return my_B_0*basicvector::Z_VECTOR; } // this lambda returns a constant magnetic field determined by B_0
-			)
-		{
-			if(is_straight()) throw excptn::ZERO_CURVATURE_DIPOLE;
-		}
+				display, entry, exit, my_radius, my_curvature, my_successor,
+				VectorField(canvas, [=](const Vector3D &){ return my_B_0*basicvector::Z_VECTOR; }) // this lambda returns a constant magnetic field determined by B_0
+			), B_0(my_B_0)
+			{ if(is_straight()) throw excptn::ZERO_CURVATURE_DIPOLE; }
+
+		virtual void draw(void) override{ canvas->draw(*this); }
 };
 
 class Quadrupole : public Magnetic_element{
@@ -109,14 +114,19 @@ class Quadrupole : public Magnetic_element{
 	public:
 		virtual std::ostream& print(std::ostream& output) const override;
 
-		Quadrupole(const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor, double my_b) :
+		Quadrupole(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, Element* my_successor, double my_b) :
 			Magnetic_element(
-				entry, exit, my_radius, my_curvature, my_successor,
-				[&](const Vector3D &v){
+				display, entry, exit, my_radius, my_curvature, my_successor,
+				VectorField(canvas,
+				[=](const Vector3D &v){
 					Vector3D d((exit_point - entry_point).unitary());
 					Vector3D y(v - (v|d)*v);
 					Vector3D u(basicvector::Z_VECTOR ^ d);
 					return b*((y|u)*basicvector::Z_VECTOR + v[2]*u);
-				}
-			){}
+				})
+			),
+			b(my_b)
+			{}
+
+		virtual void draw(void) override{ canvas->draw(*this); }
 };

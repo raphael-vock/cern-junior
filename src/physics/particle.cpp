@@ -6,8 +6,6 @@
 using namespace phcst;
 using namespace basicvector;
 
-int GRAVITATIONAL_SINGULARITY(1);
-
 double Particle::getMass(void) const{
 	return mass;
 }
@@ -119,14 +117,18 @@ double Particle::energy(void) const{
 	return gamma()*mass*C*C;
 }
 
-std::ostream& operator<<(std::ostream& output, Particle const& particle){                 
-	output << "   Position : " << particle.getPosition()
-	<< "\n   Velocity : " << particle.getVelocity()
-	<< "\n   Energy (GeV) : " << particle.energy()/GeV
-	<< "\n   Gamma : " << particle.gamma()
-	<< "\n   Mass (GeV/c^2) : " << particle.getMass() * (C*C/GeV)
-	<< "\n   Charge : " << particle.getCharge()
-	<< "\n   Force : " << particle.getForce()
+std::ostream& Particle::print(std::ostream& output) const{
+	output << "   Position : " << r
+	<< "\n   Velocity : " << v
+	<< "\n   Energy (GeV) : " << energy()/GeV
+	<< "\n   Gamma : " << gamma()
+	<< "\n   Mass (GeV/c^2) : " << mass * (C*C/GeV)
+	<< "\n   Charge : " << charge
+	<< "\n   Force : " << F
 	<< std::endl;
 	return output; 
+}
+
+std::ostream& operator<<(std::ostream& output, const Particle &particle){
+	return particle.print(output);
 }      

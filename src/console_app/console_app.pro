@@ -9,21 +9,21 @@ TARGET = console.out
 INCLUDEPATH += \
 	../vector3d \
 	../physics \
-	../general
+	../general \
 
 LIBS += \
 	-L../vector3d -lvector3d \
 	-L../physics -lphysics \
-	-L../general -lgeneral
+	-L../general -lgeneral \
 
 PRE_TARGETDEPS +=\
+	../general/libgeneral.a \
 	../vector3d/libvector3d.a \
 	../physics/libphysics.a \
-	../general/libgeneral.a
 
 SOURCES += \
+	text_viewer.cpp \
 	main_text.cpp \
-	text_viewer.cpp
 
 HEADERS += \
 	text_viewer.h \

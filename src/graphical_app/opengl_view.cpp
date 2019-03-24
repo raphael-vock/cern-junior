@@ -1,19 +1,42 @@
 #include "opengl_view.h"
 #include "vertex_shader.h"
-#include "content.h"
 
-void OpenGLView::draw(const Content &to_draw){
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear window
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);// skeleton polygons
+#include "../physics/particle.h"
+
+void OpenGLView::draw(const VectorField &to_draw){
+	//...
+}
+
+void OpenGLView::draw(const Particle &to_draw){
+	std::array<double,3> coords(to_draw.getPosition().getCoords());
 
 	QMatrix4x4 matrix;
-	// ...
+	matrix.translate(coords[0], coords[1], coords[2]);
+	matrix.scale(to_draw.getRadius());
+
+	drawSphere(matrix, to_draw.getColor());
+}
+
+void OpenGLView::draw(const StraightSection &to_draw){
+	//...
+}
+
+void OpenGLView::draw(const Dipole &to_draw){
+	//...
+}
+
+void OpenGLView::draw(const Quadrupole &to_draw){
+	//...
+}
+
+void OpenGLView::draw(const Accelerator &to_draw){
+	//...
 }
 
 void OpenGLView::init(){
-	 //* Initializes the OpenGL POV, and builds the shader.
+	 // Initializes the OpenGL POV, and builds the shader.
 
-	prog.addShaderFromSourceFile(QOpenGLShader::Vertex,   ":/vertex_shader.glsl");
+	prog.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vertex_shader.glsl");
 	prog.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fragment_shader.glsl");
 
 	prog.bindAttributeLocation("vertex", VertexId);
@@ -54,7 +77,7 @@ void OpenGLView::rotate(double angle, double x, double y, double z){
 	pov_matrix = rotation * pov_matrix;
 }
 
-void OpenGLView::drawCube(QMatrix4x4 const& pov, RGB color){
+void OpenGLView::drawCube(QMatrix4x4 const &pov, RGB color){
 	prog.setUniformValue("view", pov_matrix * pov);
 
 	glBegin(GL_QUADS);

@@ -15,8 +15,6 @@ class Vector3D{
 
 		std::array<double,3> getCoords(void) const; // return coords in an array
 
-		static void swap(Vector3D &u, Vector3D &v);
-
 		// Algebraic operators:
 		Vector3D operator-(void) const; // returns the additive inverse
 		Vector3D& operator*=(const double &);

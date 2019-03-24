@@ -25,9 +25,3 @@ PRE_TARGETDEPS +=\
 
 SOURCES += \
 	accelerator_test.cpp \
-
-HEADERS += \
-	color.h \
-	particle.h \
-	accelerator.h \
-	element.h

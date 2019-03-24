@@ -1,7 +1,32 @@
 #include "text_viewer.h"
-#include <iostream> // for endl
-#include "content.h"
 
-void TextViewer::draw(Content const& to_draw){
-	//...
+#include <iostream>
+
+#include "../physics/particle.h"
+#include "../accelerator/element.h"
+#include "../accelerator/accelerator.h"
+
+void TextViewer::draw(const VectorField &to_draw){
+	to_draw.print(stream);
+}
+
+void TextViewer::draw(const Particle &to_draw){
+	to_draw.print(stream);
+}
+
+void TextViewer::draw(const StraightSection &to_draw){
+	to_draw.print(stream);
+}
+
+void TextViewer::draw(const Dipole &to_draw){
+	to_draw.print(stream);
+}
+
+void TextViewer::draw(const Quadrupole &to_draw){
+	to_draw.print(stream);
+}
+
+void TextViewer::draw(const Accelerator &to_draw){
+	/* to_draw.print(stream); */
+	// provokes linker error for some reason
 }

@@ -4,14 +4,19 @@
 #include <QMatrix4x4>
 
 #include "../general/color.h"
-#include "../vector3d/vector3d.h"
+
 #include "glsphere.h"
 #include "canvas.h"
 
 class OpenGLView : public Canvas{
 	public:
 		// drawing methods, inherited from Canvas
-		virtual void draw(const Content &to_draw) override;
+		virtual void draw(const VectorField &to_draw) override;
+		virtual void draw(const Particle &to_draw) override;
+		virtual void draw(const StraightSection &to_draw) override;
+		virtual void draw(const Dipole &to_draw) override;
+		virtual void draw(const Quadrupole &to_draw) override;
+		virtual void draw(const Accelerator &to_draw) override;
 
 		// initalization methods
 		void init();

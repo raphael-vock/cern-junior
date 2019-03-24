@@ -22,7 +22,3 @@ PRE_TARGETDEPS +=\
 
 SOURCES += \
 	particle_test.cpp \
-
-HEADERS += \
-	color.h \
-	particle.h \

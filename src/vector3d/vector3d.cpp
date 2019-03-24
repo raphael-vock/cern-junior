@@ -1,5 +1,4 @@
 #include <iostream>
-#include <initializer_list>
 #include <random>
 #include <cmath>
 
@@ -7,12 +6,6 @@
 #include "../general/exceptions.h"
 
 using namespace excptn;
-
-void Vector3D::swap(Vector3D &u, Vector3D &v){
-	std::swap(u.x,v.x);
-	std::swap(u.y,v.y);
-	std::swap(u.z,v.z);
-}
 
 double Vector3D::operator[](int i) const{
 	switch(i){

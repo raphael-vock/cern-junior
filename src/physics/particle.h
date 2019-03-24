@@ -2,11 +2,15 @@
 
 #include <array>
 
+#include "../general/drawable.h"
+#include "../general/canvas.h"
+
 #include "../general/color.h"
+
 #include "../vector3d/vector3d.h"
 #include "physical_constants.h"
 
-class Particle{
+class Particle : public Drawable{
 	private:
 		Vector3D r; // position at time t
 		Vector3D v; // velocity at time t 
@@ -29,7 +33,8 @@ class Particle{
 
 		bool alive = true;
 
-		Particle(double x = 0, double y = 0, double z = 0, double v_x = 0.0, double v_y = 0.0, double v_z = 0.0, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
+		Particle(Canvas* vue, double x = 0, double y = 0, double z = 0, double v_x = 0.0, double v_y = 0.0, double v_z = 0.0, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
+			Drawable(vue),
 			r(Vector3D(x,y,z)),
 			v(Vector3D(v_x,v_y,v_z)),
 			F(Vector3D()),
@@ -39,7 +44,8 @@ class Particle{
 			color(WHITE)
 			{}
 
-		Particle(Vector3D x_0, Vector3D v_0 = basicvector::ZERO_VECTOR, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
+		Particle(Canvas* vue, Vector3D x_0, Vector3D v_0 = basicvector::ZERO_VECTOR, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
+			Drawable(vue),
 			r(Vector3D(x_0)),
 			v(Vector3D(v_0)),
 			F(Vector3D()),
@@ -48,6 +54,9 @@ class Particle{
 			radius(my_radius),
 			color(WHITE)
 			{}
+
+		std::ostream& print(std::ostream &stream) const;
+		virtual void draw(void) override{ canvas->draw(*this); }
 
 		double getMass(void) const;
 		void setMass(double my_mass);

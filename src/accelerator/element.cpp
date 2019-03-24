@@ -53,6 +53,12 @@ bool Element::has_left(const Particle& p) const{
 	return Vector3D::mixed_prod(Z_VECTOR, p.getPosition(), entry_point) >= 0;
 }
 
+std::ostream& StraightSection::print(std::ostream& output) const{
+	output << "Straight section:\n";
+	Element::print(output);
+	return output;
+}
+
 void Magnetic_element::add_lorentz_force(Particle& p, double dt) const{
 	p.add_magnetic_force(B(p.getPosition()), dt);
 }

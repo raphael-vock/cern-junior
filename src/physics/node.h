@@ -22,7 +22,7 @@ class Node{
 
 		static constexpr double THETA = 0.5;
 	public:
-		Node(Box my_Box) : domain(my_Box), type(EMPTY), virtual_particle(){}
+		Node(Box my_Box) : domain(my_Box), type(EMPTY), virtual_particle(nullptr){}
 
 		void subdivide(void);
 		bool insert(Particle* my_Point);

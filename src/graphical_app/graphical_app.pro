@@ -19,9 +19,9 @@ LIBS += \
 	-L../general -lgeneral
 
 PRE_TARGETDEPS +=\
+	../general/libgeneral.a \
 	../vector3d/libvector3d.a \
 	../physics/libphysics.a \
-	../general/libgeneral.a
 
 SOURCES += \
 	main_qt_gl.cpp \

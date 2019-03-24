@@ -11,7 +11,6 @@ void GLWidget::timerEvent(QTimerEvent* event){
 	if(not isPaused){
 		Q_UNUSED(event);
 		double dt = stopwatch.restart() / 1000.0;
-
 		update();
 	}
 }

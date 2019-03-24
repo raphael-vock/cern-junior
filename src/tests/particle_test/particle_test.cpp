@@ -4,13 +4,12 @@
 #include "../../physics/physical_constants.h"
 
 using namespace std;
-using namespace phcst;
 
 int main(){
 	double dt(1e-11);
 
-	Particle p1(3.00984, -0.391837, 0, -210200, -2.64754e+08, 0, GeV/(C*C) * 0.938272, 1.60217653e-19);
-	Particle p2(2.99016, -0.391837, 0, 210200, -2.64754e+08, 0, GeV/(C*C) * 0.938272, 1.60217653e-19);
+	Particle p1(nullptr, 3.00984, -0.391837, 0, -210200, -2.64754e+08, 0, phcst::GeV/(phcst::C*phcst::C) * 0.938272, 1.60217653e-19);
+	Particle p2(nullptr, 2.99016, -0.391837, 0, 210200, -2.64754e+08, 0, phcst::GeV/(phcst::C*phcst::C) * 0.938272, 1.60217653e-19);
 
 	cout << "Particle 1:\n";
 	cout << p1;
