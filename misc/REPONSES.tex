@@ -103,9 +103,9 @@ La solution évidente est par des méthodes virtuelles pures, que l'on spéciali
 
 Cette approche \textit{ad hoc} et très peu généralisable. Si l'on souhaite en plus visualiser d'autres champs, pas nécessairement liés aux éléments, par exemple le champ magnétique généré par une particule, on serait alors contraint à copier-coller le code lié à la représentation des lignes de champs. Ce qu'on a envie de faire, c'est déléguer la partie liée au dessin des champs de force à une fonction externe qui prend en argument un champ vectoriel et se charge de le dessiner. Mais dans le scénario que nous décrivons, les champs vectoriels sont des méthodes, donc ne peuvent pas être passés en argument !
 
-Force est de constater que les champs vectoriels \T{B} et \T{E}, bien qu'ils aient la vocation de se comporter comme des fonctions, apparaissent conceptuellement comme des attributs : ils contiennent \textit{de l'information qui caractérise l'instance}. Par ailleurs ce sont des \textit{objets fonctionnels purs} : en les évaluant en un point on ne modifie pas l'instance. On a donc très envie de les représenter comme des \textit{attributs de classe de type fonctionnel} et non comme des méthodes.
+Force est de constater que les champs vectoriels \T{B} et \T{E}, bien qu'ils aient la vocation de se comporter comme des fonctions, apparaissent conceptuellement comme des attributs : ils contiennent \textit{de l'information qui caractérise l'instance}. Par ailleurs ce sont des \textit{objets fonctionnels purs} : en les évaluant en un point on ne modifie pas l'instance. On a donc très envie de les représenter comme des \textit{attributs de type fonctionnel} et non comme des méthodes.
 
-Ceci est possible grâce au paradigme fonctionnel que propose la norme C++11, notamment avec \T{std::function} et la notation lambda. En bref :
+Ceci est possible grâce au paradigme fonctionnel que propose la norme C++11, notamment avec \T{std::function} et la notation lambda. Pour rappel :
 
 \begin{itemize}
 \item Le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de définir des variables fonctionnelles dites ``de première classe'', c'est-à-dire qu'on peut manier comme des variables quelconques.
@@ -117,27 +117,27 @@ Ensemble, ils nous procurent un puissant moyen de représenter des fonctions pur
 \begin{align*}
 	&\T{\#include <functional>}\\
 	&\T{// déclare une classe pour représenter les fonctions vectorielles : }\\
-	&\T{typedef std::function<Vector3D(const Vector3D \&)> VectorFunction;}\\
+	&\T{typedef std::function<Vector3D(const Vector3D \&)> vector\_function;}\\
 	&\T{const Vector3D X\_0(1.0, 2.0, 0.0);}\\
 	&\T{// initialise une fonction vectorielle constante via un lambda : }\\
-	&\T{VectorFunction X = [](Vector3D \&)\{ return X\_0; \}}
+	&\T{vector\_function X = [](Vector3D \&)\{ return X\_0; \}}
 \end{align*}
 
-\noindent Pour représenter l'\textit{objet} correspondant au champ vectoriel nous voulons en plus qu'il ait une méthode permettant de le dessiner. On va donc encapsuler un \T{VectorFunction} dans une sous-classe de la class abstraite \T{Drawable}. Puisque le C++ donne la possibilité de surcharger l'opérateur d'appel, on peut conserver son interface ``fonctionnelle'' malgré l'encapsulation :
+\noindent Pour représenter l'\textit{objet} correspondant au champ vectoriel nous voulons en plus qu'il ait une méthode permettant de le dessiner. On va donc encapsuler un \T{vector\_function} dans une sous-classe de la class abstraite \T{Drawable}. Puisque le C++ donne la possibilité de surcharger l'opérateur d'appel, on peut conserver son interface ``fonctionnelle'' malgré l'encapsulation :
 \begin{align*}
 	&\T{class VectorField : public Drawable \{}\\
 	&\indent \T{private:}\\
-	& \indent \indent \T{VectorFunction F;}\\
+	& \indent \indent \T{vector\_function F;}\\
 	&\indent \T{public:}\\
-	& \indent \indent \T{VectorField(VectorFunction f) : F(f)\{\}}\\
+	& \indent \indent \T{VectorField(vector\_function f) : F(f)\{\}}\\
 	& \indent \indent \T{// surcharge de l'opérateur d'appel :}\\
 	& \indent \indent \T{Vector3D operator()(const Vector3D \&v)\ const\{ return F(v); \} }\\
 	& \indent \indent \T{// prototype de la méthode pour dessiner les lignes de champ :}\\
-	& \indent \indent \T{virtual draw(void) override;}\\
+	& \indent \indent \T{virtual void draw(void) override;}\\
 	& \T{\};}
 \end{align*}
 
-\indent On peut enfin définir les sous-classes \T{Electric\_field} et \T{Magnetic\_field} en rajoutant un attribut de type \T{VectorField} correspondant au champ électrique et magnétique respectivement. Munis de cette représentation, l'implémentation des sous-classes spécifiques d'\T{Element} devient très concise. À l'encontre de la première approche, nous n'avons pas à redéfinir de méthode virtuelle ; il suffit d'ajouter en attribut les éventuels paramètres spécifiques de l'élément puis d'écrire le calcul du champ électrique (resp. magnétique) dans le corps d'un lambda représentant le champ vectoriel que l'on passe en argument (parmi d'autres) au constructeur de \T{Electric\_element} (resp. \T{Magnetic\_element}).\\ \indent Illustrons ceci par la définition simplifiée de la classe dipôle (qui, rappelons-le, a un champ magnétique vertical constant et d'amplitude donnée par un paramètre) :
+\indent On peut enfin définir les sous-classes \T{Electric\_field} et \T{Magnetic\_field} en rajoutant un attribut de type \T{VectorField} correspondant au champ électrique et magnétique respectivement. Munis de cette représentation, l'implémentation des sous-classes spécifiques d'\T{Element} devient très concise. À l'encontre de la première approche, nous n'avons pas à redéfinir de méthode virtuelle ; il suffit d'ajouter en attribut les éventuels paramètres spécifiques de l'élément puis d'écrire le calcul du champ électrique (resp. magnétique) dans le corps d'un lambda représentant le champ vectoriel que l'on passe en argument (parmi d'autres) au constructeur de \T{Electric\_element} (resp. \T{Magnetic\_element}).\\ \indent Illustrons ceci par la définition simplifiée de la classe représentant les dipôles (qui, rappelons-le, ont un champ magnétique vertical constant, d'amplitude donnée par un paramètre) :
 \begin{align*}
 	&\T{class Dipole : public Magnetic\_field \{}\\
 	&\indent \T{private:}\\
