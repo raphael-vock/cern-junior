@@ -30,7 +30,7 @@ void GLWidget::paintGL(){
 
 
 void GLWidget::keyPressEvent(QKeyEvent* event){
-	constexpr double small_angle(2.5); // in degrees
+	constexpr double small_angle(5); // in degrees
 	constexpr double small_increment(0.5);
 
 	switch(event->key()){

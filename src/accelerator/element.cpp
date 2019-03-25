@@ -40,6 +40,29 @@ Vector3D Element::center(void) const{
 	return 0.5*(entry_point + exit_point) + (1.0/curvature)*sqrt(1.0-curvature*curvature*direction.norm2()/4.0)*(direction.unitary()^Z_VECTOR);
 }
 
+std::vector<Vector3D> Element::sample_points(void) const{
+	// we want the sample points of an element to be evenly distributed on the circle of its entry surface
+	// i.e. a circle orthogonal to exit_point - entry_point and with radius that of the element (i.e. Element::radius)
+	std::vector<Vector3D> list;
+
+	double SAMPLE_POINT_DENSITY(1e-3);// number of points per unit of distance
+				// note: move somewhere more appropriate
+
+	Vector3D u((exit_point - entry_point).unitary());
+
+	// constructs an orthonormal pair of vector {u,v} in the plane of the circle
+	Vector3D v(u.orthogonal());
+	u = u^v;
+
+	int number_of_points(2*M_PI*radius/SAMPLE_POINT_DENSITY);
+
+	for(int i(1); i <= number_of_points; ++i){
+		double theta(SAMPLE_POINT_DENSITY * i);
+		list.push_back(entry_point + sin(theta)*u + cos(theta)*v);
+	}
+	return list;
+}
+
 bool Element::has_collided(const Particle& p) const{
 	if(is_straight()){
 		Vector3D r(p.getPosition() - center()); // position relative to center
@@ -62,11 +85,11 @@ std::ostream& StraightSection::print(std::ostream& output) const{
 }
 
 void Magnetic_element::add_lorentz_force(Particle& p, double dt) const{
-	p.add_magnetic_force(B(p.getPosition()), dt);
+	p.add_magnetic_force(field(p.getPosition()), dt);
 }
 
 void Electric_element::add_lorentz_force(Particle& p, double dt) const{
-	p.add_electric_force(E(p.getPosition()));
+	p.add_electric_force(field(p.getPosition()));
 }
 
 std::ostream& Dipole::print(std::ostream& output) const{

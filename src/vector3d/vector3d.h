@@ -2,6 +2,10 @@
 
 #include <array>
 
+#include "../misc/color.h"
+#include "../general/drawable.h"
+#include "../general/canvas.h"
+
 class Vector3D{
 	private:
 		double x;
@@ -40,7 +44,8 @@ class Vector3D{
 
 		// Other methods/functions with vector output:
 		Vector3D rotate(Vector3D, double) const; // rotates around a given axis by a given angle angle passed as arguments
-		Vector3D unitary() const; // returns the unit vector in the same direction
+		Vector3D unitary(void) const; // returns the unit vector in the same direction
+		Vector3D orthogonal(void) const; // returns an unitary orthogonal vector
 		static Vector3D random_unit_vector(void);
 
 		// Constants:
@@ -56,3 +61,17 @@ namespace basicvector{
 	static const Vector3D Y_VECTOR(0.0,1.0,0.0);
 	static const Vector3D Z_VECTOR(0.0,0.0,1.0);
 }
+
+class Arrow : public Drawable{
+	// represents a segment of 3D space with a start point and an endpoint
+	friend class OpenGLView;
+	private:
+		Vector3D A;
+		Vector3D B;
+		RGB color;
+	public:
+		Arrow(Canvas* c, Vector3D a = basicvector::ZERO_VECTOR, Vector3D b = basicvector::ZERO_VECTOR, RGB my_color = {1.0,1.0,1.0}) : Drawable(c), A(a), B(b), color(my_color){}
+
+		std::ostream& print(std::ostream& stream) const;
+		virtual void draw(void) override{ canvas->draw(*this); }
+};

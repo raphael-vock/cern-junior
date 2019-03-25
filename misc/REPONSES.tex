@@ -79,7 +79,7 @@ L'implémentation du facteur gamma et de l'énergie dans la classe \T{Particle} 
 
 \subitem $\oplus$ Stockées sous forme de méthodes, on calcule leur valeur précisément lorsqu'on en a besoin, donc on ne stocke jamais d'information redondante.
 
-\subitem $\ominus$ \ldots quitte à effectuer inutilement plusieurs fois le même calcul.
+\subitem $\ominus$ \ldots quitte à éventuellement effectuer plusieurs fois le même calcul.
 \end{itemize}
 \bigskip
 Certes, il s'agit de calculs simples avec des \double\ donc les arguments de complexité et de poids seront probablement négligeables à l'échelle de l'executable final. Moyennant le pour et le contre, et en se focalisant surtout sur la clarté conceptuelle, \textbf{nous avons opté pour des méthodes.}

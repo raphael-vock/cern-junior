@@ -27,6 +27,9 @@ int main(void){
 	cout << "\n   |v| = " << v.norm();
 	cout << "\n   unitary(v) = " << v.unitary();
 	cout << "\n   u.(v^w) = " << Vector3D::mixed_prod(u,v,w);
+	cout << "\n   An orthogonal unit vector to u is: " << u.orthogonal();
+	cout << "\n   An orthogonal unit vector to v is: " << v.orthogonal();
+	cout << "\n   An orthogonal unit vector to w is: " << w.orthogonal();
 
 	cout << "\n\n";
 }

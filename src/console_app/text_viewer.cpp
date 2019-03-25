@@ -6,7 +6,15 @@
 #include "../accelerator/element.h"
 #include "../accelerator/accelerator.h"
 
-void TextViewer::draw(const VectorField &to_draw){
+void TextViewer::draw(const Arrow &to_draw){
+	stream << "An arrow";
+}
+
+void TextViewer::draw(const StaticVectorField &to_draw){
+	to_draw.print(stream);
+}
+
+void TextViewer::draw(const DynamicVectorField &to_draw){
 	to_draw.print(stream);
 }
 

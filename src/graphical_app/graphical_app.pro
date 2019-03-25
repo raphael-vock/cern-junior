@@ -14,14 +14,16 @@ INCLUDEPATH += \
 	../general
 
 LIBS += \
+	-L../general -lgeneral \
 	-L../vector3d -lvector3d \
 	-L../physics -lphysics \
-	-L../general -lgeneral
+	-L../accelerator -laccelerator \
 
 PRE_TARGETDEPS +=\
 	../general/libgeneral.a \
 	../vector3d/libvector3d.a \
 	../physics/libphysics.a \
+	../accelerator/libaccelerator.a \
 
 SOURCES += \
 	main_qt_gl.cpp \

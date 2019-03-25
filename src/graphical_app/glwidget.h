@@ -8,10 +8,6 @@
 #include "../accelerator/accelerator.h"
 
 class GLWidget : public QOpenGLWidget{
-	public:
-		GLWidget(QWidget* parent) : QOpenGLWidget(parent), content(&view){}
-		virtual ~GLWidget(){}
-
 	private:
 		virtual void initializeGL() override;
 		virtual void resizeGL(int width, int height) override;
@@ -34,4 +30,7 @@ class GLWidget : public QOpenGLWidget{
 
 		// to be drawn
 		Accelerator content;
+	public:
+		GLWidget(QWidget* parent = nullptr, Accelerator my_content = Accelerator()) : QOpenGLWidget(parent), content(Accelerator(&view, my_content)){}
+		virtual ~GLWidget(){}
 };

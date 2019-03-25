@@ -1,8 +1,11 @@
 #pragma once
 
+#include <iostream>
+
 #include "element.h"
 
-class Accelerator : Drawable{
+class Accelerator : public Drawable{
+	friend class OpenGLView;
 	private:
 		void initialize(void);
 
@@ -13,6 +16,10 @@ class Accelerator : Drawable{
 			Drawable(canvas),	
 			element_list(my_element_list),
 			particle_list(my_particle_list){}
+		Accelerator(Canvas* canvas, Accelerator A = Accelerator()) :
+			Drawable(canvas),
+			element_list(A.element_list),
+			particle_list(A.particle_list){}
 
 		virtual void draw(void) override{ canvas->draw(*this); }
 

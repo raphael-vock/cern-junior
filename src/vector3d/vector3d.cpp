@@ -100,7 +100,17 @@ bool Vector3D::operator!=(const Vector3D& v) const{
 
 Vector3D Vector3D::unitary(void) const{
 	if(this->is_zero()) throw ZERO_VECTOR_UNITARY;
-	else return (*this) * (1/this->norm());
+	else return (*this) * (1/norm());
+}
+
+Vector3D Vector3D::orthogonal(void) const{
+	if(x*x > EPSILON) return Vector3D(-y/x, 1.0, 0.0).unitary();
+	if(y*y > EPSILON) return Vector3D(1.0, -x/y, 0.0).unitary();
+	if(z*z > EPSILON) return Vector3D(1.0, 0.0, -x/z).unitary();
+	else{
+		// (is zero vector)
+		return basicvector::X_VECTOR;
+	}
 }
 
 Vector3D Vector3D::rotate(Vector3D u, double alpha) const{
@@ -139,4 +149,9 @@ double Vector3D::mixed_prod(const Vector3D &u, const Vector3D &v, const Vector3D
 std::ostream& operator<<(std::ostream& output, Vector3D const& v){
 	output << v[0] << "  " << v[1] << "  " << v[2];
 	return output;
+}
+
+std::ostream& Arrow::print(std::ostream& stream) const{
+	stream << '[' << A << ", " << B << ']';
+	return stream;
 }

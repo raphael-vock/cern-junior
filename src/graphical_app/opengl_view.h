@@ -11,7 +11,9 @@
 class OpenGLView : public Canvas{
 	public:
 		// drawing methods, inherited from Canvas
-		virtual void draw(const VectorField &to_draw) override;
+		virtual void draw(const Arrow &to_draw) override;
+		virtual void draw(const StaticVectorField &to_draw) override;
+		virtual void draw(const DynamicVectorField &to_draw) override;
 		virtual void draw(const Particle &to_draw) override;
 		virtual void draw(const StraightSection &to_draw) override;
 		virtual void draw(const Dipole &to_draw) override;
@@ -19,8 +21,8 @@ class OpenGLView : public Canvas{
 		virtual void draw(const Accelerator &to_draw) override;
 
 		// initalization methods
-		void init();
-		void initializePosition();
+		void init(void);
+		void initializePosition(void);
 
 		// setters
 		void setProjection(QMatrix4x4 const& projection){
