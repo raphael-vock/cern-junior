@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
 	Quadrupole Q(nullptr, {0.0,0.0,0.0}, {5.0,0.0,0.0}, 1.0, 0.1, nullptr, nullptr, 10.0);
 	RadiofrequencyCavity E(nullptr, {0.0,0.0,0.0}, {5.0,0.0,0.0}, 2.0, 0.0, nullptr, nullptr, 1.0, 1.0, 0.4, 0.0);
 
-	Accelerator A(nullptr, {&Q}, {});
+	Accelerator A(nullptr, {&E}, {});
 	cout << A << endl;
 
 	GLWidget w(nullptr, &A);

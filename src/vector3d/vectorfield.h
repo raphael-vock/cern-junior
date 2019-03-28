@@ -33,7 +33,7 @@ class VectorField : public Drawable{
 			clock(my_clock),
 			color(my_color),
 			F_max(my_F_max)
-			{ evolve(0.0); }
+			{ evolve(); }
 
 		// overload of call operator
 		Vector3D operator()(const Vector3D &x) const;
@@ -44,5 +44,5 @@ class VectorField : public Drawable{
 		void setClock(double* my_clock){ clock = my_clock; }
 
 		Vector3D tangent_neighbor(const Vector3D &x) const; // returns the tangent vector to the field at point x
-		virtual void evolve(double dt) override; // calculates field lines as a set of line segments (Arrow class) and puts them in field_lines
+		virtual void evolve(double dt = 0.0) override; // calculates field lines as a set of line segments (Arrow class) and puts them in field_lines
 };
