@@ -39,54 +39,41 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 		case Qt::Key_Left:
 			view.rotate(small_angle, 0.0, -1.0, 0.0);
 			break;
-
 		case Qt::Key_Right:
 			view.rotate(small_angle, 0.0, +1.0, 0.0);
 			break;
-
 		case Qt::Key_Up:
 			view.rotate(small_angle, -1.0, 0.0, 0.0);
 			break;
-
 		case Qt::Key_Down:
 			view.rotate(small_angle, +1.0, 0.0, 0.0);
 			break;
-
 		case Qt::Key_W:
 			// close on Ctrl-w (Windows/Linux) or Cmd-w (Mac):
 			if(event->modifiers() & Qt::ControlModifier) close();
-
 			else view.translate(0.0, 0.0, small_increment);
 			break;
-
 		case Qt::Key_S:
 			view.translate(0.0, 0.0, -small_increment);
 			break;
-
 		case Qt::Key_A:
 			view.translate(small_increment, 0.0, 0.0);
 			break;
-
 		case Qt::Key_D:
 			view.translate(-small_increment, 0.0, 0.0);
 			break;
-
 		case Qt::Key_R:
 			view.translate(0.0, -small_increment, 0.0);
 			break;
-
 		case Qt::Key_F:
 			view.translate(0.0, small_increment, 0.0);
 			break;
-
 		case Qt::Key_Q:
 			view.rotate(small_angle, 0.0, 0.0, -1.0);
 			break;
-
 		case Qt::Key_E:
 			view.rotate(small_angle, 0.0, 0.0, +1.0);
 			break;
-
 		case Qt::Key_Home:
 			view.initializePosition();
 			break;

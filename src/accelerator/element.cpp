@@ -29,6 +29,10 @@ void Element::link(Element &next_element){
 	successor = &next_element;
 }
 
+void Element::insert(Particle &p){
+	particle_list.push_back(&p);
+}
+
 Vector3D Element::center(void) const{
 	if(is_straight()) throw ZERO_CURVATURE_CENTER;
 	Vector3D direction(exit_point - entry_point);
@@ -36,15 +40,24 @@ Vector3D Element::center(void) const{
 }
 
 Vector3D Element::direction(void) const{
-	return (exit_point - entry_point).unitary();
+	return exit_point - entry_point;
+}
+
+Vector3D Element::unit_direction(void) const{
+	return direction().unitary();
+}
+
+Vector3D Element::relative_coords(const Vector3D &x) const{
+	return x - entry_point;
 }
 
 Vector3D Element::local_coords(const Vector3D &x) const{
-	return x - (x|direction())*x;
+	Vector3D y(relative_coords(x));
+	return y - (y|direction())*y;
 }
 
 double Element::curvilinear_coord(const Vector3D &x) const{
-	double l(local_coords(x)|direction());
+	double l((local_coords(x) - relative_coords(x)) | unit_direction());
 	return is_straight() ? l : asin(l*curvature) / curvature;
 }
 
@@ -53,27 +66,20 @@ std::vector<Vector3D> Element::sample_points(void) const{
 	// i.e. a circle orthogonal to exit_point - entry_point and with radius that of the element (i.e. Element::radius)
 	std::vector<Vector3D> list;
 
-	double SAMPLE_POINT_DENSITY(3.0);// number of points per unit of distance
-				// note: move somewhere more appropriate
-
-	Vector3D u(exit_point - entry_point);
-	double l(u.norm());
-	u *= 1.0/l;
+	Vector3D u(direction());
 
 	// constructs an orthonormal pair of vector {v,w} in the plane of the circle
 	Vector3D v(u.orthogonal());
-	Vector3D w(u^v);
+	Vector3D w(u.unitary()^v);
 
-	int number_of_points(2*M_PI*radius*SAMPLE_POINT_DENSITY);
+	int number_of_points(2*M_PI*radius*simcst::FIELD_LINE_SAMPLE_POINT_DENSITY);
 
 	for(int i(1); i <= number_of_points; ++i){
-		double theta(i / (radius*SAMPLE_POINT_DENSITY));
+		double theta(i / (radius*simcst::FIELD_LINE_SAMPLE_POINT_DENSITY));
 		Vector3D P(entry_point + sin(theta)*v + cos(theta)*w);
-
-		/* for(int j(1); j <= 10; ++j){ */
-		/* 	list.push_back(P + l*j/10); */
-		/* } */
-		list.push_back(P + l);
+		list.push_back(P + entry_point);
+		list.push_back(P + exit_point);
+		list.push_back(P + 0.5*(exit_point - entry_point));
 	}
 	return list;
 }
@@ -83,7 +89,7 @@ bool Element::has_collided(const Particle& p) const{
 		Vector3D r(p.getPosition() - center()); // position relative to center
 		return (r - 1.0/abs(curvature)*(r - r[2]*vctr::Z_VECTOR)).norm2() >= radius*radius;
 	}else{
-		Vector3D d((exit_point - entry_point).unitary());
+		Vector3D d(unit_direction());
 		Vector3D r(p.getPosition() - entry_point); // position relative to entry point
 		return (r - (r|d)*d).norm2() >= radius*radius;
 	}
@@ -91,6 +97,10 @@ bool Element::has_collided(const Particle& p) const{
 
 bool Element::has_left(const Particle& p) const{
 	return Vector3D::mixed_prod(vctr::Z_VECTOR, p.getPosition(), entry_point) >= 0;
+}
+
+void Element::evolve(double dt){
+	for(Particle* p : particle_list) add_lorentz_force(*p, dt);
 }
 
 std::ostream& StraightSection::print(std::ostream& output) const{

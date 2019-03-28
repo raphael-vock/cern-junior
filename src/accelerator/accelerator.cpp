@@ -5,6 +5,7 @@ void Accelerator::initialize(Canvas* c){
 
 	for(Particle* p : particle_list){
 		p->setCanvas(c);
+		for(Element* e : element_list) e->insert(*p);
 	}
 
 	for(Element* e : element_list){

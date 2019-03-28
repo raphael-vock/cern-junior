@@ -50,9 +50,14 @@ class Element : public Drawable{
 		
 		void link(Element &next_element);
 
-		Vector3D center(void) const; // returns the center of circular element assuming curvature is non-zero
-		Vector3D direction(void) const; // returns unit vector with the direction of the element
+		void insert(Particle &p);
 
+		Vector3D center(void) const; // returns the center of circular element assuming curvature is non-zero
+
+		Vector3D direction(void) const; // returns the vector exit_point - entry_point
+		Vector3D unit_direction(void) const; // returns director().unitary()
+
+		Vector3D relative_coords(const Vector3D &x) const;
 		Vector3D local_coords(const Vector3D &x) const;
 
 		double curvilinear_coord(const Vector3D &x) const;
@@ -63,6 +68,7 @@ class Element : public Drawable{
 		bool has_left(const Particle& p) const; // returns true iff p has passed to the next element
 		
 		virtual void add_lorentz_force(Particle &p, double dt) const = 0;
+		virtual void evolve(double dt) override;
 }; 
 
 std::ostream& operator<<(std::ostream& output, const Element &E);
@@ -160,7 +166,7 @@ class RadiofrequencyCavity : public Electric_element{
 			phi(my_phi)
 			{}
 
-		virtual void evolve(double dt) override{ field.evolve(dt); }
+		virtual void evolve(double dt) override{ Element::evolve(dt); field.evolve(dt); }
 
 		virtual void draw(void) override{ canvas->draw(*this); }
 };

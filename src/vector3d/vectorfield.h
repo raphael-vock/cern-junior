@@ -9,6 +9,7 @@
 #include "../general/canvas.h"
 
 #include "vector3d.h"
+#include "../misc/constants.h"
 
 typedef std::function<Vector3D(const Vector3D &, double t)> vector_map;
 
@@ -20,10 +21,8 @@ class VectorField : public Drawable{
 		double* clock;
 		RGB color;
 
-		std::vector<Arrow> field_lines;	
-		static constexpr double MAX_FIELD_LINE_LENGTH = 3;
-
-		double F_max; // for representing color shifts in field lines
+		std::vector<Arrow> field_lines;
+		double F_max; // for drawing the field lines with a gradient depending on the field's strength
 
 	public:
 		VectorField(Canvas* display = nullptr, vector_map f = [](Vector3D, double){ return vctr::ZERO_VECTOR; }, std::vector<Vector3D> my_points = {}, double* my_clock = nullptr, RGB my_color = RGB::WHITE, double my_F_max = 1.0) :

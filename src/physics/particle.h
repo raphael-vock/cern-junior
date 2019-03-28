@@ -24,16 +24,10 @@ class Particle : public Drawable{
 		RGB color;
 
 	public:
-		static constexpr double DEFAULT_MASS = 1.0;
-		static constexpr double DEFAULT_RADIUS = 1.0;
-
-		static constexpr double GRAVITY_EPSILON = 1e-1;
-		
-		static constexpr double ETA = 0.8; // collision constant
 
 		bool alive = true;
 
-		Particle(Canvas* vue, double x = 0, double y = 0, double z = 0, double v_x = 0.0, double v_y = 0.0, double v_z = 0.0, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
+		Particle(Canvas* vue, double x = 0, double y = 0, double z = 0, double v_x = 0.0, double v_y = 0.0, double v_z = 0.0, double my_mass = simcst::DEFAULT_MASS, double my_charge = simcst::DEFAULT_CHARGE, double my_radius = simcst::DEFAULT_RADIUS) :
 			Drawable(vue),
 			r(Vector3D(x,y,z)),
 			v(Vector3D(v_x,v_y,v_z)),
@@ -44,7 +38,7 @@ class Particle : public Drawable{
 			color(RGB::WHITE)
 			{}
 
-		Particle(Canvas* vue, Vector3D x_0, Vector3D v_0 = vctr::ZERO_VECTOR, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
+		Particle(Canvas* vue, Vector3D x_0, Vector3D v_0 = vctr::ZERO_VECTOR, double my_mass = simcst::DEFAULT_MASS, double my_charge = simcst::DEFAULT_CHARGE, double my_radius = simcst::DEFAULT_RADIUS) :
 			Drawable(vue),
 			r(Vector3D(x_0)),
 			v(Vector3D(v_0)),

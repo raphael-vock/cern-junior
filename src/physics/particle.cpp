@@ -1,5 +1,5 @@
 #include <iostream> // for std::cout 
-#include <cmath> // for pow
+#include <cmath> // for pow, asin
 
 #include "particle.h"
 
@@ -60,15 +60,11 @@ void Particle::add_gravitational_force(Particle& P) const{
 	if(this == &P or not alive) return;
 
 	Vector3D F_g(r - P.r);
-	F_g *= G * mass * P.mass / pow( F_g.norm2() + GRAVITY_EPSILON, 1.5 );
+	F_g *= phcst::G * mass * P.mass / pow( F_g.norm2() + simcst::GRAVITY_SMOOTHING_EPSILON, 1.5 );
 	P.F += F_g;
 }
 
 void Particle::evolve(double dt){
-	double f(F.norm()/(G*mass*mass/GRAVITY_EPSILON)); // == F/F_max
-	if(f > 1.0) f = 1.0;
-	color = {0.1+f, 0.3+f*f*f, 1.0};
-
 	v += (dt / (gamma()*mass)) * F;
 	r += dt * v;
 
@@ -86,7 +82,7 @@ void Particle::swallow(Particle& q){
 
 	mass += q_mass;
 
-	v *= ETA/mass;
+	v *= simcst::COLLISION_ETA/mass;
 	r *= 1.0/mass;
 
 	radius = pow( pow(radius,3.0) + pow(q.getRadius(),3.0), 1.0/3.0 );
@@ -102,9 +98,8 @@ void Particle::add_magnetic_force(const Vector3D &B, double dt){
 	if(dt <= simcst::ZERO_TIME) return;
 	Vector3D magnetic_force(charge*(v^B));
 	Vector3D axis(v^magnetic_force);
-	if(not axis.is_zero()){
-		magnetic_force.rotate(axis,asin(dt*magnetic_force.norm()/(2*gamma()*mass*v.norm())));
-	}
+
+	magnetic_force.rotate(axis,asin(dt*magnetic_force.norm()/(2*gamma()*mass*v.norm())));
 	add_force(magnetic_force);
 }
 
@@ -113,19 +108,19 @@ void Particle::add_electric_force(const Vector3D &E){
 }
 
 double Particle::gamma(void) const{
-	return 1.0/(sqrt(1.0-v.norm2()/(C*C)));
+	return 1.0/(sqrt(1.0 - v.norm2() / (phcst::C * phcst::C)));
 }
 
 double Particle::energy(void) const{
-	return gamma()*mass*C*C;
+	return gamma()*mass*phcst::C*phcst::C;
 }
 
 std::ostream& Particle::print(std::ostream& output) const{
 	output << "   Position : " << r
 	<< "\n   Velocity : " << v
-	<< "\n   Energy (GeV) : " << energy()/GeV
 	<< "\n   Gamma : " << gamma()
-	<< "\n   Mass (GeV/c^2) : " << mass * (C*C/GeV)
+	<< "\n   Energy (GeV) : " << energy()*1e-9/E
+	<< "\n   Mass (GeV/c^2) : " << mass*(C*C*1e-9/E)
 	<< "\n   Charge : " << charge
 	<< "\n   Force : " << F
 	<< std::endl;

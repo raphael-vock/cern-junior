@@ -31,6 +31,7 @@ void OpenGLView::draw(const VectorField &to_draw){
 }
 
 void OpenGLView::draw(const Particle &to_draw){
+	std::cout << to_draw << std::endl;
 	std::array<double,3> coords(to_draw.getPosition().getCoords());
 
 	QMatrix4x4 matrix;

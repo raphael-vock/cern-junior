@@ -86,7 +86,11 @@ double Vector3D::distance2(const Vector3D& u, const Vector3D& v){
 }
 
 bool Vector3D::is_zero(void) const{
-	return norm2() <= simcst::ZERO_VECTOR_NORM2;
+	// calculation is optimized because this method will be called very very frequently!
+	if(x*x >= simcst::ZERO_VECTOR_NORM2) return false;
+	if(y*y >= simcst::ZERO_VECTOR_NORM2) return false;
+	if(z*z >= simcst::ZERO_VECTOR_NORM2) return false;
+	return true;
 }
 
 bool Vector3D::operator==(const Vector3D& v) const{
@@ -97,9 +101,14 @@ bool Vector3D::operator!=(const Vector3D& v) const{
 	return not (*this == v);
 }
 
+void Vector3D::normalize(void){
+	if(this->is_zero()) throw excptn::ZERO_VECTOR_UNITARY;
+	else (*this) *= 1.0/norm();
+}
+
 Vector3D Vector3D::unitary(void) const{
 	if(this->is_zero()) throw excptn::ZERO_VECTOR_UNITARY;
-	else return (*this) * (1/norm());
+	else return (1.0/norm())*(*this);
 }
 
 Vector3D Vector3D::orthogonal(void) const{
@@ -112,26 +121,15 @@ Vector3D Vector3D::orthogonal(void) const{
 	}
 }
 
-Vector3D Vector3D::rotate(Vector3D u, double alpha) const{
-	// rotates *this around u by an angle alpha
-	// if u is zero-vector an exception will be thrown
-	u = u.unitary(); // normalize
-	return (cos(alpha)*(*this))
-		+ (1.0-cos(alpha))*((*this)|u)*u +
+void Vector3D::rotate(Vector3D u, double alpha){
+	// returns *this rotated around u by an angle alpha
+	// rotating around a zero-vector does nothing
+	
+	try{ u.normalize(); }
+	catch(std::invalid_argument){ return; }
+	*this = (cos(alpha)*(*this))
+		+ (1.0-cos(alpha))*((*this)|u)*u
 		+ sin(alpha)*(u^(*this));
-}
-
-Vector3D random_unit_vector(void){
-	std::uniform_real_distribution<double> dis(0.0, M_PI);
-	std::random_device gen;
-
-	double phi(dis(gen));
-	double theta(2 * dis(gen));
-	return Vector3D(
-		sin(theta) * cos(phi),
-		sin(theta) * sin(phi),
-		cos(theta)
-	);
 }
 
 Vector3D operator*(const double &lambda, const Vector3D& u){
@@ -152,6 +150,6 @@ std::ostream& Arrow::print(std::ostream& stream) const{
 	return stream;
 }
 
-Vector3D Arrow::director(void) const{
+Vector3D Arrow::direction(void) const{
 	return B - A;
 }
