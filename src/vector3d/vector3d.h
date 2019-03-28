@@ -72,6 +72,8 @@ class Arrow : public Drawable{
 	public:
 		Arrow(Canvas* c, Vector3D a = vctr::ZERO_VECTOR, Vector3D b = vctr::ZERO_VECTOR, RGB my_color = RGB::WHITE) : Drawable(c), A(a), B(b), color(my_color){}
 
+		Vector3D director(void) const;
+
 		std::ostream& print(std::ostream& stream) const;
 		virtual void draw(void) override{ canvas->draw(*this); }
 };

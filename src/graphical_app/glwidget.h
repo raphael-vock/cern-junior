@@ -30,6 +30,6 @@ class GLWidget : public QOpenGLWidget{
 		// to be drawn
 		Accelerator* content;
 	public:
-		GLWidget(QWidget* parent = nullptr, Accelerator* my_content = nullptr) : QOpenGLWidget(parent), content(my_content){ content->setCanvas(&view); }
+		GLWidget(QWidget* parent = nullptr, Accelerator* my_content = nullptr) : QOpenGLWidget(parent), content(my_content){ content->initialize(&view); }
 		virtual ~GLWidget(){}
 };

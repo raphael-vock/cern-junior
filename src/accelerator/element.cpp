@@ -53,7 +53,7 @@ std::vector<Vector3D> Element::sample_points(void) const{
 	// i.e. a circle orthogonal to exit_point - entry_point and with radius that of the element (i.e. Element::radius)
 	std::vector<Vector3D> list;
 
-	double SAMPLE_POINT_DENSITY(2*M_PI/radius);// number of points per unit of distance
+	double SAMPLE_POINT_DENSITY(1.0);// number of points per unit of distance
 				// note: move somewhere more appropriate
 
 	Vector3D u(exit_point - entry_point);
@@ -91,10 +91,6 @@ bool Element::has_collided(const Particle& p) const{
 
 bool Element::has_left(const Particle& p) const{
 	return Vector3D::mixed_prod(vctr::Z_VECTOR, p.getPosition(), entry_point) >= 0;
-}
-
-void Element::setCanvas(Canvas* c){
-	canvas = c;
 }
 
 std::ostream& StraightSection::print(std::ostream& output) const{

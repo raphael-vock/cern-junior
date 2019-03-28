@@ -150,3 +150,7 @@ std::ostream& Arrow::print(std::ostream& stream) const{
 	stream << '[' << A << ", " << B << ']';
 	return stream;
 }
+
+Vector3D Arrow::director(void) const{
+	return B - A;
+}
