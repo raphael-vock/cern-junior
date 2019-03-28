@@ -20,7 +20,6 @@ class Node{
 						   // i.e. its mass is the total mass of the particles in the cell
 						   // and its position is their barycenter
 
-		static constexpr double THETA = 0.5;
 	public:
 		Node(Box my_Box) : domain(my_Box), type(EMPTY), virtual_particle(nullptr){}
 

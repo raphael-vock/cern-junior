@@ -39,7 +39,7 @@ class Vector3D{
 		double norm(void) const; // returns Euclidian norm
 		static double distance(const Vector3D& u, const Vector3D& v);
 		static double distance2(const Vector3D& u, const Vector3D& v);
-		bool is_zero(void) const; // returns true if square of norm is "zero" i.e. less than EPSILON
+		bool is_zero(void) const; // returns true if square of norm is "zero" i.e. less than a small constants
 		static double mixed_prod(const Vector3D &, const Vector3D &, const Vector3D &); // returns mixed product of (u,v,w) i.e. u|(v^w);
 
 		// Other methods/functions with vector output:
@@ -47,12 +47,10 @@ class Vector3D{
 		Vector3D unitary(void) const; // returns the unit vector in the same direction
 		Vector3D orthogonal(void) const; // returns an unitary orthogonal vector
 		static Vector3D random_unit_vector(void);
-
-		// Constants:
-		static constexpr double EPSILON = 1e-5;
 };
 
 namespace vctr{
+	// some useful vectors for general use
 	const Vector3D ZERO_VECTOR(0,0,0);
 	const Vector3D X_VECTOR(1,0,0);
 	const Vector3D Y_VECTOR(0,1,0);

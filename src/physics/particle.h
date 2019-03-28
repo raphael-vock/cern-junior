@@ -8,7 +8,7 @@
 #include "../color/rgb.h"
 
 #include "../vector3d/vector3d.h"
-#include "../misc/physical_constants.h"
+#include "../misc/constants.h"
 
 class Particle : public Drawable{
 	private:

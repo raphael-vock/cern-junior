@@ -1,7 +1,7 @@
 #include <iostream>
 #include "text_viewer.h"
 
-#include "../misc/physical_constants.h"
+#include "../misc/constants.h"
 #include "../general/canvas.h"
 #include "../physics/particle.h"
 

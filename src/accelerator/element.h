@@ -109,7 +109,7 @@ class Dipole : public Magnetic_element{
 				display, entry, exit, my_radius, my_curvature, my_successor, my_clock,
 				[=](const Vector3D &, double){ return my_B_0*vctr::Z_VECTOR; },
 				abs(my_B_0)), // this lambda returns a constant magnetic field determined by B_0
-			B_0(my_B_0)
+			B_0(my_B_0) // F_max
 			{ if(is_straight()) throw excptn::ZERO_CURVATURE_DIPOLE; }
 
 		virtual void draw(void) override{ canvas->draw(*this); }
@@ -129,7 +129,7 @@ class Quadrupole : public Magnetic_element{
 					Vector3D u(vctr::Z_VECTOR ^ direction());
 					return my_b*((y|u)*vctr::Z_VECTOR + x[2]*u);
 				},
-				my_b*radius
+				my_b*my_radius // F_max
 			),
 			b(my_b)
 			{}

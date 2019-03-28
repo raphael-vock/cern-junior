@@ -99,7 +99,7 @@ void Particle::add_force(const Vector3D & my_F){
 }
 
 void Particle::add_magnetic_force(const Vector3D &B, double dt){
-	if(dt <= ZERO_TIME) return;
+	if(dt <= simcst::ZERO_TIME) return;
 	Vector3D magnetic_force(charge*(v^B));
 	Vector3D axis(v^magnetic_force);
 	if(not axis.is_zero()){

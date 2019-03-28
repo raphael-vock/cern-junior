@@ -4,6 +4,7 @@
 
 #include "vector3d.h"
 #include "../misc/exceptions.h"
+#include "../misc/constants.h"
 
 double Vector3D::operator[](int i) const{
 	switch(i){
@@ -85,7 +86,7 @@ double Vector3D::distance2(const Vector3D& u, const Vector3D& v){
 }
 
 bool Vector3D::is_zero(void) const{
-	return norm2() <= EPSILON;
+	return norm2() <= simcst::ZERO_VECTOR_NORM2;
 }
 
 bool Vector3D::operator==(const Vector3D& v) const{
@@ -102,9 +103,9 @@ Vector3D Vector3D::unitary(void) const{
 }
 
 Vector3D Vector3D::orthogonal(void) const{
-	if(x*x > EPSILON) return Vector3D(-y/x, 1.0, 0.0).unitary();
-	if(y*y > EPSILON) return Vector3D(1.0, -x/y, 0.0).unitary();
-	if(z*z > EPSILON) return Vector3D(1.0, 0.0, -x/z).unitary();
+	if(x*x > simcst::ZERO_VECTOR_NORM2) return Vector3D(-y/x, 1.0, 0.0).unitary();
+	if(y*y > simcst::ZERO_VECTOR_NORM2) return Vector3D(1.0, -x/y, 0.0).unitary();
+	if(z*z > simcst::ZERO_VECTOR_NORM2) return Vector3D(1.0, 0.0, -x/z).unitary();
 	else{
 		// (is zero vector)
 		return vctr::X_VECTOR;

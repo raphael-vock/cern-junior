@@ -6,7 +6,7 @@ using namespace std;
 using namespace excptn;
 
 bool Element::is_straight(void) const{
-	return abs(curvature) <= phcst::ZERO_DISTANCE;
+	return abs(curvature) <= simcst::ZERO_DISTANCE;
 }
 
 std::ostream& Element::print(std::ostream& output) const{
@@ -53,7 +53,7 @@ std::vector<Vector3D> Element::sample_points(void) const{
 	// i.e. a circle orthogonal to exit_point - entry_point and with radius that of the element (i.e. Element::radius)
 	std::vector<Vector3D> list;
 
-	double SAMPLE_POINT_DENSITY(1.0);// number of points per unit of distance
+	double SAMPLE_POINT_DENSITY(3.0);// number of points per unit of distance
 				// note: move somewhere more appropriate
 
 	Vector3D u(exit_point - entry_point);
