@@ -2,25 +2,25 @@ QT += core gui opengl widgets
 
 CONFIG -= \
 	app_bundle \
-	console
+	console \
+
 CONFIG += \
 	c++11 \
 
 TARGET = graphical_app
 
 INCLUDEPATH += \
-	../vector3d \
-	../physics \
-	../general
+	../general \
+	../accelerator \
 
 LIBS += \
-	-L../general -lgeneral \
+	-L../color -lcolor \
 	-L../vector3d -lvector3d \
 	-L../physics -lphysics \
 	-L../accelerator -laccelerator \
 
 PRE_TARGETDEPS +=\
-	../general/libgeneral.a \
+	../color/libcolor.a \
 	../vector3d/libvector3d.a \
 	../physics/libphysics.a \
 	../accelerator/libaccelerator.a \

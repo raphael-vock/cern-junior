@@ -20,13 +20,10 @@ void OpenGLView::draw(const Arrow &to_draw){
 	glEnd();
 }
 
-void OpenGLView::draw(const StaticVectorField &to_draw){
-	for(const Arrow &seg : to_draw.static_field_lines) draw(seg);
-}
-
-void OpenGLView::draw(const DynamicVectorField &to_draw){
-	std::vector<Arrow> lines(to_draw.field_lines());
-	for(const Arrow &seg : lines) draw(seg);
+void OpenGLView::draw(const VectorField &to_draw){
+	for(const Arrow &seg : to_draw.field_lines){
+		draw(seg);
+	}
 }
 
 void OpenGLView::draw(const Particle &to_draw){
@@ -51,9 +48,13 @@ void OpenGLView::draw(const Quadrupole &to_draw){
 	draw(to_draw.field);
 }
 
+void OpenGLView::draw(const RadiofrequencyCavity &to_draw){
+	draw(to_draw.field);
+}
+
 void OpenGLView::draw(const Accelerator &to_draw){
-	for(Particle* p : to_draw.particle_list) draw(*p);
-	for(Element* e : to_draw.element_list) draw(*e);
+	for(Particle* p : to_draw.particle_list) p->draw();
+	for(Element* e : to_draw.element_list) e->draw();
 }
 
 void OpenGLView::init(){

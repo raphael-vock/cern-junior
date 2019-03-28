@@ -1,9 +1,9 @@
 #include "vectorfield.h"
 
-constexpr double h(0.1);
+constexpr double h(1e-3);
 
 Vector3D VectorField::operator()(const Vector3D &x) const{
-	return F(x);
+	return F(x,t);
 }
 
 std::ostream& VectorField::print(std::ostream &stream) const{
@@ -13,22 +13,24 @@ std::ostream& VectorField::print(std::ostream &stream) const{
 
 Vector3D VectorField::tangent_neighbor(const Vector3D &x) const{
 	try{
-		return x + h*(F(x).unitary());
+		return x + h*(F(x,t).unitary());
 	}catch(...){ throw; }
 }
 
-std::vector<Arrow> VectorField::field_lines(void) const{
-	std::vector<Arrow> list;
-	for(const Vector3D &P : sample_points){
+void VectorField::evolve(double dt){
+	t += dt;
+
+	field_lines.clear();
+	for(Vector3D P : sample_points){
 		for(int i(0); i <= MAX_FIELD_LINE_LENGTH / h; ++i){
 			try{
 				Vector3D P_h(tangent_neighbor(P));
-				list.push_back(Arrow(canvas, P, P_h, color));
+				field_lines.push_back(Arrow(canvas, P, P_h, color));
+				P = P_h;
 			}catch(...){
 				// field vanishes so the field line terminates
 				break;
 			}
 		}
 	}
-	return list;
 }

@@ -10,12 +10,8 @@ void TextViewer::draw(const Arrow &to_draw){
 	stream << "An arrow";
 }
 
-void TextViewer::draw(const StaticVectorField &to_draw){
-	to_draw.print(stream);
-}
-
-void TextViewer::draw(const DynamicVectorField &to_draw){
-	to_draw.print(stream);
+void TextViewer::draw(const VectorField &to_draw){
+	stream << "A vector field";
 }
 
 void TextViewer::draw(const Particle &to_draw){
@@ -31,6 +27,10 @@ void TextViewer::draw(const Dipole &to_draw){
 }
 
 void TextViewer::draw(const Quadrupole &to_draw){
+	to_draw.print(stream);
+}
+
+void TextViewer::draw(const RadiofrequencyCavity &to_draw){
 	to_draw.print(stream);
 }
 

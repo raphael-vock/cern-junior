@@ -14,7 +14,6 @@ class GLWidget : public QOpenGLWidget{
 		virtual void paintGL() override;
 
 		// Event handling
-		bool isPaused = true;
 		virtual void keyPressEvent(QKeyEvent* event) override;
 		virtual void timerEvent(QTimerEvent*) override;
 
@@ -29,8 +28,8 @@ class GLWidget : public QOpenGLWidget{
 		QTime stopwatch;
 
 		// to be drawn
-		Accelerator content;
+		Accelerator* content;
 	public:
-		GLWidget(QWidget* parent = nullptr, Accelerator my_content = Accelerator()) : QOpenGLWidget(parent), content(Accelerator(&view, my_content)){}
+		GLWidget(QWidget* parent = nullptr, Accelerator* my_content = nullptr) : QOpenGLWidget(parent), content(my_content){ content->setCanvas(&view); }
 		virtual ~GLWidget(){}
 };

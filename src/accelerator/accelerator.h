@@ -16,16 +16,14 @@ class Accelerator : public Drawable{
 			Drawable(canvas),	
 			element_list(my_element_list),
 			particle_list(my_particle_list){}
-		Accelerator(Canvas* canvas, Accelerator A = Accelerator()) :
-			Drawable(canvas),
-			element_list(A.element_list),
-			particle_list(A.particle_list){}
 
 		virtual void draw(void) override{ canvas->draw(*this); }
 
 		std::ostream& print(std::ostream& output) const;
 
-		void evolve(double dt);
+		virtual void evolve(double dt) override;
+
+		void setCanvas(Canvas* c);
 };
 
 std::ostream& operator<<(std::ostream& output, const Accelerator &A);

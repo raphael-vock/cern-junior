@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "../misc/color.h"
+#include "../color/rgb.h"
 #include "../general/drawable.h"
 #include "../general/canvas.h"
 
@@ -52,15 +52,15 @@ class Vector3D{
 		static constexpr double EPSILON = 1e-5;
 };
 
+namespace vctr{
+	const Vector3D ZERO_VECTOR(0,0,0);
+	const Vector3D X_VECTOR(1,0,0);
+	const Vector3D Y_VECTOR(0,1,0);
+	const Vector3D Z_VECTOR(0,0,1);
+}
+
 Vector3D operator*(const double &, const Vector3D&); // scalar multiplication, with the scalar coming BEFORE
 std::ostream& operator<<(std::ostream& output, Vector3D const& v); // prints to output (e.g. std::cout or std::ofstream)
-
-namespace basicvector{
-	static const Vector3D ZERO_VECTOR = Vector3D(0.0,0.0,0.0);
-	static const Vector3D X_VECTOR(1.0,0.0,0.0);
-	static const Vector3D Y_VECTOR(0.0,1.0,0.0);
-	static const Vector3D Z_VECTOR(0.0,0.0,1.0);
-}
 
 class Arrow : public Drawable{
 	// represents a segment of 3D space with a start point and an endpoint
@@ -70,7 +70,7 @@ class Arrow : public Drawable{
 		Vector3D B;
 		RGB color;
 	public:
-		Arrow(Canvas* c, Vector3D a = basicvector::ZERO_VECTOR, Vector3D b = basicvector::ZERO_VECTOR, RGB my_color = {1.0,1.0,1.0}) : Drawable(c), A(a), B(b), color(my_color){}
+		Arrow(Canvas* c, Vector3D a = vctr::ZERO_VECTOR, Vector3D b = vctr::ZERO_VECTOR, RGB my_color = RGB::WHITE) : Drawable(c), A(a), B(b), color(my_color){}
 
 		std::ostream& print(std::ostream& stream) const;
 		virtual void draw(void) override{ canvas->draw(*this); }

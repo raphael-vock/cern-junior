@@ -4,7 +4,6 @@
 #include "particle.h"
 
 using namespace phcst;
-using namespace basicvector;
 
 double Particle::getMass(void) const{
 	return mass;
@@ -38,8 +37,12 @@ double Particle::getCharge(void) const{
 	return charge;
 }
 
+void Particle::setCanvas(Canvas* c){
+	canvas = c;
+}
+
 void Particle::reset_force(void){
-	F = ZERO_VECTOR;
+	F = vctr::ZERO_VECTOR;
 }
 
 bool Particle::is_touching(const Particle& q) const{

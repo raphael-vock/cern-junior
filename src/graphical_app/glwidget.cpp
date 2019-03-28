@@ -8,11 +8,10 @@ void GLWidget::initializeGL(){
 }
 
 void GLWidget::timerEvent(QTimerEvent* event){
-	if(not isPaused){
-		Q_UNUSED(event);
-		double dt = stopwatch.restart() / 1000.0;
-		update();
-	}
+	Q_UNUSED(event);
+	double dt = stopwatch.restart() / 1000.0;
+	content->evolve(dt);
+	update();
 }
 
 void GLWidget::resizeGL(int width, int height){
@@ -25,7 +24,7 @@ void GLWidget::resizeGL(int width, int height){
 
 void GLWidget::paintGL(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	content.draw();
+	content->draw();
 }
 
 
@@ -34,14 +33,8 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 	constexpr double small_increment(0.5);
 
 	switch(event->key()){
-		case Qt::Key_P:
-			if(isPaused){
-				timerId = startTimer(20);
-				isPaused = false;
-			}else{
-				isPaused = true;
-				killTimer(timerId);
-			}
+		case Qt::Key_Space:
+			pause();
 			break;
 		case Qt::Key_Left:
 			view.rotate(small_angle, 0.0, -1.0, 0.0);
@@ -98,6 +91,15 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 			view.initializePosition();
 			break;
 	};
-
 	update();
+}
+
+void GLWidget::pause(void){
+	if(timerId == 0){
+		timerId = startTimer(20);
+		stopwatch.restart();
+	}else{
+		killTimer(timerId);
+		timerId = 0;
+	}
 }

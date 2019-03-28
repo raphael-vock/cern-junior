@@ -5,15 +5,13 @@
 #include "vector3d.h"
 #include "../misc/exceptions.h"
 
-using namespace excptn;
-
 double Vector3D::operator[](int i) const{
 	switch(i){
 		case 0: return x;
 		case 1: return y;
 		case 2: return z;
 	}
-	throw BAD_VECTOR3D_ACCESS;
+	throw excptn::BAD_VECTOR3D_ACCESS;
 }
 
 std::array<double,3> Vector3D::getCoords() const{
@@ -58,15 +56,15 @@ Vector3D Vector3D::operator-(const Vector3D &v) const{
 }
 
 double Vector3D::operator|(const Vector3D &v) const{
-	return this->x * v.x + this->y * v.y + this->z * v.z;
+	return x*v.x + y*v.y + z*v.z;
 }
 
 Vector3D Vector3D::operator^(const Vector3D &v) const{
 	// note that member function binary operator overloading passes *this as first argument and the method argument as second. i.e. x^y = x.operator^(y);
 	return Vector3D(
-		this->y * v.z - this->z * v.y,
-		v.x * this->z - v.z * this->x,
-		this->x * v.y - this->y * v.x
+		y*v.z - z*v.y,
+		v.x*z - v.z*x,
+		x*v.y - y*v.x
 	); 
 }
 
@@ -87,7 +85,7 @@ double Vector3D::distance2(const Vector3D& u, const Vector3D& v){
 }
 
 bool Vector3D::is_zero(void) const{
-	return this->norm2() <= EPSILON;
+	return norm2() <= EPSILON;
 }
 
 bool Vector3D::operator==(const Vector3D& v) const{
@@ -99,7 +97,7 @@ bool Vector3D::operator!=(const Vector3D& v) const{
 }
 
 Vector3D Vector3D::unitary(void) const{
-	if(this->is_zero()) throw ZERO_VECTOR_UNITARY;
+	if(this->is_zero()) throw excptn::ZERO_VECTOR_UNITARY;
 	else return (*this) * (1/norm());
 }
 
@@ -109,20 +107,17 @@ Vector3D Vector3D::orthogonal(void) const{
 	if(z*z > EPSILON) return Vector3D(1.0, 0.0, -x/z).unitary();
 	else{
 		// (is zero vector)
-		return basicvector::X_VECTOR;
+		return vctr::X_VECTOR;
 	}
 }
 
 Vector3D Vector3D::rotate(Vector3D u, double alpha) const{
 	// rotates *this around u by an angle alpha
 	// if u is zero-vector an exception will be thrown
-	try{
-		u = u.unitary(); // normalize
-		return (cos(alpha)*(*this))
-	 		    + (1.0-cos(alpha))*((*this)|u)*u +
-			    + sin(alpha)*(u ^ (*this));
-	}
-	catch(...){ throw; }
+	u = u.unitary(); // normalize
+	return (cos(alpha)*(*this))
+		+ (1.0-cos(alpha))*((*this)|u)*u +
+		+ sin(alpha)*(u^(*this));
 }
 
 Vector3D random_unit_vector(void){
