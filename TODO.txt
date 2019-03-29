@@ -1,4 +1,6 @@
 [x] Write a custom swap(x,y) for Vector3D for efficiency purposes
 [x] Fix the #&@$-ing bug in Node.cpp
 [x] Finish off the Particle class
-[ ] replace IFNDEF by pragma once
+[x] replace IFNDEF by pragma once
+[ ] delete canvas copy constructor
+[ ] finish cylindre
