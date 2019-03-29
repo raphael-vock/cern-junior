@@ -3,26 +3,27 @@
 #include <vector>
 #include <cmath>
 
-#include "../misc/physical_constants.h"
-#include "../accelerator/element.h"
-#include "../accelerator/accelerator.h"
 #include "glwidget.h"
 
+#include "accelerator.h"
+
+using namespace std;
+
 using namespace phcst;
-using namespace basicvector;
+using namespace vctr;
 
 int main(int argc, char* argv[]){
-	std::vector<Vector3D> list;
-
 	QApplication a(argc, argv);
 
-	Dipole D(nullptr, ZERO_VECTOR, {1.0,0.0,0.0}, 0.5, 0.5, nullptr, 2.0);
-	Quadrupole Q(nullptr, {1.0,0.0,0.0}, {2.0,0.0,0.0}, 1.0, 2.0, nullptr, 1.0);
-	StraightSection S(nullptr, {2.0,0.0,0.0}, {3.0,0.0,0.0}, 1.0, nullptr);
+	Dipole D(nullptr, ZERO_VECTOR, {5.0,0.0,0.0}, 0.5, 0.1, nullptr, nullptr, 1);
+	Quadrupole Q(nullptr, {-5.0,0.0,0.0}, {5.0,0.0,0.0}, 1.0, 0.1, nullptr, nullptr, 1);
+	RadiofrequencyCavity E(nullptr, {0.0,0.0,0.0}, {5.0,0.0,0.0}, 2.0, 0.0, nullptr, nullptr, 1.0, 1.0, 0.4, M_PI/2);
 
-	Accelerator A(nullptr, {&D, &Q, &S}, {});
+	Accelerator A(nullptr, {&D}, {});
 
-	GLWidget w(nullptr, A);
+	cout << A << endl;
+
+	GLWidget w(nullptr, &A);
 
 	w.show();
 

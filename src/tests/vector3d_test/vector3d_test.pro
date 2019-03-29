@@ -17,6 +17,3 @@ PRE_TARGETDEPS +=\
 
 SOURCES += \
 	vector3d_test.cpp \
-
-HEADERS += \
-	vector3d.h \

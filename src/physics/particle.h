@@ -5,10 +5,10 @@
 #include "../general/drawable.h"
 #include "../general/canvas.h"
 
-#include "../misc/color.h"
+#include "../color/rgb.h"
 
 #include "../vector3d/vector3d.h"
-#include "../misc/physical_constants.h"
+#include "../misc/constants.h"
 
 class Particle : public Drawable{
 	private:
@@ -24,16 +24,10 @@ class Particle : public Drawable{
 		RGB color;
 
 	public:
-		static constexpr double DEFAULT_MASS = 1.0;
-		static constexpr double DEFAULT_RADIUS = 1.0;
-
-		static constexpr double GRAVITY_EPSILON = 1e-1;
-		
-		static constexpr double ETA = 0.8; // collision constant
 
 		bool alive = true;
 
-		Particle(Canvas* vue, double x = 0, double y = 0, double z = 0, double v_x = 0.0, double v_y = 0.0, double v_z = 0.0, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
+		Particle(Canvas* vue, double x = 0, double y = 0, double z = 0, double v_x = 0.0, double v_y = 0.0, double v_z = 0.0, double my_mass = simcst::DEFAULT_MASS, double my_charge = simcst::DEFAULT_CHARGE, double my_radius = simcst::DEFAULT_RADIUS) :
 			Drawable(vue),
 			r(Vector3D(x,y,z)),
 			v(Vector3D(v_x,v_y,v_z)),
@@ -41,10 +35,10 @@ class Particle : public Drawable{
 			mass(my_mass),
 			charge(my_charge),
 			radius(my_radius),
-			color(WHITE)
+			color(RGB::WHITE)
 			{}
 
-		Particle(Canvas* vue, Vector3D x_0, Vector3D v_0 = basicvector::ZERO_VECTOR, double my_mass = DEFAULT_MASS, double my_charge = 0.0, double my_radius = DEFAULT_RADIUS) :
+		Particle(Canvas* vue, Vector3D x_0, Vector3D v_0 = vctr::ZERO_VECTOR, double my_mass = simcst::DEFAULT_MASS, double my_charge = simcst::DEFAULT_CHARGE, double my_radius = simcst::DEFAULT_RADIUS) :
 			Drawable(vue),
 			r(Vector3D(x_0)),
 			v(Vector3D(v_0)),
@@ -52,7 +46,7 @@ class Particle : public Drawable{
 			mass(my_mass),
 			charge(my_charge),
 			radius(my_radius),
-			color(WHITE)
+			color(RGB::WHITE)
 			{}
 
 		std::ostream& print(std::ostream &stream) const;
@@ -70,6 +64,8 @@ class Particle : public Drawable{
 		Vector3D getPosition(void) const;
 		Vector3D getVelocity(void) const;
 		Vector3D getForce(void) const;
+
+		void setCanvas(Canvas* c);
 		
 		void reset_force(void); // sets force to zero-vector
 		void add_force(const Vector3D& my_F);
@@ -85,7 +81,7 @@ class Particle : public Drawable{
 		bool is_touching(const Particle& q) const;
 
 		void swallow(Particle &q);
-		void evolve(double dt);
+		virtual void evolve(double dt) override;
 };
 
 std::ostream& operator<<(std::ostream& output, Particle const& particle);

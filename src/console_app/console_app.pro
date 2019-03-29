@@ -7,17 +7,16 @@ CONFIG -= app_bundle
 TARGET = console.out
 
 INCLUDEPATH += \
-	../vector3d \
-	../physics \
 	../general \
+	../accelerator \
 
 LIBS += \
+	-L../color -lcolor \
 	-L../vector3d -lvector3d \
 	-L../physics -lphysics \
-	-L../general -lgeneral \
 
 PRE_TARGETDEPS +=\
-	../general/libgeneral.a \
+	../color/libcolor.a \
 	../vector3d/libvector3d.a \
 	../physics/libphysics.a \
 

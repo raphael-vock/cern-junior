@@ -7,16 +7,15 @@ CONFIG -= app_bundle
 TARGET = particle_test.out
 
 INCLUDEPATH += \
-	../../general \
-	../../vector3d \
 	../../physics \
 
 LIBS += \
-	-L../../general -lgeneral \
+	-L../../color -lcolor \
 	-L../../vector3d -lvector3d \
 	-L../../physics -lphysics \
 
 PRE_TARGETDEPS +=\
+	../../color/libcolor.a \
 	../../vector3d/libvector3d.a \
 	../../physics/libphysics.a \
 

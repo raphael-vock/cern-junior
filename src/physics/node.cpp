@@ -55,7 +55,7 @@ void Node::increment_gravity(Particle& P) const{
 
 	double ratio(pow(domain.volume(),1.0/3.0) / Vector3D::distance(P.getPosition(), virtual_particle.getPosition()) );
 
-	if(ratio <= THETA) virtual_particle.add_gravitational_force(P);
+	if(ratio <= simcst::BARNES_HUT_THETA) virtual_particle.add_gravitational_force(P);
 	else for(Node* child : children) child->increment_gravity(P);
 }
 

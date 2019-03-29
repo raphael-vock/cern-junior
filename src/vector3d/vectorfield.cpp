@@ -1,9 +1,7 @@
 #include "vectorfield.h"
 
-constexpr double h(0.1);
-
 Vector3D VectorField::operator()(const Vector3D &x) const{
-	return F(x);
+	return F(x,*clock);
 }
 
 std::ostream& VectorField::print(std::ostream &stream) const{
@@ -12,23 +10,22 @@ std::ostream& VectorField::print(std::ostream &stream) const{
 }
 
 Vector3D VectorField::tangent_neighbor(const Vector3D &x) const{
-	try{
-		return x + h*(F(x).unitary());
-	}catch(...){ throw; }
+	return x + simcst::FIELD_LINE_SEGMENT_LENGTH*(F(x,(clock ? *clock : 0.0)).unitary());
 }
 
-std::vector<Arrow> VectorField::field_lines(void) const{
-	std::vector<Arrow> list;
-	for(const Vector3D &P : sample_points){
-		for(int i(0); i <= MAX_FIELD_LINE_LENGTH / h; ++i){
+void VectorField::evolve(double dt){
+	field_lines.clear();
+	double t_0(clock ? *clock : 0.0);
+	for(Vector3D P : sample_points){
+		for(int i(0); i <= simcst::FIELD_LINE_LENGTH / simcst::FIELD_LINE_SEGMENT_LENGTH; ++i){
 			try{
 				Vector3D P_h(tangent_neighbor(P));
-				list.push_back(Arrow(canvas, P, P_h, color));
-			}catch(...){
-				// field vanishes so the field line terminates
-				break;
+				field_lines.push_back(Arrow(canvas, P, P_h, color.modulate(F(P,t_0).norm(),F_max)));
+				P = P_h;
+			}catch(std::invalid_argument){ // field vanishes
+				if(field_lines.empty()) break;
+				P += field_lines.back().direction();
 			}
 		}
 	}
-	return list;
 }

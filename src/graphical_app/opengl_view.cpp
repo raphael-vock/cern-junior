@@ -1,35 +1,37 @@
 #include "opengl_view.h"
 #include "vertex_shader.h"
 
-#include "../vector3d/vector3d.h"
-#include "../vector3d/vectorfield.h"
-#include "../physics/particle.h"
-#include "../accelerator/element.h"
 #include "../accelerator/accelerator.h"
+
+void OpenGLView::setShaderColor(const RGB &color){
+	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
+}
+
+void OpenGLView::setShaderPoint(const Vector3D &point){
+	prog.setAttributeValue(VertexId, point[0], point[1], point[2]);
+}
 
 void OpenGLView::draw(const Arrow &to_draw){
 	prog.setUniformValue("view", pov_matrix);
 
 	glBegin(GL_LINES);
 
-	prog.setAttributeValue(ColorId, to_draw.color[0], to_draw.color[1], to_draw.color[2]);
+	setShaderColor(to_draw.color);
 
-	prog.setAttributeValue(VertexId, to_draw.A[0], to_draw.A[1], to_draw.A[2]);
-	prog.setAttributeValue(VertexId, to_draw.B[0], to_draw.B[1], to_draw.B[2]);
+	setShaderPoint(to_draw.A);
+	setShaderPoint(to_draw.B);
 
 	glEnd();
 }
 
-void OpenGLView::draw(const StaticVectorField &to_draw){
-	for(const Arrow &seg : to_draw.static_field_lines) draw(seg);
-}
-
-void OpenGLView::draw(const DynamicVectorField &to_draw){
-	std::vector<Arrow> lines(to_draw.field_lines());
-	for(const Arrow &seg : lines) draw(seg);
+void OpenGLView::draw(const VectorField &to_draw){
+	for(const Arrow &seg : to_draw.field_lines){
+		draw(seg);
+	}
 }
 
 void OpenGLView::draw(const Particle &to_draw){
+	std::cout << to_draw << std::endl;
 	std::array<double,3> coords(to_draw.getPosition().getCoords());
 
 	QMatrix4x4 matrix;
@@ -51,9 +53,13 @@ void OpenGLView::draw(const Quadrupole &to_draw){
 	draw(to_draw.field);
 }
 
+void OpenGLView::draw(const RadiofrequencyCavity &to_draw){
+	draw(to_draw.field);
+}
+
 void OpenGLView::draw(const Accelerator &to_draw){
-	for(Particle* p : to_draw.particle_list) draw(*p);
-	for(Element* e : to_draw.element_list) draw(*e);
+	for(Particle* p : to_draw.particle_list) p->draw();
+	for(Element* e : to_draw.element_list) e->draw();
 }
 
 void OpenGLView::init(){
@@ -104,43 +110,40 @@ void OpenGLView::drawCube(QMatrix4x4 const &pov, RGB color){
 	prog.setUniformValue("view", pov_matrix * pov);
 
 	glBegin(GL_QUADS);
+
+	setShaderColor(color);
+
 	// X = +1 face
-	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 	prog.setAttributeValue(VertexId, +1.0, -1.0, -1.0);
 	prog.setAttributeValue(VertexId, +1.0, +1.0, -1.0);
 	prog.setAttributeValue(VertexId, +1.0, +1.0, +1.0);
 	prog.setAttributeValue(VertexId, +1.0, -1.0, +1.0);
 
 	// X = -1 face
-	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 	prog.setAttributeValue(VertexId, -1.0, -1.0, -1.0);
 	prog.setAttributeValue(VertexId, -1.0, -1.0, +1.0);
 	prog.setAttributeValue(VertexId, -1.0, +1.0, +1.0);
 	prog.setAttributeValue(VertexId, -1.0, +1.0, -1.0);
 
 	// Y = +1 face
-	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 	prog.setAttributeValue(VertexId, -1.0, +1.0, -1.0);
 	prog.setAttributeValue(VertexId, -1.0, +1.0, +1.0);
 	prog.setAttributeValue(VertexId, +1.0, +1.0, +1.0);
 	prog.setAttributeValue(VertexId, +1.0, +1.0, -1.0);
 
 	// Y = -1 face
-	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 	prog.setAttributeValue(VertexId, -1.0, -1.0, -1.0);
 	prog.setAttributeValue(VertexId, +1.0, -1.0, -1.0);
 	prog.setAttributeValue(VertexId, +1.0, -1.0, +1.0);
 	prog.setAttributeValue(VertexId, -1.0, -1.0, +1.0);
 
 	// Z = +1 face
-	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 	prog.setAttributeValue(VertexId, -1.0, -1.0, +1.0);
 	prog.setAttributeValue(VertexId, +1.0, -1.0, +1.0);
 	prog.setAttributeValue(VertexId, +1.0, +1.0, +1.0);
 	prog.setAttributeValue(VertexId, -1.0, +1.0, +1.0);
 
 	// Z = -1 face
-	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 	prog.setAttributeValue(VertexId, -1.0, -1.0, -1.0);
 	prog.setAttributeValue(VertexId, -1.0, +1.0, -1.0);
 	prog.setAttributeValue(VertexId, +1.0, +1.0, -1.0);
@@ -151,7 +154,7 @@ void OpenGLView::drawCube(QMatrix4x4 const &pov, RGB color){
 
 void OpenGLView::drawSphere(QMatrix4x4 const& pov, RGB color){
 	prog.setUniformValue("view", pov_matrix * pov);
-	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);  // colors
+	setShaderColor(color);
 	sphere.draw(prog, VertexId); // draws sphere
 }
 
@@ -161,8 +164,8 @@ void OpenGLView::drawAxes(QMatrix4x4 const& pov, bool is_in_color){
 	glBegin(GL_LINES);
 
 	// X-axis
-	if(is_in_color) prog.setAttributeValue(ColorId, 1.0, 0.0, 0.0);// red
-	else prog.setAttributeValue(ColorId, 1.0, 1.0, 1.0); // white
+	if(is_in_color) setShaderColor(RGB::RED);
+	else setShaderColor(RGB::WHITE);
 
 	prog.setAttributeValue(VertexId, 0.0, 0.0, 0.0);
 	prog.setAttributeValue(VertexId, 1.0, 0.0, 0.0);

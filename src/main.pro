@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-	general \
+	color \
 	vector3d \
 	physics \
 	accelerator \
