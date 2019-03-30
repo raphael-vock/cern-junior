@@ -29,5 +29,5 @@ namespace simcst{ // simulation constants
 	constexpr int TORUS_NUM_QUADS(100);
 	constexpr int TORUS_NUM_CYLINDERS(100);
 
-	constexpr int CYLINDER_NUM_SLICES(100);
+	constexpr int CYLINDER_NUM_SLICES(50);
 }

@@ -6,6 +6,8 @@
 #include "../misc/constants.h"
 #include "../accelerator/accelerator.h"
 
+using namespace simcst;
+
 void OpenGLView::setShaderColor(const RGB &color){
 	prog.setAttributeValue(ColorId, color[0], color[1], color[2]);
 }
@@ -104,16 +106,16 @@ void OpenGLView::drawTorusSection(const QMatrix4x4 &pov, double major_radius, do
 	prog.setUniformValue("view", pov_matrix * pov);
 	setShaderColor(color);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	for(int i(0); i < simcst::TORUS_NUM_QUADS; ++i){
+	for(int i(0); i < TORUS_NUM_QUADS; ++i){
 		glBegin(GL_QUAD_STRIP);
-		for(int j(0); j <= simcst::TORUS_NUM_CYLINDERS*proportion; ++j){
+		for(int j(0); j <= TORUS_NUM_CYLINDERS*proportion; ++j){
 			for(int k(1); k >= 0; --k){
-				double s((i + k) % simcst::TORUS_NUM_QUADS + 0.5);
-				double t(j % simcst::TORUS_NUM_CYLINDERS);
+				double s((i + k) % TORUS_NUM_QUADS + 0.5);
+				double t(j % TORUS_NUM_CYLINDERS);
 
-				double x((major_radius + minor_radius * cos(s * 2*M_PI / simcst::TORUS_NUM_QUADS)) * cos(t * 2*M_PI / simcst::TORUS_NUM_CYLINDERS));
-				double y((major_radius + minor_radius * cos(s * 2*M_PI / simcst::TORUS_NUM_QUADS)) * sin(t * 2*M_PI / simcst::TORUS_NUM_CYLINDERS));
-				double z(minor_radius * sin(s * 2*M_PI / simcst::TORUS_NUM_QUADS));
+				double x((major_radius + minor_radius * cos(s * 2*M_PI / TORUS_NUM_QUADS)) * cos(t * 2*M_PI / TORUS_NUM_CYLINDERS));
+				double y((major_radius + minor_radius * cos(s * 2*M_PI / TORUS_NUM_QUADS)) * sin(t * 2*M_PI / TORUS_NUM_CYLINDERS));
+				double z(minor_radius * sin(s * 2*M_PI / TORUS_NUM_QUADS));
 				glVertex3d(x,y,z);
 			}
 		}
@@ -128,20 +130,23 @@ void OpenGLView::drawCylinder(const Vector3D &start, const Vector3D &end, double
 	double alpha(acos((direction|vctr::Z_VECTOR)/height));
 	Vector3D axis(vctr::Z_VECTOR ^ direction);
 
-	prog.setUniformValue("view", pov_matrix);
+	QMatrix4x4 translation;
+	translation.translate(start[0], start[1], start[2]);
+
+	prog.setUniformValue("view", pov_matrix * translation);
 	setShaderColor(color);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	for(int i(0); i <= simcst::CYLINDER_NUM_SLICES; ++i){
+	for(int i(0); i <= CYLINDER_NUM_SLICES; ++i){
 		std::array<Vector3D,4> vertices;
 		vertices[0] = Vector3D(
-			radius*cos(2*M_PI*i/double(simcst::CYLINDER_NUM_SLICES)),
-			radius*sin(2*M_PI*i/double(simcst::CYLINDER_NUM_SLICES)),
+			radius*cos(2*M_PI*i/double(CYLINDER_NUM_SLICES)),
+			radius*sin(2*M_PI*i/double(CYLINDER_NUM_SLICES)),
 			0.0
 		);
 		vertices[1] = Vector3D(
-			radius*cos(2*M_PI*(i+1)/double(simcst::CYLINDER_NUM_SLICES)),
-			radius* sin(2*M_PI*(i+1)/double(simcst::CYLINDER_NUM_SLICES)),
+			radius*cos(2*M_PI*(i+1)/double(CYLINDER_NUM_SLICES)),
+			radius* sin(2*M_PI*(i+1)/double(CYLINDER_NUM_SLICES)),
 			0.0
 		);
 		vertices[0].rotate(axis, alpha);
@@ -150,7 +155,7 @@ void OpenGLView::drawCylinder(const Vector3D &start, const Vector3D &end, double
 		vertices[3] = vertices[0] + direction;
 
 		glBegin(GL_QUADS);
-		for(int i(0); i <= 3; ++i) glVertex3d( vertices[i][0], vertices[i][1], vertices[i][2] );
+		for(int i(0); i <= 3; ++i) glVertex3d(vertices[i][0], vertices[i][1], vertices[i][2]);
 	}
 	glEnd();
 }
