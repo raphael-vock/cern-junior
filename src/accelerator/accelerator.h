@@ -7,12 +7,10 @@
 class Accelerator : public Drawable{
 	protected:
 		std::vector<std::unique_ptr<Element>> element_list; // (ordered) list of elements that make up the accelerator
-		std::vector<Particle*> particle_list; // list of particles
 		double time;
 	public:
 		Accelerator(Canvas* canvas = nullptr) : Drawable(canvas){}
 
-		void draw_particles(void) const{ for(auto &p : particle_list) p->draw(); }
 		void draw_elements(void) const{ for(auto &e : element_list) e->draw(); }
 
 		void addParticle(Vector3D r, Vector3D v, double mass, double charge, double radius);

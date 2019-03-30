@@ -41,8 +41,6 @@ class OpenGLView : public Canvas{
 		void translate(double x, double y, double z);
 		void rotate(double angle, double dir_x, double dir_y, double dir_z);
 
-		// some useful methods
-		void drawAxes(QMatrix4x4 const& pov, bool is_in_color = true);
-		void drawCube(QMatrix4x4 const& pov = QMatrix4x4(), RGB color = RGB::WHITE);
+		// drawing
 		void drawSphere(QMatrix4x4 const& point_de_vue, RGB color = RGB::WHITE);
 };

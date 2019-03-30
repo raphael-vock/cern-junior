@@ -18,6 +18,15 @@ std::ostream& Element::print(std::ostream& output) const{
 		cout << "\n   Center of curvature: " << center();
 	}
 	return output;
+}	
+
+bool Element::print_elements(std::ostream& output) const{
+	// returns true iff there is at least one element
+	for(auto &p : particle_list){
+		p->print(output);
+		output << "\n";
+	}
+	return not particle_list.empty();
 }
 
 std::ostream& operator<<(std::ostream& output, const Element &E){

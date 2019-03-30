@@ -42,6 +42,8 @@ class Element : public Drawable{
 		virtual std::ostream& print(std::ostream& output) const;
 		// Base method prints only basic information (i.e. about its shape)
 		// Subclass overrides will add additional information e.g. type of the element, electric/magnetic fields, other parameters...
+
+		bool print_elements(std::ostream& output) const;
 		
 		void link(Element &next_element);
 
