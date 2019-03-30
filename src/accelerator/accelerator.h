@@ -7,9 +7,9 @@
 class Accelerator : public Drawable{
 	protected:
 		std::vector<std::unique_ptr<Element>> element_list; // (ordered) list of elements that make up the accelerator
-		double time;
+		std::shared_ptr<double> time;
 	public:
-		Accelerator(Canvas* canvas = nullptr) : Drawable(canvas){}
+		Accelerator(Canvas* canvas = nullptr) : Drawable(canvas), time(std::make_shared<double>(0.0)){}
 
 		void draw_elements(void) const{ for(auto &e : element_list) e->draw(); }
 

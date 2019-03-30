@@ -26,16 +26,20 @@ class Element : public Drawable{
 		std::shared_ptr<double> clock;
 
 	public:
-		Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, double& my_clock) :
+		Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<double> my_clock) :
 			Drawable(display),
 			entry_point(entry),
 			exit_point(exit),
 			radius(my_radius),
 			curvature(my_curvature),
-			clock(std::shared_ptr<double>(&my_clock))
+			clock(my_clock)
 		{}
 
 		void setCanvas(Canvas* c){ canvas = c; }
+
+		Vector3D getEntry_point(void) const{ return entry_point; }
+		Vector3D getExit_point(void) const{ return exit_point; }
+		double getRadius(void) const{ return radius; }
 
 		virtual ~Element(void){}
 
@@ -72,8 +76,8 @@ std::ostream& operator<<(std::ostream& output, const Element &E);
 
 class StraightSection : public Element{
 	public:
-		StraightSection(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double &time) :
-			Element(display, entry, exit, my_radius,0.0,time)
+		StraightSection(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, std::shared_ptr<double> my_clock) :
+			Element(display, entry, exit, my_radius,0.0,my_clock)
 		{}
 		virtual ~StraightSection(void) override{}
 
@@ -105,7 +109,7 @@ class Dipole : public Magnetic_element{
 	public:
 		virtual std::ostream& print(std::ostream& output) const override;
 
-		Dipole(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, double &my_clock, double my_B_0) :
+		Dipole(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<double> my_clock, double my_B_0) :
 			Magnetic_element(display, entry, exit, my_radius, my_curvature, my_clock), B_0(my_B_0) {}
 
 		virtual void draw(void) override{ canvas->draw(*this); }
@@ -120,7 +124,7 @@ class Quadrupole : public Magnetic_element{
 		virtual Vector3D B(const Vector3D &x, double dt) const override;
 		virtual std::ostream& print(std::ostream& output) const override;
 
-		Quadrupole(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, double &my_clock, double my_b) :
+		Quadrupole(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<double> my_clock, double my_b) :
 			Magnetic_element(display, entry, exit, my_radius, my_curvature, my_clock), b(my_b){}
 
 		virtual void draw(void) override{ canvas->draw(*this); }
@@ -136,7 +140,7 @@ class RadiofrequencyCavity : public Electric_element{
 		virtual Vector3D E(const Vector3D &x, double dt) const override;
 		virtual std::ostream& print(std::ostream& output) const override;
 
-		RadiofrequencyCavity(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, double &my_clock, double my_E_0, double my_omega, double my_kappa, double my_phi) :
+		RadiofrequencyCavity(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<double> my_clock, double my_E_0, double my_omega, double my_kappa, double my_phi) :
 			Electric_element(display, entry, exit, my_radius, my_curvature, my_clock),
 			E_0(my_E_0),
 			omega(my_omega),

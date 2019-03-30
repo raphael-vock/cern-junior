@@ -25,4 +25,9 @@ namespace simcst{ // simulation constants
 	constexpr double FIELD_LINE_SEGMENT_LENGTH(1e-1);
 	constexpr double FIELD_LINE_LENGTH(10);
 	constexpr double FIELD_LINE_SAMPLE_POINT_DENSITY(0.8);
+
+	constexpr int TORUS_NUM_QUADS(100);
+	constexpr int TORUS_NUM_CYLINDERS(100);
+
+	constexpr int CYLINDER_NUM_SLICES(100);
 }

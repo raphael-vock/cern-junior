@@ -6,6 +6,7 @@ CONFIG -= \
 
 CONFIG += \
 	c++11 \
+	debug \
 
 TARGET = graphical_app
 

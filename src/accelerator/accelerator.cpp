@@ -18,7 +18,7 @@ void Accelerator::addQuadrupole(Vector3D start, Vector3D end, double radius, dou
 
 std::ostream& Accelerator::print(std::ostream& output){
 	output << "\nELEMENTS:\n\n";
-	if(element_list.empty()) output << "   none\n";
+	if(element_list.empty()) output << "   none\n\n";
 	for(auto &E : element_list){
 		output << *E << "\n\n";
 	}
@@ -27,7 +27,7 @@ std::ostream& Accelerator::print(std::ostream& output){
 	for(auto &E : element_list){
 		if(E->print_elements(output)) no_particles = false;
 	}
-	if(no_particles) output << "   none\n";
+	if(no_particles) output << "   none\n\n";
 
 	return output;
 }
@@ -37,6 +37,6 @@ std::ostream& operator<<(std::ostream& output, Accelerator &A){
 }
 
 void Accelerator::evolve(double dt){
-	time += dt;
+	*time += dt;
 	for(std::unique_ptr<Element> &e : element_list) e->evolve(dt);
 }
