@@ -5,46 +5,6 @@
 
 using namespace phcst;
 
-double Particle::getMass(void) const{
-	return mass;
-}
-
-void Particle::setMass(double my_mass){
-	mass = my_mass;
-}
-
-double Particle::getRadius(void) const{
-	return radius;
-}
-
-RGB Particle::getColor(void) const{
-	return color;
-}
-
-Vector3D Particle::getPosition(void) const{
-	return r;
-}
-
-Vector3D Particle::getVelocity(void) const{
-	return v;
-}
-
-Vector3D Particle::getForce(void) const{
-	return F;
-}
-
-double Particle::getCharge(void) const{
-	return charge;
-}
-
-void Particle::setCanvas(Canvas* c){
-	canvas = c;
-}
-
-void Particle::reset_force(void){
-	F = vctr::ZERO_VECTOR;
-}
-
 bool Particle::is_touching(const Particle& q) const{
 	return Vector3D::distance(r, q.r) <= radius + q.radius;
 }

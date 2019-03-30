@@ -48,7 +48,7 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 			view.rotate(small_angle, +1.0, 0.0, 0.0);
 			break;
 		case Qt::Key_W:
-			// close on Ctrl-w (Windows/Linux) or Cmd-w (Mac):
+			// Close on Ctrl-W (Windows/Linux) or Cmd-W (Mac):
 			if(event->modifiers() & Qt::ControlModifier) close();
 			else view.translate(0.0, 0.0, small_increment);
 			break;
@@ -72,9 +72,6 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 			break;
 		case Qt::Key_E:
 			view.rotate(small_angle, 0.0, 0.0, +1.0);
-			break;
-		case Qt::Key_Home:
-			view.initializePosition();
 			break;
 	};
 	update();

@@ -1,18 +1,5 @@
 #include "accelerator.h"
 
-void Accelerator::initialize(Canvas* c){
-	canvas = c;
-
-	for(Particle* p : particle_list){
-		p->setCanvas(c);
-		for(std::unique_ptr<Element> &e : element_list) e->insert(*p);
-	}
-
-	for(std::unique_ptr<Element> &e : element_list){
-		e->setCanvas(c);
-	}
-}
-
 void Accelerator::addParticle(Vector3D r, Vector3D v, double mass, double charge, double radius){
 	// TODO
 }

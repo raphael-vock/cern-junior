@@ -9,7 +9,6 @@ class Accelerator : public Drawable{
 		std::vector<std::unique_ptr<Element>> element_list; // (ordered) list of elements that make up the accelerator
 		std::vector<Particle*> particle_list; // list of particles
 		double time;
-		void initialize(Canvas* c);
 	public:
 		Accelerator(Canvas* canvas = nullptr) : Drawable(canvas){}
 

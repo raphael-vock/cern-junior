@@ -38,22 +38,16 @@ class Particle : public Drawable{
 		std::ostream& print(std::ostream &stream) const;
 		virtual void draw(void) override{ canvas->draw(*this); }
 
-		double getMass(void) const;
-		void setMass(double my_mass);
+		double getMass(void) const{ return mass; }
+		double getCharge(void) const{ return charge; }
+		double getRadius(void) const{ return radius; }
+		RGB getColor(void) const{ return color; }
+		Vector3D getPosition(void) const{ return r; }
+		Vector3D getVelocity(void) const{ return v; }
+		Vector3D getForce(void) const{ return F; }
 
-		double getCharge(void) const;
+		void reset_force(void){ F = vctr::ZERO_VECTOR; }
 
-		double getRadius(void) const;
-
-		RGB getColor(void) const;
-
-		Vector3D getPosition(void) const;
-		Vector3D getVelocity(void) const;
-		Vector3D getForce(void) const;
-
-		void setCanvas(Canvas* c);
-		
-		void reset_force(void); // sets force to zero-vector
 		void add_force(const Vector3D& my_F);
 		void add_magnetic_force(const Vector3D& B, double dt);
 		void add_electric_force(const Vector3D &E);
