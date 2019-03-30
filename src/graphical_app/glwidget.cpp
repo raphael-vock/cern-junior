@@ -10,7 +10,7 @@ void GLWidget::initializeGL(){
 void GLWidget::timerEvent(QTimerEvent* event){
 	Q_UNUSED(event);
 	double dt = stopwatch.restart() / 1000.0;
-	content->evolve(dt);
+	evolve(dt);
 	update();
 }
 
@@ -24,9 +24,8 @@ void GLWidget::resizeGL(int width, int height){
 
 void GLWidget::paintGL(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	content->draw();
+	draw();
 }
-
 
 void GLWidget::keyPressEvent(QKeyEvent* event){
 	constexpr double small_angle(5); // in degrees

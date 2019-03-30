@@ -20,21 +20,14 @@ bool Node::insert(Particle* my_particle){
 			return false;
 		}
 		case EXT:{
-			if(tenant->alive){
-				if(my_particle->is_touching(*tenant)){
-					my_particle->swallow(*tenant);
-					return insert(my_particle);
-				}
+			virtual_particle.average_particle(*my_particle);
+			subdivide();
 
-				virtual_particle.average_particle(*my_particle);
-				subdivide();
+			for(Node* child : children) if(child->insert(tenant)) break;
+			tenant = nullptr;
 
-				for(Node* child : children) if(child->insert(tenant)) break;
-				tenant = nullptr;
-
-				for(Node* child : children) if(child->insert(my_particle)) return true;
-				return false;
-			}
+			for(Node* child : children) if(child->insert(my_particle)) return true;
+			return false;
 		}
 		case EMPTY:{
 			type = EXT;

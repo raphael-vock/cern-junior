@@ -16,16 +16,14 @@ void OpenGLView::draw(const Arrow &to_draw){
 
 	glBegin(GL_LINES);
 
-	setShaderColor(to_draw.color);
-
-	setShaderPoint(to_draw.A);
-	setShaderPoint(to_draw.B);
+	setShaderColor(to_draw.getColor());
+	setShaderPoint(to_draw.getA());
+	setShaderPoint(to_draw.getB());
 
 	glEnd();
 }
 
 void OpenGLView::draw(const Particle &to_draw){
-	std::cout << to_draw << std::endl;
 	std::array<double,3> coords(to_draw.getPosition().getCoords());
 
 	QMatrix4x4 matrix;
@@ -48,8 +46,8 @@ void OpenGLView::draw(const Magnetic_element &to_draw){
 }
 
 void OpenGLView::draw(const Accelerator &to_draw){
-	for(Particle* p : to_draw.particle_list) p->draw();
-	for(Element* e : to_draw.element_list) e->draw();
+	to_draw.draw_particles();
+	to_draw.draw_elements();
 }
 
 void OpenGLView::init(){

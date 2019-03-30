@@ -62,12 +62,15 @@ namespace vctr{
 
 class Arrow : public Drawable{
 	// An Arrow is a line segment in 3D space with a starting point A and an ending point B
-	friend class OpenGLView;
 	private:
 		Vector3D A;
 		Vector3D B;
 		RGB color;
 	public:
+		Vector3D getA(void) const{ return A; }
+		Vector3D getB(void) const{ return B; }
+		RGB getColor(void) const{ return color; }
+
 		Arrow(Canvas* c, Vector3D a = vctr::ZERO_VECTOR, Vector3D b = vctr::ZERO_VECTOR, RGB my_color = RGB::WHITE) : Drawable(c), A(a), B(b), color(my_color){}
 
 		Vector3D direction(void) const; // returns the Vector3D B-A

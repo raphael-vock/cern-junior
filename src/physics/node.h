@@ -21,7 +21,7 @@ class Node{
 						   // and its position is their barycenter
 
 	public:
-		Node(Box my_Box) : domain(my_Box), type(EMPTY), virtual_particle(nullptr){}
+		Node(Box my_Box) : domain(my_Box), type(EMPTY), virtual_particle(){}
 
 		void subdivide(void);
 		bool insert(Particle* my_Point);

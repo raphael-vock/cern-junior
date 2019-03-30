@@ -11,8 +11,8 @@ using namespace phcst;
 int main(void){
 	TextViewer screen(cout);
 
-	Particle p1(&screen, 3.00984, -0.391837, 0, -210200, -2.64754e+08, 0, 1e9*E/(C*C) * 0.938272, 1.60217653e-19);
-	Particle p2(&screen, 2.99016, -0.391837, 0, 210200, -2.64754e+08, 0, 1e9*E/(C*C) * 0.938272, 1.60217653e-19);
+	Particle p1(&screen, Vector3D(3.00984, -0.391837, 0), Vector3D(-210200, -2.64754e+08, 0), 1e9*E/(C*C) * 0.938272, 1.60217653e-19);
+	Particle p2(&screen, Vector3D(2.99016, -0.391837, 0), Vector3D(210200, -2.64754e+08, 0), 1e9*E/(C*C) * 0.938272, 1.60217653e-19);
 
 	cout << "Particle 1:\n";
 	p1.draw();

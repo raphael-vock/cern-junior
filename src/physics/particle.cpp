@@ -57,17 +57,20 @@ void Particle::average_particle(const Particle& P){
 }
 
 void Particle::add_gravitational_force(Particle& P) const{
-	if(this == &P or not alive) return;
+	if(this == &P) return;
 
 	Vector3D F_g(r - P.r);
 	F_g *= phcst::G * mass * P.mass / pow( F_g.norm2() + simcst::GRAVITY_SMOOTHING_EPSILON, 1.5 );
 	P.F += F_g;
 }
 
-void Particle::evolve(double dt){
+void Particle::move(double dt){
 	v += (dt / (gamma()*mass)) * F;
 	r += dt * v;
+}
 
+void Particle::evolve(double dt){
+	move(dt);
 	reset_force();
 }
 
@@ -86,8 +89,6 @@ void Particle::swallow(Particle& q){
 	r *= 1.0/mass;
 
 	radius = pow( pow(radius,3.0) + pow(q.getRadius(),3.0), 1.0/3.0 );
-
-	q.alive = false;
 }
 
 void Particle::add_force(const Vector3D & my_F){

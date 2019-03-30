@@ -110,11 +110,11 @@ std::ostream& StraightSection::print(std::ostream& output) const{
 }
 
 void Magnetic_element::add_lorentz_force(Particle& p, double dt) const{
-	p.add_magnetic_force(B(p.getPosition()), dt);
+	p.add_magnetic_force(B(p.getPosition(), *clock), dt);
 }
 
 void Electric_element::add_lorentz_force(Particle& p, double dt) const{
-	p.add_electric_force(E(p.getPosition()));
+	p.add_electric_force(E(p.getPosition(), *clock));
 }
 
 // FIELD EQUATIONS

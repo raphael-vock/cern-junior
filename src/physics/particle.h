@@ -24,21 +24,7 @@ class Particle : public Drawable{
 		RGB color;
 
 	public:
-
-		bool alive = true;
-
-		Particle(Canvas* vue, double x = 0, double y = 0, double z = 0, double v_x = 0.0, double v_y = 0.0, double v_z = 0.0, double my_mass = simcst::DEFAULT_MASS, double my_charge = simcst::DEFAULT_CHARGE, double my_radius = simcst::DEFAULT_RADIUS) :
-			Drawable(vue),
-			r(Vector3D(x,y,z)),
-			v(Vector3D(v_x,v_y,v_z)),
-			F(Vector3D()),
-			mass(my_mass),
-			charge(my_charge),
-			radius(my_radius),
-			color(RGB::WHITE)
-			{}
-
-		Particle(Canvas* vue, Vector3D x_0, Vector3D v_0 = vctr::ZERO_VECTOR, double my_mass = simcst::DEFAULT_MASS, double my_charge = simcst::DEFAULT_CHARGE, double my_radius = simcst::DEFAULT_RADIUS) :
+		Particle(Canvas* vue = nullptr, Vector3D x_0 = vctr::ZERO_VECTOR, Vector3D v_0 = vctr::ZERO_VECTOR, double my_mass = simcst::DEFAULT_MASS, double my_charge = simcst::DEFAULT_CHARGE, double my_radius = simcst::DEFAULT_RADIUS) :
 			Drawable(vue),
 			r(Vector3D(x_0)),
 			v(Vector3D(v_0)),
@@ -81,6 +67,8 @@ class Particle : public Drawable{
 		bool is_touching(const Particle& q) const;
 
 		void swallow(Particle &q);
+
+		void move(double dt);
 		virtual void evolve(double dt) override;
 };
 
