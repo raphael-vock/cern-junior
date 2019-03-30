@@ -137,7 +137,7 @@ void OpenGLView::drawCylinder(const Vector3D &start, const Vector3D &end, double
 	setShaderColor(color);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	for(int i(0); i <= CYLINDER_NUM_SLICES; ++i){
+	for(int i(0); i <= CYLINDER_NUM_SLICES-1; ++i){
 		std::array<Vector3D,4> vertices;
 		vertices[0] = Vector3D(
 			radius*cos(2*M_PI*i/double(CYLINDER_NUM_SLICES)),
@@ -146,7 +146,7 @@ void OpenGLView::drawCylinder(const Vector3D &start, const Vector3D &end, double
 		);
 		vertices[1] = Vector3D(
 			radius*cos(2*M_PI*(i+1)/double(CYLINDER_NUM_SLICES)),
-			radius* sin(2*M_PI*(i+1)/double(CYLINDER_NUM_SLICES)),
+			radius*sin(2*M_PI*(i+1)/double(CYLINDER_NUM_SLICES)),
 			0.0
 		);
 		vertices[0].rotate(axis, alpha);
