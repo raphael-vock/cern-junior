@@ -45,3 +45,4 @@ src/tests/accelerator_test/Makefile
 src/tests/particle_test/makefile
 src/tests/vector3d_test/makefile
 src/accelerator/Makefile
+src/color/Makefile
