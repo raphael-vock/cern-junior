@@ -30,7 +30,7 @@ void Element::link(Element &next_element){
 }
 
 void Element::insert(Particle &p){
-	particle_list.push_back(&p);
+	particle_list.push_back(std::unique_ptr<Particle>(&p));
 }
 
 Vector3D Element::center(void) const{
@@ -100,7 +100,7 @@ bool Element::has_left(const Particle& p) const{
 }
 
 void Element::evolve(double dt){
-	for(Particle* p : particle_list) add_lorentz_force(*p, dt);
+	// TODO write
 }
 
 std::ostream& StraightSection::print(std::ostream& output) const{
@@ -110,13 +110,31 @@ std::ostream& StraightSection::print(std::ostream& output) const{
 }
 
 void Magnetic_element::add_lorentz_force(Particle& p, double dt) const{
-	p.add_magnetic_force(field(p.getPosition()), dt);
+	p.add_magnetic_force(B(p.getPosition()), dt);
 }
 
 void Electric_element::add_lorentz_force(Particle& p, double dt) const{
-	p.add_electric_force(field(p.getPosition()));
+	p.add_electric_force(E(p.getPosition()));
 }
 
+// FIELD EQUATIONS
+Vector3D Dipole::B(const Vector3D &x, double) const{
+	return B_0 * vctr::Z_VECTOR;
+}
+
+Vector3D Quadrupole::B(const Vector3D &x, double) const{
+	Vector3D y(local_coords(x));
+	Vector3D u(vctr::Z_VECTOR ^ direction());
+	return b*((y|u)*vctr::Z_VECTOR + x[2]*u);
+}
+
+Vector3D RadiofrequencyCavity::E(const Vector3D &x, double t) const{
+	// TODO work out how to calculate direction properly
+	Vector3D axis((exit_point - entry_point).unitary());
+	return E_0*sin(omega*t - kappa * curvilinear_coord(x) + phi) * axis;
+}
+
+// PRINTING METHODS
 std::ostream& Dipole::print(std::ostream& output) const{
 	output << "Dipole:\n";
 	Element::print(output);

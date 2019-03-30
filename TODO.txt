@@ -1,6 +1,7 @@
-[x] Write a custom swap(x,y) for Vector3D for efficiency purposes
+[x] Write a custom swap(x,y) for Vector3D for efficiency purposes // note: was not needed in the end
 [x] Fix the #&@$-ing bug in Node.cpp
 [x] Finish off the Particle class
 [x] replace IFNDEF by pragma once
 [ ] delete canvas copy constructor
 [ ] finish cylindre
+[ ] properly calculate Vector3D axis in RadiofrequencyCavity::field

@@ -24,12 +24,6 @@ void OpenGLView::draw(const Arrow &to_draw){
 	glEnd();
 }
 
-void OpenGLView::draw(const VectorField &to_draw){
-	for(const Arrow &seg : to_draw.field_lines){
-		draw(seg);
-	}
-}
-
 void OpenGLView::draw(const Particle &to_draw){
 	std::cout << to_draw << std::endl;
 	std::array<double,3> coords(to_draw.getPosition().getCoords());
@@ -42,19 +36,15 @@ void OpenGLView::draw(const Particle &to_draw){
 }
 
 void OpenGLView::draw(const StraightSection &to_draw){
-	//...
+	// TODO
 }
 
-void OpenGLView::draw(const Dipole &to_draw){
-	draw(to_draw.field);
+void OpenGLView::draw(const Electric_element &to_draw){
+	// TODO
 }
 
-void OpenGLView::draw(const Quadrupole &to_draw){
-	draw(to_draw.field);
-}
-
-void OpenGLView::draw(const RadiofrequencyCavity &to_draw){
-	draw(to_draw.field);
+void OpenGLView::draw(const Magnetic_element &to_draw){
+	// TODO
 }
 
 void OpenGLView::draw(const Accelerator &to_draw){
