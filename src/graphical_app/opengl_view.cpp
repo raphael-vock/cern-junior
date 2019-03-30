@@ -97,3 +97,106 @@ void OpenGLView::drawSphere(QMatrix4x4 const& pov, RGB color){
 	setShaderColor(color);
 	sphere.draw(prog, VertexId); // draws sphere
 }
+
+void OpenGLView::drawTorus(QMatrix4x4 const& pov, const RGB& color, int section, double major_radius, double minor_radius){
+    prog.setUniformValue("view", pov_matrix * pov);
+    setShaderColor(color);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    #define TWOPI 2.0 * M_PI
+    int num_quads = 100, num_cylinders = 100;
+    for (int i = 0; i < num_quads; i++) {
+        glBegin(GL_QUAD_STRIP);
+        for (int j = 0; j <= num_cylinders/section; j++) {
+            for (int k = 1; k >= 0; k--) {
+
+            double s = (i + k) % num_quads + 0.5;
+            double t = j % num_cylinders;
+
+            double x = (major_radius + minor_radius * cos(s * TWOPI / num_quads)) * cos(t * TWOPI / num_cylinders);
+            double y = (major_radius + minor_radius * cos(s * TWOPI / num_quads)) * sin(t * TWOPI / num_cylinders);
+            double z = minor_radius * sin(s * TWOPI / num_quads);
+            glVertex3d(x, y, z);
+        }
+        }
+        glEnd();
+}
+}
+
+void OpenGLView::drawDisc(QMatrix4x4 const& pov, const RGB& color, double radius){
+
+    prog.setUniformValue("view", pov_matrix * pov);
+    setShaderColor(color);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    int slices(100);
+
+    glBegin(GL_TRIANGLE_FAN);
+    for (int i(0); i < slices; ++i){
+        glVertex3d(0, 0, 0);
+        glVertex3d(radius*cos(TWOPI*i/double(slices)), radius*sin(TWOPI*i/double(slices)), 0);
+        glVertex3d(radius*cos(TWOPI*(i+1)/double(slices)), radius*sin(TWOPI*(i+1)/double(slices)), 0);
+    }
+    glEnd();
+  }
+
+void OpenGLView::drawCylinder(QMatrix4x4 const& pov, const RGB& color, double radius, double height){
+
+    prog.setUniformValue("view", pov_matrix * pov);
+    setShaderColor(color);
+
+    unsigned int slices(100);
+    #define TWOPI 2.0 * M_PI
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    for (unsigned int i(0); i <= slices; ++i){
+            glBegin(GL_QUADS);
+	    glVertex3d(radius*cos(TWOPI*i/double(slices)), radius* sin(TWOPI*i/double(slices)), 0);
+            glVertex3d(radius*cos(TWOPI*i/double(slices)), radius* sin(TWOPI*i/double(slices)), height);
+            glVertex3d(radius*cos(TWOPI*((i+1)%slices)/double(slices)), radius* sin(TWOPI*((i+1)%slices)/double(slices)), height);
+            glVertex3d(radius*cos(TWOPI*((i+1)%slices)/double(slices)), radius* sin(TWOPI*((i+1)%slices)/double(slices)), 0);
+    }
+    glEnd();
+  }
+
+void OpenGLView::drawBasicAccelerator(QMatrix4x4 const& pov, const RGB& color, double major_radius, double minor_radius){
+
+    prog.setUniformValue("view", pov_matrix * pov);
+    setShaderColor(color);
+
+  // for some unknow reason translation has to be 10
+    float translation(10);
+
+    QMatrix4x4 matrix, matrix2, matrix3, matrix4, matrix5, matrix6, matrix7, matrix8, matrix9;
+
+  // drawing the four curved elements on the edges
+    matrix5.translate(translation, translation, 0);
+    drawTorus(matrix5, color, 4, major_radius, minor_radius);
+
+    matrix4.translate(-translation, -translation, 0);
+    matrix4.rotate(180, 0.0, 0.0, 1.0);
+    drawTorus(matrix4, color, 4, major_radius, minor_radius);
+
+    matrix8.translate(-translation, translation, 0);
+    matrix8.rotate(90, 0.0, 0.0, 1.0);
+    drawTorus(matrix8, color, 4, major_radius, minor_radius);
+
+    matrix9.translate(translation, -translation, 0);
+    matrix9.rotate(270, 0.0, 0.0, 1.0);
+    drawTorus(matrix9, color, 4, major_radius, minor_radius);
+ 
+  // drawing the four straight elements connecting curved elements
+    matrix2.translate(translation + major_radius, translation, 0);
+    matrix2.rotate(90, 1.0, 0.0);
+    drawCylinder(matrix2, color, minor_radius);
+   
+    matrix3.translate(translation, translation + major_radius, 0);
+    matrix3.rotate(270, 0.0, 1.0);
+    drawCylinder(matrix3, color, minor_radius);
+   
+    matrix6.translate(-translation - major_radius, -translation, 0);
+    matrix6.rotate(270, 1.0, 0.0);
+    drawCylinder(matrix6, color, minor_radius);
+   
+    matrix7.translate(-translation, -translation - major_radius, 0);
+    matrix7.rotate(90, 0.0, 1.0);
+    drawCylinder(matrix7, color, minor_radius);
+ }                                          

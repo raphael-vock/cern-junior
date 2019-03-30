@@ -43,4 +43,10 @@ class OpenGLView : public Canvas{
 
 		// drawing
 		void drawSphere(QMatrix4x4 const& point_de_vue, RGB color = RGB::WHITE);
+		void drawDisc(QMatrix4x4 const& pov = QMatrix4x4(), const RGB& color = RGB::WHITE, double radius = 1.0);
+		void drawCylinder(QMatrix4x4 const& pov = QMatrix4x4(), const RGB& color = RGB::WHITE, double radius = 1.0, double lenght = 5.0);
+		void drawTorus(QMatrix4x4 const& pov = QMatrix4x4(), const RGB& color = RGB::WHITE, int section = 10, double major_radius = 10.0, double minor_radius = 1.0);
+
+                // draws a first model of a simple accelerator
+		void drawBasicAccelerator(QMatrix4x4 const& pov = QMatrix4x4(), const RGB& color = RGB::WHITE, double major_radius = 10.0, double minor_radius = 1.0);
 };
