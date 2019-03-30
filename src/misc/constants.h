@@ -2,9 +2,9 @@
 
 namespace phcst{ // physical constants
 	// the following are given in SI units
-	constexpr double G(6.674e-11);
-	constexpr double C(2.998e8);
-	constexpr double E(1.60218e-19);
+	constexpr double G(6.674e-11); // universal gratational constant
+	constexpr double C(2.998e8); // speed of light in a vacuum
+	constexpr double E(1.60218e-19); // electric charge of an electron
 }
 
 namespace simcst{ // simulation constants
@@ -29,5 +29,5 @@ namespace simcst{ // simulation constants
 	constexpr int TORUS_NUM_QUADS(100);
 	constexpr int TORUS_NUM_CYLINDERS(100);
 
-	constexpr int CYLINDER_NUM_SLICES(50);
+	constexpr int CYLINDER_NUM_SIDES(50);
 }

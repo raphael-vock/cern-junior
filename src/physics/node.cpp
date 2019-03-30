@@ -5,7 +5,7 @@
 
 void Node::subdivide(void){
 	type = INT;
-	for(uint8_t i(0); i <= 1; ++i) for(uint8_t j(0); j <= 1; ++j) for(uint8_t k(0); k <= 1; ++k){
+	for(int i(0); i <= 1; ++i) for(int j(0); j <= 1; ++j) for(int k(0); k <= 1; ++k){
 		children[i + 2*j + 4*k] = new Node(domain.octant(i,j,k));
 	}
 }
@@ -16,17 +16,17 @@ bool Node::insert(Particle* my_particle){
 	switch(type){
 		case INT:{
 			virtual_particle.average_particle(*my_particle);
-			for(Node* child : children) if(child->insert(my_particle)) return true;
+			for(auto child : children) if(child->insert(my_particle)) return true;
 			return false;
 		}
 		case EXT:{
 			virtual_particle.average_particle(*my_particle);
 			subdivide();
 
-			for(Node* child : children) if(child->insert(tenant)) break;
+			for(auto child : children) if(child->insert(tenant)) break;
 			tenant = nullptr;
 
-			for(Node* child : children) if(child->insert(my_particle)) return true;
+			for(auto child : children) if(child->insert(my_particle)) return true;
 			return false;
 		}
 		case EMPTY:{
@@ -36,29 +36,34 @@ bool Node::insert(Particle* my_particle){
 			return true;
 		}
 	}
-	throw 0;
 }
 
 void Node::increment_gravity(Particle& P) const{
 	if(type == EMPTY) return;
 	if(type == EXT){
-		virtual_particle.add_gravitational_force(P);
+		virtual_particle.apply_gravitational_force(P);
 		return;
 	}
+	// else type == INT
 
-	double ratio(pow(domain.volume(),1.0/3.0) / Vector3D::distance(P.getPosition(), virtual_particle.getPosition()) );
+	const double ratio(pow(domain.volume(),1.0/3) / Vector3D::distance(P.getPosition(), virtual_particle.getPosition()));
 
-	if(ratio <= simcst::BARNES_HUT_THETA) virtual_particle.add_gravitational_force(P);
-	else for(Node* child : children) child->increment_gravity(P);
+	if(ratio <= simcst::BARNES_HUT_THETA){
+		virtual_particle.apply_gravitational_force(P);
+	}else{
+		for(auto child : children){
+			child->increment_gravity(P);
+		}
+	}
 }
 
-void Node::set_gravity(Particle& P) const{
+void Node::apply_gravity(Particle& P) const{
 	P.reset_force();
 	increment_gravity(P);
 }
 
 void Node::print_elements(void) const{
-	if(type == INT) for(Node* child : children) child->print_elements();
+	if(type == INT) for(auto child : children) child->print_elements();
 	if(type == EXT){
 		std::cout << *tenant << std::endl;
 		std::cout << " is in\n";

@@ -45,7 +45,7 @@ class Vector3D{
 		// Various
 		void normalize(void); // divides by the norm to get a unit vector and returns the result. undefined behavior if norm() == 0.0
 		Vector3D unitary(void) const; // same as normalize(), but returns the result
-		void rotate(Vector3D u, double alpha); // rotates around a given axis by a given angle angle
+		Vector3D rotated(Vector3D u, double alpha) const; // returns result of rotating around a given axis by a given angle angle
 		Vector3D orthogonal(void) const; // returns a unit vector that is orthogonal
 		static double mixed_prod(const Vector3D &, const Vector3D &, const Vector3D &); // returns mixed product of (u,v,w) i.e. u|(v^w) where | is the dot product
 };

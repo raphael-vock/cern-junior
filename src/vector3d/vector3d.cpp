@@ -121,15 +121,12 @@ Vector3D Vector3D::orthogonal(void) const{
 	}
 }
 
-void Vector3D::rotate(Vector3D u, double alpha){
-	// returns *this rotated around u by an angle alpha
-	// rotating around a zero-vector does nothing
-	
+Vector3D Vector3D::rotated(Vector3D u, double alpha) const{
 	try{ u.normalize(); }
-	catch(std::invalid_argument){ return; }
-	*this = (cos(alpha)*(*this))
-		+ (1.0-cos(alpha))*((*this)|u)*u
-		+ sin(alpha)*(u^(*this));
+	catch(std::invalid_argument){ return *this; } // u is a zero-vector then nothing happens
+	return    (cos(alpha)*(*this))
+     		  + (1.0-cos(alpha))*((*this)|u)*u
+		  + sin(alpha)*(u^(*this));
 }
 
 Vector3D operator*(const double &lambda, const Vector3D& u){

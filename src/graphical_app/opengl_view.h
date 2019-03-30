@@ -35,9 +35,7 @@ class OpenGLView : public Canvas{
 		void initializePosition(void);
 
 		// setters
-		void setProjection(QMatrix4x4 const& projection){
-			prog.setUniformValue("projection", projection);
-		}
+		void setProjection(QMatrix4x4 const& projection){ prog.setUniformValue("projection", projection); }
 		void translate(double x, double y, double z);
 		void rotate(double angle, double dir_x, double dir_y, double dir_z);
 

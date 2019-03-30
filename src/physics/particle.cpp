@@ -16,7 +16,7 @@ void Particle::average_particle(const Particle& P){
 	r *= 1.0/mass;
 }
 
-void Particle::add_gravitational_force(Particle& P) const{
+void Particle::apply_gravitational_force(Particle& P) const{
 	if(this == &P) return;
 
 	Vector3D F_g(r - P.r);
@@ -59,9 +59,8 @@ void Particle::add_magnetic_force(const Vector3D &B, double dt){
 	if(dt <= simcst::ZERO_TIME) return;
 	Vector3D magnetic_force(charge*(v^B));
 	Vector3D axis(v^magnetic_force);
-
-	magnetic_force.rotate(axis,asin(dt*magnetic_force.norm()/(2*gamma()*mass*v.norm())));
-	add_force(magnetic_force);
+	double alpha(asin(dt*magnetic_force.norm()/(2*gamma()*mass*v.norm())));
+	add_force(magnetic_force.rotated(axis, alpha));
 }
 
 void Particle::add_electric_force(const Vector3D &E){

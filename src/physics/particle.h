@@ -51,7 +51,7 @@ class Particle : public Drawable{
 		void add_force(const Vector3D& my_F);
 		void add_magnetic_force(const Vector3D& B, double dt);
 		void add_electric_force(const Vector3D &E);
-		void add_gravitational_force(Particle& P) const; // increments force of P by the gravitational force exerted by *this
+		void apply_gravitational_force(Particle& P) const; // applies gravitational force on P
 
 		double gamma(void) const;
 		double energy(void) const;
