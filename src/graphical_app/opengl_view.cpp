@@ -39,7 +39,8 @@ void OpenGLView::draw(const Particle &to_draw){
 }
 
 void OpenGLView::draw(const StraightSection &to_draw){
-	drawCylinder(to_draw.getEntry_point(), to_draw.getExit_point(), to_draw.getRadius());
+	Vector3D entry_point(to_draw.getEntry_point());
+	drawCylinder(entry_point, to_draw.getExit_point() - entry_point, to_draw.getRadius());
 }
 
 void OpenGLView::draw(const Electric_element &to_draw){
@@ -71,6 +72,7 @@ void OpenGLView::init(){
 
 	// activates
 	glEnable(GL_DEPTH_TEST);
+	/* glEnable(GL_CULL_FACE); */
 	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(0.1);
 
@@ -127,25 +129,23 @@ void OpenGLView::drawTorusSection(const QMatrix4x4 &pov, double major_radius, do
 	}
 }
 
-void OpenGLView::drawCylinder(const Vector3D &start, const Vector3D &end, double radius, const RGB &color){
+void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &direction, double radius, const RGB &color){
 	constexpr double h(2*M_PI/CYLINDER_NUM_SIDES);
 	constexpr int offset(CYLINDER_NUM_SIDES * CYLINDER_SPIRAL_RATIO);
-	Vector3D direction(end - start);
-
-	double alpha(acos(direction[2]/direction.norm())); // angle between cylinder and z-axis
-	Vector3D axis(vctr::Z_VECTOR ^ direction); // axis about which to rotate
+	Vector3D u(direction.unitary());
+	Vector3D v(radius*u.orthogonal());
+	u = u^v;
 
 	QMatrix4x4 translation;
-	translation.translate(start[0], start[1], start[2]);
-
+	translation.translate(basepoint[0], basepoint[1], basepoint[2]);
 	prog.setUniformValue("view", pov_matrix * translation);
 	setShaderColor(color);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_QUAD_STRIP);
 	for(int i(0); i <= CYLINDER_NUM_SIDES; ++i){
-		Vector3D P(Vector3D(radius*cos(i*h), radius*sin(i*h)).rotated(axis, alpha));
-		Vector3D Q(Vector3D(radius*cos((i+offset)*h),radius*sin((i+offset)*h)).rotated(axis,alpha) + direction);
+		Vector3D P(cos(i*h)*u + sin(i*h)*v);
+		Vector3D Q(cos((i+offset)*h)*u + sin((i+offset)*h)*v + direction);
 
 		glVertex3d(P[0], P[1], P[2]);
 		glVertex3d(Q[0], Q[1], Q[2]);
