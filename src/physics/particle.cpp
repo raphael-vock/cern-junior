@@ -76,13 +76,13 @@ double Particle::energy(void) const{
 }
 
 std::ostream& Particle::print(std::ostream& output) const{
-	output << "   Position : " << r
-	<< "\n   Velocity : " << v
-	<< "\n   Gamma : " << gamma()
-	<< "\n   Energy (GeV) : " << energy()*1e-9/E
-	<< "\n   Mass (GeV/c^2) : " << mass*(C*C*1e-9/E)
-	<< "\n   Charge : " << charge
-	<< "\n   Force : " << F
+	output << "   Position: " << r
+	<< "\n   Velocity: " << v
+	<< "\n   Gamma: " << gamma()
+	<< "\n   Energy (GeV): " << energy()*1e-9/E
+	<< "\n   Mass (GeV/c^2): " << mass*(C*C*1e-9/E)
+	<< "\n   Charge: " << charge
+	<< "\n   Force: " << F
 	<< std::endl;
 	return output; 
 }

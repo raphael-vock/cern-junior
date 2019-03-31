@@ -137,9 +137,13 @@ double Vector3D::mixed_prod(const Vector3D &u, const Vector3D &v, const Vector3D
 	return u|(v^w);
 }
 
-std::ostream& operator<<(std::ostream& output, Vector3D const& v){
-	output << v[0] << "  " << v[1] << "  " << v[2];
+std::ostream& Vector3D::print(std::ostream& output) const{
+	output << '(' << x << "  " << y << "  " << z << ')';
 	return output;
+}
+
+std::ostream& operator<<(std::ostream& output, const Vector3D &v){
+	return v.print(output);
 }
 
 std::ostream& Segment::print(std::ostream& stream) const{

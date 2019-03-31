@@ -48,7 +48,10 @@ class Vector3D{
 		Vector3D rotated(Vector3D u, double alpha) const; // returns result of rotating around a given axis by a given angle angle
 		Vector3D orthogonal(void) const; // returns a unit vector that is orthogonal
 		static double mixed_prod(const Vector3D &, const Vector3D &, const Vector3D &); // returns mixed product of (u,v,w) i.e. u|(v^w) where | is the dot product
+
+		std::ostream& print(std::ostream& output) const;
 };
+
 Vector3D operator*(const double &, const Vector3D&); // scalar multiplication, but here the scalar is written before   
 std::ostream& operator<<(std::ostream& output, Vector3D const& v); // prints to output (e.g. std::cout or std::ofstream)
 

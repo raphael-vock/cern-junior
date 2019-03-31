@@ -161,6 +161,6 @@ std::ostream& Quadrupole::print(std::ostream& output) const{
 std::ostream& RadiofrequencyCavity::print(std::ostream& output) const{
 	output << "Radiofrequency cavity:\n";
 	Element::print(output);
-	cout << "\n   RFC Parameters : (E,ω,k,Φ) = " << '(' << E_0 << ", " << omega << ", " << kappa << ", " << phi << ')';
+	cout << "\n   RFC Parameters : (E,ω,κ,Φ) = " << '(' << E_0 << ", " << omega << ", " << kappa << ", " << phi << ')';
 	return output;
 }
