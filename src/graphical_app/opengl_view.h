@@ -41,6 +41,6 @@ class OpenGLView : public Canvas{
 
 		// drawing
 		void drawSphere(QMatrix4x4 const& pov, RGB color = RGB::WHITE);
-		void drawCylinder(const Vector3D &start, const Vector3D &end, double radius, const RGB &color = RGB::WHITE);
+		void drawCylinder(const Vector3D &basepoint, const Vector3D &direction, double radius, const RGB &color = RGB::WHITE);
 		void drawTorusSection(QMatrix4x4 const& pov, double major_radius, double minor_radius, double proportion, const RGB &color = RGB::WHITE);
 };
