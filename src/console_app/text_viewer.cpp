@@ -6,8 +6,8 @@
 #include "../accelerator/element.h"
 #include "../accelerator/accelerator.h"
 
-void TextViewer::draw(const Arrow &to_draw){
-	stream << "An arrow";
+void TextViewer::draw(const Segment &to_draw){
+	stream << "A segment";
 }
 
 void TextViewer::draw(const Particle &to_draw){

@@ -2,7 +2,7 @@
 
 #include "drawable.h"
 
-class Arrow;
+class Segment;
 class Particle;
 class Element;
 class StraightSection;
@@ -14,7 +14,7 @@ class Canvas{
 	public:
 		virtual ~Canvas(){}
 
-		virtual void draw(const Arrow &) = 0;
+		virtual void draw(const Segment &) = 0;
 		virtual void draw(const Particle &) = 0;
 		virtual void draw(const StraightSection &) = 0;
 		virtual void draw(const Magnetic_element &) = 0;

@@ -60,8 +60,8 @@ namespace vctr{
 	const Vector3D Z_VECTOR(0,0,1);
 }
 
-class Arrow : public Drawable{
-	// An Arrow is a line segment in 3D space with a starting point A and an ending point B
+class Segment : public Drawable{
+	// An Segment is a line segment in 3D space with a starting point A and an ending point B
 	private:
 		Vector3D A;
 		Vector3D B;
@@ -71,7 +71,7 @@ class Arrow : public Drawable{
 		Vector3D getB(void) const{ return B; }
 		RGB getColor(void) const{ return color; }
 
-		Arrow(Canvas* c, Vector3D a = vctr::ZERO_VECTOR, Vector3D b = vctr::ZERO_VECTOR, RGB my_color = RGB::WHITE) : Drawable(c), A(a), B(b), color(my_color){}
+		Segment(Canvas* c, Vector3D a = vctr::ZERO_VECTOR, Vector3D b = vctr::ZERO_VECTOR, RGB my_color = RGB::WHITE) : Drawable(c), A(a), B(b), color(my_color){}
 
 		Vector3D direction(void) const; // returns the Vector3D B-A
 

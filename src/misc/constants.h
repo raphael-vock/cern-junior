@@ -20,7 +20,7 @@ namespace simcst{ // simulation constants
 
 	constexpr double GRAVITY_SMOOTHING_EPSILON(1e-1);
 
-	constexpr double COLLISION_ETA = 0.8; // collision constant
+	constexpr double COLLISION_ETA = 0.8;
 
 	constexpr double FIELD_LINE_SEGMENT_LENGTH(1e-1);
 	constexpr double FIELD_LINE_LENGTH(10);
@@ -29,5 +29,6 @@ namespace simcst{ // simulation constants
 	constexpr int TORUS_NUM_QUADS(100);
 	constexpr int TORUS_NUM_CYLINDERS(100);
 
-	constexpr int CYLINDER_NUM_SIDES(50);
+	constexpr int CYLINDER_NUM_SIDES(20);
+	constexpr double CYLINDER_SPIRAL_RATIO(0.15); // 0.0 gives no spiral. 0.25 gives a strong spiral effect
 }

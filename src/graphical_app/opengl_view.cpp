@@ -16,7 +16,7 @@ void OpenGLView::setShaderPoint(const Vector3D &point){
 	prog.setAttributeValue(VertexId, point[0], point[1], point[2]);
 }
 
-void OpenGLView::draw(const Arrow &to_draw){
+void OpenGLView::draw(const Segment &to_draw){
 	prog.setUniformValue("view", pov_matrix);
 
 	glBegin(GL_LINES);
@@ -71,7 +71,8 @@ void OpenGLView::init(){
 
 	// activates
 	glEnable(GL_DEPTH_TEST);
-	/* glEnable(GL_CULL_FACE); */
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(0.1);
 
 	sphere.initialize();
 	initializePosition();
@@ -128,10 +129,10 @@ void OpenGLView::drawTorusSection(const QMatrix4x4 &pov, double major_radius, do
 
 void OpenGLView::drawCylinder(const Vector3D &start, const Vector3D &end, double radius, const RGB &color){
 	constexpr double h(2*M_PI/CYLINDER_NUM_SIDES);
+	constexpr int offset(CYLINDER_NUM_SIDES * CYLINDER_SPIRAL_RATIO);
 	Vector3D direction(end - start);
-	double height(direction.norm());
 
-	double alpha(acos(direction[2]/height)); // angle between cylinder and origin
+	double alpha(acos(direction[2]/direction.norm())); // angle between cylinder and z-axis
 	Vector3D axis(vctr::Z_VECTOR ^ direction); // axis about which to rotate
 
 	QMatrix4x4 translation;
@@ -142,12 +143,12 @@ void OpenGLView::drawCylinder(const Vector3D &start, const Vector3D &end, double
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_QUAD_STRIP);
-	for(int i(0); i <= CYLINDER_NUM_SIDES-1; ++i){
-		Vector3D vertices[2];
-		vertices[0] = Vector3D(radius*cos(i*h), radius*sin(i*h)).rotated(axis, alpha);
-		vertices[1] = vertices[0] + direction;
+	for(int i(0); i <= CYLINDER_NUM_SIDES; ++i){
+		Vector3D P(Vector3D(radius*cos(i*h), radius*sin(i*h)).rotated(axis, alpha));
+		Vector3D Q(Vector3D(radius*cos((i+offset)*h),radius*sin((i+offset)*h)).rotated(axis,alpha) + direction);
 
-		for(int j(0); j <= 1; ++j) glVertex3d(vertices[j][0], vertices[j][1], vertices[j][2]);
+		glVertex3d(P[0], P[1], P[2]);
+		glVertex3d(Q[0], Q[1], Q[2]);
 	}
 	glEnd();
 }

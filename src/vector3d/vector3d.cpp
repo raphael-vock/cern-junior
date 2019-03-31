@@ -142,11 +142,11 @@ std::ostream& operator<<(std::ostream& output, Vector3D const& v){
 	return output;
 }
 
-std::ostream& Arrow::print(std::ostream& stream) const{
+std::ostream& Segment::print(std::ostream& stream) const{
 	stream << '[' << A << ", " << B << ']';
 	return stream;
 }
 
-Vector3D Arrow::direction(void) const{
+Vector3D Segment::direction(void) const{
 	return B - A;
 }
