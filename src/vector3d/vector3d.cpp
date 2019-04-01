@@ -77,11 +77,11 @@ double Vector3D::norm(void) const{
 	return sqrt(norm2());
 }
 
-double Vector3D::distance(const Vector3D& u, const Vector3D& v){
+double Vector3D::distance2(const Vector3D& u, const Vector3D& v){
 	return (u - v).norm2();
 }
 
-double Vector3D::distance2(const Vector3D& u, const Vector3D& v){
+double Vector3D::distance(const Vector3D& u, const Vector3D& v){
 	return (u - v).norm();
 }
 

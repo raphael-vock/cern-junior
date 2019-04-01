@@ -45,7 +45,8 @@ void Element::insert(Particle &p){
 Vector3D Element::center(void) const{
 	if(is_straight()) throw ZERO_CURVATURE_CENTER;
 	Vector3D direction(exit_point - entry_point);
-	return 0.5*(entry_point + exit_point) + (1.0/curvature)*sqrt(1.0-0.25*curvature*curvature*direction.norm2())*(direction.unitary()^vctr::Z_VECTOR);
+
+	return 0.5*(entry_point + exit_point) + (1.0/curvature)*sqrt(abs(1.0-0.25*curvature*curvature*direction.norm2()))*(direction^vctr::Z_VECTOR).unitary();
 }
 
 Vector3D Element::direction(void) const{

@@ -21,8 +21,6 @@ class Element : public Drawable{
 
 		std::vector<std::unique_ptr<Particle>> particle_list; // list of particles contained inside
 
-		bool is_straight(void) const;
-
 		std::shared_ptr<double> clock;
 
 	public:
@@ -40,6 +38,7 @@ class Element : public Drawable{
 		Vector3D getEntry_point(void) const{ return entry_point; }
 		Vector3D getExit_point(void) const{ return exit_point; }
 		double getRadius(void) const{ return radius; }
+		double getCurvature(void) const{ return curvature; }
 
 		virtual ~Element(void){}
 
@@ -53,6 +52,7 @@ class Element : public Drawable{
 
 		void insert(Particle &p);
 
+		bool is_straight(void) const;
 		Vector3D center(void) const; // returns the center of circular element assuming curvature is non-zero
 
 		Vector3D direction(void) const; // returns the vector exit_point - entry_point

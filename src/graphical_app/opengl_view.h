@@ -40,7 +40,9 @@ class OpenGLView : public Canvas{
 		void rotate(double angle, double dir_x, double dir_y, double dir_z);
 
 		// drawing
-		void drawSphere(QMatrix4x4 const& pov, RGB color = RGB::WHITE);
+		void drawSphere(const Vector3D &x, double r, RGB color);
 		void drawCylinder(const Vector3D &basepoint, const Vector3D &direction, double radius, const RGB &color = RGB::WHITE);
-		void drawTorusSection(QMatrix4x4 const& pov, double major_radius, double minor_radius, double proportion, const RGB &color = RGB::WHITE);
+		void drawTorusSection(const Vector3D &center, const Vector3D &p1, const Vector3D &p2, double minor_radius, const RGB &color);
+
+		void drawElement(const Element &E, const RGB &color);
 };

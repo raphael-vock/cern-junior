@@ -1,4 +1,4 @@
-#include <cmath> // for acos
+#include <cmath> // for trig functions
 
 #include "opengl_view.h"
 #include "vertex_shader.h"
@@ -29,13 +29,7 @@ void OpenGLView::draw(const Segment &to_draw){
 }
 
 void OpenGLView::draw(const Particle &to_draw){
-	std::array<double,3> coords(to_draw.getPosition().getCoords());
-
-	QMatrix4x4 matrix;
-	matrix.translate(coords[0], coords[1], coords[2]);
-	matrix.scale(to_draw.getRadius());
-
-	drawSphere(matrix, to_draw.getColor());
+	drawSphere(to_draw.getPosition(), to_draw.getRadius(), to_draw.getColor());
 }
 
 void OpenGLView::draw(const StraightSection &to_draw){
@@ -44,11 +38,11 @@ void OpenGLView::draw(const StraightSection &to_draw){
 }
 
 void OpenGLView::draw(const Electric_element &to_draw){
-	// TODO
+	drawElement(to_draw, RGB::BLUE);
 }
 
 void OpenGLView::draw(const Magnetic_element &to_draw){
-	// TODO
+	drawElement(to_draw, RGB::RED);
 }
 
 void OpenGLView::draw(const Accelerator &to_draw){
@@ -99,30 +93,43 @@ void OpenGLView::rotate(double angle, double x, double y, double z){
 	pov_matrix = rotation * pov_matrix;
 }
 
-void OpenGLView::drawSphere(const QMatrix4x4 &pov, RGB color){
-	prog.setUniformValue("view", pov_matrix * pov);
+void OpenGLView::drawSphere(const Vector3D &x, double r, RGB color){
+	QMatrix4x4 matrix;
+	matrix.translate(x[0], x[1], x[2]);
+	matrix.scale(r);
+
+	prog.setUniformValue("view", pov_matrix * matrix);
 	setShaderColor(color);
 	sphere.draw(prog, VertexId);
 }
 
-void OpenGLView::drawTorusSection(const QMatrix4x4 &pov, double major_radius, double minor_radius, double proportion, const RGB &color){
+void OpenGLView::drawTorusSection(const Vector3D &center, const Vector3D &p1, const Vector3D &p2, double minor_radius, const RGB &color){
 	constexpr double lambda(2*M_PI/TORUS_NUM_QUADS);
 	constexpr double mu(2*M_PI/TORUS_NUM_CYLINDERS);
+	double major_radius(Vector3D::distance(center, p1));
 
-	prog.setUniformValue("view", pov_matrix * pov);
+	Vector3D u((center - p1).unitary());
+	Vector3D v(center - p2);
+	v = (v - (v|u)*u).unitary();
+	Vector3D w(u^v);
+
+	double p(1/M_PI*asin( Vector3D::distance(p1, p2)/(2*major_radius) ));
+
+	prog.setUniformValue("view", pov_matrix);
 	setShaderColor(color);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	for(int i(0); i < TORUS_NUM_QUADS; ++i){
 		glBegin(GL_QUAD_STRIP);
-		for(int j(0); j <= TORUS_NUM_CYLINDERS * proportion; ++j){
+		for(int j(0); j <= p*TORUS_NUM_CYLINDERS; ++j){
 			for(int k(1); k >= 0; --k){
 				double s((i + k) % TORUS_NUM_QUADS + 0.5);
-				double t(j % TORUS_NUM_CYLINDERS);
+				double t(TORUS_NUM_CYLINDERS/2 + j % TORUS_NUM_CYLINDERS);
 
 				double x((major_radius + minor_radius * cos(s * lambda)) * cos(t * mu));
 				double y((major_radius + minor_radius * cos(s * lambda)) * sin(t * mu));
 				double z(minor_radius * sin(s * lambda));
-				glVertex3d(x,y,z);
+				Vector3D P(center + x*u + y*v + z*w);
+				glVertex3d(P[0], P[1], P[2]);
 			}
 		}
 		glEnd();
@@ -151,4 +158,13 @@ void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &directi
 		glVertex3d(Q[0], Q[1], Q[2]);
 	}
 	glEnd();
+}
+
+void OpenGLView::drawElement(const Element &E, const RGB &color){
+	if(E.is_straight()){
+		Vector3D entry_point(E.getEntry_point());
+		drawCylinder(entry_point, E.getExit_point() - entry_point, E.getRadius(), color);
+	}else{
+		drawTorusSection(E.center(), E.getEntry_point(), E.getExit_point(), E.getRadius(), color);
+	}
 }
