@@ -104,6 +104,7 @@ void OpenGLView::drawSphere(const Vector3D &x, double r, RGB color){
 }
 
 void OpenGLView::drawTorusSection(const Vector3D &center, const Vector3D &p1, const Vector3D &p2, double minor_radius, const RGB &color){
+
 	constexpr double lambda(2*M_PI/TORUS_NUM_QUADS);
 	constexpr double mu(2*M_PI/TORUS_NUM_CYLINDERS);
 	double major_radius(Vector3D::distance(center, p1));
@@ -138,7 +139,6 @@ void OpenGLView::drawTorusSection(const Vector3D &center, const Vector3D &p1, co
 
 void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &direction, double radius, const RGB &color){
 	constexpr double h(2*M_PI/CYLINDER_NUM_SIDES);
-	constexpr int offset(CYLINDER_NUM_SIDES * CYLINDER_SPIRAL_RATIO);
 	Vector3D u(direction.unitary());
 	Vector3D v(radius*u.orthogonal());
 	u = u^v;
@@ -152,7 +152,7 @@ void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &directi
 	glBegin(GL_QUAD_STRIP);
 	for(int i(0); i <= CYLINDER_NUM_SIDES; ++i){
 		Vector3D P(cos(i*h)*u + sin(i*h)*v);
-		Vector3D Q(cos((i+offset)*h)*u + sin((i+offset)*h)*v + direction);
+		Vector3D Q(P + direction);
 
 		glVertex3d(P[0], P[1], P[2]);
 		glVertex3d(Q[0], Q[1], Q[2]);

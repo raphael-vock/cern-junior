@@ -29,6 +29,8 @@ namespace simcst{ // simulation constants
 	constexpr int TORUS_NUM_QUADS(100);
 	constexpr int TORUS_NUM_CYLINDERS(100);
 
+	constexpr double TORUS_QUAD_LENGTH(0.1);
+	constexpr double TORUS_CYLINDER_LENGTH(0.1);
+
 	constexpr int CYLINDER_NUM_SIDES(20);
-	constexpr double CYLINDER_SPIRAL_RATIO(0.15); // 0.0 gives no spiral. 0.25 gives a strong spiral effect
 }

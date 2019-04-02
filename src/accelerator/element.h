@@ -124,8 +124,8 @@ class Quadrupole : public Magnetic_element{
 		virtual Vector3D B(const Vector3D &x, double dt) const override;
 		virtual std::ostream& print(std::ostream& output) const override;
 
-		Quadrupole(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<double> my_clock, double my_b) :
-			Magnetic_element(display, entry, exit, my_radius, my_curvature, my_clock), b(my_b){}
+		Quadrupole(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, std::shared_ptr<double> my_clock, double my_b) :
+			Magnetic_element(display, entry, exit, my_radius, 0.0, my_clock), b(my_b){}
 
 		virtual void draw(void) override{ canvas->draw(*this); }
 };

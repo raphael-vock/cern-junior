@@ -12,8 +12,8 @@ void Accelerator::addDipole(Vector3D start, Vector3D end, double radius, double 
 	element_list.push_back(std::unique_ptr<Element>(new Dipole(canvas, start, end, radius, curvature, time, B_0)));
 }
 
-void Accelerator::addQuadrupole(Vector3D start, Vector3D end, double radius, double curvature, double b){
-	element_list.push_back(std::unique_ptr<Element>(new Quadrupole(canvas, start, end, radius, curvature, time, b)));
+void Accelerator::addQuadrupole(Vector3D start, Vector3D end, double radius, double b){
+	element_list.push_back(std::unique_ptr<Element>(new Quadrupole(canvas, start, end, radius, time, b)));
 }
 
 std::ostream& Accelerator::print(std::ostream& output){

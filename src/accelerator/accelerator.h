@@ -16,7 +16,7 @@ class Accelerator : public Drawable{
 		void addParticle(Vector3D r, Vector3D v, double mass, double charge, double radius);
 		void addStraightSection(Vector3D start, Vector3D end, double radius);
 		void addDipole(Vector3D start, Vector3D end, double radius, double curvature, double B_0);
-		void addQuadrupole(Vector3D start, Vector3D end, double radius, double curvature, double b);
+		void addQuadrupole(Vector3D start, Vector3D end, double radius, double b);
 
 		virtual void draw(void) override{ canvas->draw(*this); }
 
