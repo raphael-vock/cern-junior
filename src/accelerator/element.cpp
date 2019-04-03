@@ -1,9 +1,15 @@
 #include "../misc/exceptions.h"
 
+#include "../misc/exceptions.h"
 #include "element.h"
 
 using namespace std;
 using namespace excptn;
+
+void Element::addParticle(std::unique_ptr<Particle> &p){
+	particle_list.push_back(move(p));
+	++ number_of_particles;
+}
 
 bool Element::is_straight(void) const{
 	return abs(curvature) <= simcst::ZERO_DISTANCE;
@@ -33,28 +39,21 @@ std::ostream& operator<<(std::ostream& output, const Element &E){
 	return E.print(output);
 }
 
-void Element::link(Element &next_element){
-	if(exit_point != next_element.entry_point) throw NON_MATCHING_LINK_POINTS;
-	successor = &next_element;
-}
-
-void Element::insert(Particle &p){
-	particle_list.push_back(std::unique_ptr<Particle>(&p));
-}
-
 Vector3D Element::center(void) const{
 	if(is_straight()) throw ZERO_CURVATURE_CENTER;
 	Vector3D direction(exit_point - entry_point);
 
-	return 0.5*(entry_point + exit_point) + (1.0/curvature)*sqrt(abs(1.0-0.25*curvature*curvature*direction.norm2()))*(direction^vctr::Z_VECTOR).unitary();
+	try{
+		return 0.5*(entry_point + exit_point) + (1.0/curvature)*sqrt(abs(1.0-0.25*curvature*curvature*direction.norm2()))*(direction^vctr::Z_VECTOR).unitary();
+	}
+	catch(std::exception){
+		// an exception is thrown if direction is parallel to z-vector which is prohibited
+		throw ELEMENT_DEGENERATE_GEOMETRY;
+	}
 }
 
 Vector3D Element::direction(void) const{
 	return exit_point - entry_point;
-}
-
-Vector3D Element::unit_direction(void) const{
-	return direction().unitary();
 }
 
 Vector3D Element::relative_coords(const Vector3D &x) const{
@@ -62,55 +61,74 @@ Vector3D Element::relative_coords(const Vector3D &x) const{
 }
 
 Vector3D Element::local_coords(const Vector3D &x) const{
-	Vector3D y(relative_coords(x));
-	return y - (y|direction())*y;
+	try{
+		Vector3D y(relative_coords(x));
+		Vector3D d(direction().unitary());
+		return y - (y|d)*d;
+	}
+	catch(std::exception){
+		throw ELEMENT_DEGENERATE_GEOMETRY;
+	}
 }
 
 double Element::curvilinear_coord(const Vector3D &x) const{
-	double l((local_coords(x) - relative_coords(x)) | unit_direction());
+	double l((local_coords(x) - relative_coords(x))|direction().unitary());
 	return is_straight() ? l : asin(l*curvature) / curvature;
 }
 
-std::vector<Vector3D> Element::sample_points(void) const{
-	// we want the sample points of an element to be evenly distributed on the circle of its entry surface
-	// i.e. a circle orthogonal to exit_point - entry_point and with radius that of the element (i.e. Element::radius)
-	std::vector<Vector3D> list;
-
-	Vector3D u(direction());
-
-	// constructs an orthonormal pair of vector {v,w} in the plane of the circle
-	Vector3D v(u.orthogonal());
-	Vector3D w(u.unitary()^v);
-
-	int number_of_points(2*M_PI*radius*simcst::FIELD_LINE_SAMPLE_POINT_DENSITY);
-
-	for(int i(1); i <= number_of_points; ++i){
-		double theta(i / (radius*simcst::FIELD_LINE_SAMPLE_POINT_DENSITY));
-		Vector3D P(entry_point + sin(theta)*v + cos(theta)*w);
-		list.push_back(P + entry_point);
-		list.push_back(P + exit_point);
-		list.push_back(P + 0.5*(exit_point - entry_point));
-	}
-	return list;
-}
-
-bool Element::has_collided(const Particle& p) const{
+bool Element::has_collided(const Vector3D &r) const{
 	if(is_straight()){
-		Vector3D r(p.getPosition() - center()); // position relative to center
-		return (r - 1.0/abs(curvature)*(r - r[2]*vctr::Z_VECTOR)).norm2() >= radius*radius;
+		return local_coords(r).norm() >= radius;
 	}else{
-		Vector3D d(unit_direction());
-		Vector3D r(p.getPosition() - entry_point); // position relative to entry point
-		return (r - (r|d)*d).norm2() >= radius*radius;
+		const Vector3D X(r - center());
+		try{
+			const Vector3D u((X - r[2]*vctr::Z_VECTOR).unitary());
+			return (X - (1.0/abs(curvature))*u).norm() >= radius;
+		}
+		catch(std::exception){
+			// means that the point is directly over the center
+			return true;
+		}
 	}
 }
 
-bool Element::has_left(const Particle& p) const{
-	return Vector3D::mixed_prod(vctr::Z_VECTOR, p.getPosition(), entry_point) >= 0;
+bool Element::is_after(const Vector3D &r) const{
+	Vector3D rel(relative_coords(r));
+	Vector3D dir(direction());
+	return (rel|dir) > dir.norm2();
+}
+
+bool Element::is_before(const Vector3D &r) const{
+	Vector3D rel(relative_coords(r));
+	Vector3D dir(direction());
+	return (rel|dir) < 0.0;
+}
+
+bool Element::contains(const Vector3D &r) const{
+	return not is_after(r) and not is_before(r) and not has_collided(r);
 }
 
 void Element::evolve(double dt){
-	// TODO write
+	for(int i(0); i <= number_of_particles-1;){
+		add_lorentz_force(*particle_list[i], dt);
+		/* std::cout << particle_list[i]->getForce() << std::endl; */
+		particle_list[i]->evolve(dt);
+		
+		if(is_after(*particle_list[i])){
+			if(successor) successor->addParticle(particle_list[i]);
+			particle_list.erase(particle_list.begin()+i);
+			-- number_of_particles;
+		}else if(is_before(*particle_list[i])){
+			if(predecessor) predecessor->addParticle(particle_list[i]);
+			particle_list.erase(particle_list.begin()+i);
+			-- number_of_particles;
+		}else if(has_collided(*particle_list[i])){
+			particle_list.erase(particle_list.begin()+i);
+			-- number_of_particles;
+		}else{
+			++i;
+		}
+	}
 }
 
 std::ostream& StraightSection::print(std::ostream& output) const{
@@ -134,7 +152,7 @@ Vector3D Dipole::B(const Vector3D &x, double) const{
 
 Vector3D Quadrupole::B(const Vector3D &x, double) const{
 	Vector3D y(local_coords(x));
-	Vector3D u(vctr::Z_VECTOR ^ direction());
+	Vector3D u(vctr::Z_VECTOR ^ direction().unitary());
 	return b*((y|u)*vctr::Z_VECTOR + x[2]*u);
 }
 

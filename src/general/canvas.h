@@ -15,9 +15,12 @@ class Canvas{
 		virtual ~Canvas(){}
 
 		virtual void draw(const Segment &) = 0;
+
 		virtual void draw(const Particle &) = 0;
+
 		virtual void draw(const StraightSection &) = 0;
 		virtual void draw(const Magnetic_element &) = 0;
 		virtual void draw(const Electric_element &) = 0;
+
 		virtual void draw(const Accelerator &) = 0;
 };

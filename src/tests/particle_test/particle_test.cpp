@@ -9,8 +9,8 @@ using namespace phcst;
 int main(){
 	const double dt(1e-11);
 
-	Particle p1(nullptr, Vector3D(3.00984, -0.391837, 0), Vector3D(-210200, -2.64754e+08, 0), 1e9*E/(C*C) * 0.938272, 1.60217653e-19);
-	Particle p2(nullptr, Vector3D(2.99016, -0.391837, 0), Vector3D(210200, -2.64754e+08, 0), 1e9*E/(C*C) * 0.938272, 1.60217653e-19);
+	Particle p1(nullptr, Vector3D(3.00984, -0.391837, 0), Vector3D(-210200, -2.64754e+08, 0), 1e9*E/(C*C) * 0.938272, 1.60217653e-19, 0.0);
+	Particle p2(nullptr, Vector3D(2.99016, -0.391837, 0), Vector3D(210200, -2.64754e+08, 0), 1e9*E/(C*C) * 0.938272, 1.60217653e-19, 0.0);
 
 	cout << "Particle 1:\n";
 	cout << p1;

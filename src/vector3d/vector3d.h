@@ -13,7 +13,7 @@ class Vector3D{
 		double z;
 	public:
 		// Constructor, getters, setters:
-		Vector3D(double a = 0, double b = 0, double c = 0) : x(a), y(b), z(c){}
+		explicit Vector3D(double a = 0, double b = 0, double c = 0) : x(a), y(b), z(c){}
 		std::array<double,3> getCoords(void) const; // return coords in an array
 		double operator[](int i) const; // overload of index operator allows easy access to individual coordinates
 

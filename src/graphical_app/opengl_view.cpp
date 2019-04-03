@@ -4,6 +4,7 @@
 #include "vertex_shader.h"
 
 #include "../misc/constants.h"
+#include "../misc/exceptions.h"
 #include "../accelerator/accelerator.h"
 
 using namespace simcst;
@@ -33,15 +34,18 @@ void OpenGLView::draw(const Particle &to_draw){
 }
 
 void OpenGLView::draw(const StraightSection &to_draw){
+	to_draw.draw_particles();
 	Vector3D entry_point(to_draw.getEntry_point());
 	drawCylinder(entry_point, to_draw.getExit_point() - entry_point, to_draw.getRadius());
 }
 
 void OpenGLView::draw(const Electric_element &to_draw){
-	drawElement(to_draw, RGB::BLUE);
+	to_draw.draw_particles();
+	drawElement(to_draw, RGB::ELECTRIC_BLUE);
 }
 
 void OpenGLView::draw(const Magnetic_element &to_draw){
+	to_draw.draw_particles();
 	drawElement(to_draw, RGB::RED);
 }
 
@@ -100,45 +104,67 @@ void OpenGLView::drawSphere(const Vector3D &x, double r, RGB color){
 
 	prog.setUniformValue("view", pov_matrix * matrix);
 	setShaderColor(color);
+	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	sphere.draw(prog, VertexId);
 }
 
 void OpenGLView::drawTorusSection(const Vector3D &center, const Vector3D &p1, const Vector3D &p2, double minor_radius, const RGB &color){
+	const double major_radius(Vector3D::distance(center, p1));
+	const double p(1/M_PI*asin( Vector3D::distance(p1, p2)/(2*major_radius))); // proportion of the torus to be drawn (0 ≤ p ≤ 1)
 
-	constexpr double lambda(2*M_PI/TORUS_NUM_QUADS);
-	constexpr double mu(2*M_PI/TORUS_NUM_CYLINDERS);
-	double major_radius(Vector3D::distance(center, p1));
+	const double lambda(TORUS_QUAD_LENGTH/minor_radius);
+	const double mu(1.0/(p*major_radius/TORUS_TUBE_HEIGHT));
 
-	Vector3D u((center - p1).unitary());
-	Vector3D v(center - p2);
-	v = (v - (v|u)*u).unitary();
-	Vector3D w(u^v);
+	const int num_cylinders(ceil(2*M_PI*major_radius*p/TORUS_TUBE_HEIGHT));
+	const int num_quads(ceil(2*M_PI*minor_radius/TORUS_QUAD_LENGTH));
 
-	double p(1/M_PI*asin( Vector3D::distance(p1, p2)/(2*major_radius) ));
+	try{
+		Vector3D u((center - p1).unitary());
 
-	prog.setUniformValue("view", pov_matrix);
-	setShaderColor(color);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	for(int i(0); i < TORUS_NUM_QUADS; ++i){
-		glBegin(GL_QUAD_STRIP);
-		for(int j(0); j <= p*TORUS_NUM_CYLINDERS; ++j){
-			for(int k(1); k >= 0; --k){
-				double s((i + k) % TORUS_NUM_QUADS + 0.5);
-				double t(TORUS_NUM_CYLINDERS/2 + j % TORUS_NUM_CYLINDERS);
-
-				double x((major_radius + minor_radius * cos(s * lambda)) * cos(t * mu));
-				double y((major_radius + minor_radius * cos(s * lambda)) * sin(t * mu));
-				double z(minor_radius * sin(s * lambda));
-				Vector3D P(center + x*u + y*v + z*w);
-				glVertex3d(P[0], P[1], P[2]);
+		Vector3D v((center - p2).unitary());
+		try{
+			v = (v - (u|v)*u).unitary();
+		}
+		catch(std::exception){
+			try{
+				v = u^vctr::Z_VECTOR.unitary();
+			}
+			catch(std::exception){
+				throw excptn::ELEMENT_DEGENERATE_GEOMETRY;
 			}
 		}
-		glEnd();
+
+		Vector3D w(u^v);
+
+		prog.setUniformValue("view", pov_matrix);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		for(int i(0); i < num_quads; ++i){
+			glBegin(GL_QUAD_STRIP);
+			for(int j(0); j <= ceil(p*num_cylinders); ++j){
+				setShaderColor(j % HIGHLIGHT_COLOR_FREQUENCY == 0 ? color : RGB::WHITE);
+				for(int k(1); k >= 0; --k){
+					double s((i + k) % num_quads + 0.5);
+					double t(num_cylinders/2 + j % num_cylinders);
+
+					double x((major_radius + minor_radius * cos(s * lambda)) * cos(t * mu));
+					double y((major_radius + minor_radius * cos(s * lambda)) * sin(t * mu));
+					double z(minor_radius * sin(s * lambda));
+					Vector3D P(center + x*u + y*v + z*w);
+					glVertex3d(P[0], P[1], P[2]);
+				}
+			}
+			glEnd();
+		}
 	}
+	catch(std::exception){ throw excptn::ELEMENT_DEGENERATE_GEOMETRY; }
 }
 
 void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &direction, double radius, const RGB &color){
-	constexpr double h(2*M_PI/CYLINDER_NUM_SIDES);
+	const int num_cylinders(ceil(direction.norm()/CYLINDER_TUBE_HEIGHT)); // number of small cylinders
+	const int num_quads(ceil(2*M_PI*radius / CYLINDER_QUAD_LENGTH)); // number of quads per small cylinder
+	const Vector3D small_direction(CYLINDER_TUBE_HEIGHT*direction.unitary()); // direction of the small cylinders
+
 	Vector3D u(direction.unitary());
 	Vector3D v(radius*u.orthogonal());
 	u = u^v;
@@ -146,18 +172,21 @@ void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &directi
 	QMatrix4x4 translation;
 	translation.translate(basepoint[0], basepoint[1], basepoint[2]);
 	prog.setUniformValue("view", pov_matrix * translation);
-	setShaderColor(color);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glBegin(GL_QUAD_STRIP);
-	for(int i(0); i <= CYLINDER_NUM_SIDES; ++i){
-		Vector3D P(cos(i*h)*u + sin(i*h)*v);
-		Vector3D Q(P + direction);
 
-		glVertex3d(P[0], P[1], P[2]);
-		glVertex3d(Q[0], Q[1], Q[2]);
+	for(int i(0); i <= num_cylinders; ++i){
+		glBegin(GL_QUAD_STRIP);
+		setShaderColor(i % HIGHLIGHT_COLOR_FREQUENCY == 0 ? color : RGB::WHITE);
+		for(int j(0); j <= num_quads; ++j){
+			Vector3D P(i*small_direction + cos(2*M_PI*j/num_quads)*u + sin(2*M_PI*j/num_quads)*v);
+			Vector3D Q(P + small_direction);
+
+			glVertex3d(P[0], P[1], P[2]);
+			glVertex3d(Q[0], Q[1], Q[2]);
+		}
+		glEnd();
 	}
-	glEnd();
 }
 
 void OpenGLView::drawElement(const Element &E, const RGB &color){

@@ -138,7 +138,7 @@ double Vector3D::mixed_prod(const Vector3D &u, const Vector3D &v, const Vector3D
 }
 
 std::ostream& Vector3D::print(std::ostream& output) const{
-	output << '(' << x << "  " << y << "  " << z << ')';
+	output << x << "  " << y << "  " << z;
 	return output;
 }
 

@@ -11,14 +11,19 @@ class Accelerator : public Drawable{
 	public:
 		Accelerator(Canvas* canvas = nullptr) : Drawable(canvas), time(std::make_shared<double>(0.0)){}
 
+		void weld(void);
+
 		void draw_elements(void) const{ for(auto &e : element_list) e->draw(); }
 
-		void addParticle(Vector3D r, Vector3D v, double mass, double charge, double radius);
+		void addParticle(Vector3D r, Vector3D v, double mass, double charge, double radius, const RGB &color = RGB::WHITE);
 		void addStraightSection(Vector3D start, Vector3D end, double radius);
 		void addDipole(Vector3D start, Vector3D end, double radius, double curvature, double B_0);
 		void addQuadrupole(Vector3D start, Vector3D end, double radius, double b);
+		void addRadiofrequencyCavity(Vector3D start, Vector3D end, double radius, double curvature, double E_0, double omega, double kappa, double phi);
 
 		virtual void draw(void) override{ canvas->draw(*this); }
+
+		void stitch(void);
 
 		std::ostream& print(std::ostream& output);
 

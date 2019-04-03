@@ -24,15 +24,15 @@ class Particle : public Drawable{
 		RGB color;
 
 	public:
-		Particle(Canvas* vue = nullptr, Vector3D x_0 = vctr::ZERO_VECTOR, Vector3D v_0 = vctr::ZERO_VECTOR, double my_mass = simcst::DEFAULT_MASS, double my_charge = simcst::DEFAULT_CHARGE, double my_radius = simcst::DEFAULT_RADIUS) :
+		Particle(Canvas* vue, const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge, double my_radius, const RGB &my_color = RGB::BLUE) :
 			Drawable(vue),
 			r(Vector3D(x_0)),
 			v(Vector3D(v_0)),
-			F(Vector3D()),
+			F(vctr::ZERO_VECTOR),
 			mass(my_mass),
 			charge(my_charge),
 			radius(my_radius),
-			color(RGB::WHITE)
+			color(my_color)
 			{}
 
 		std::ostream& print(std::ostream &stream) const;

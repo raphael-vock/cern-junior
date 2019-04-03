@@ -15,8 +15,12 @@ class RGB{
 
 		static const RGB WHITE;
 		static const RGB BLACK;
+
 		static const RGB RED;
 		static const RGB GREEN;
 		static const RGB BLUE;
+
+		static const RGB YELLOW;
+		static const RGB ELECTRIC_BLUE;
 };
 
