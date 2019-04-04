@@ -15,7 +15,7 @@ class Particle : public Drawable{
 		Vector3D r; // position (SI units)
 		Vector3D v; // velocity at time t 
 
-		Vector3D F; // resultant force being applied 
+		Vector3D F; // resultant force being applied (N)
 
 		// Physical attributes:
 		double mass;
