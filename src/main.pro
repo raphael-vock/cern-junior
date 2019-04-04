@@ -1,10 +1,11 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
+	textview \
 	color \
 	vector3d \
 	physics \
 	accelerator \
-	tests \
 	textview \
+	tests \
 	graphical_app \
