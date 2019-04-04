@@ -3,12 +3,13 @@
 #include "../vector3d/vector3d.h"
 #include <vector>
 #include <cmath>
+#include <memory>
 
 void Beam::initialise(void) {
 	Particle macro_particle(reference_particle);
 	macro_particle.scale(macro_particle_factor);
 	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
-		particle_list.push_back(new Particle(macro_particle)); 
+		particle_list.push_back(std::make_unique<Particle>(Particle(macro_particle))); 
 	}
 }
 
@@ -23,7 +24,8 @@ double Beam::average_energy(void) const{
 
 
 Vector3D Beam::radial_average_velocity(void) const{
-	Vector3D radial_average_velocity;
+	Vector3D radial_average_velocity(0,0,0);
+	if (particle_number == 0) return radial_average_velocity;
 	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
 		radial_average_velocity += particle_list[i]->getVelocity(); // TODO need relative_radial_axis 
 	}
@@ -31,7 +33,8 @@ Vector3D Beam::radial_average_velocity(void) const{
 }
 
 Vector3D Beam::vertical_average_velocity(void) const{
-	Vector3D vertical_average_velocity;
+	Vector3D vertical_average_velocity(0,0,0);
+	if (particle_number == 0) return vertical_average_velocity;
 	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
 		vertical_average_velocity += Vector3D(0,0,particle_list[i]->getVelocity()[2]); 
 	}
@@ -39,7 +42,8 @@ Vector3D Beam::vertical_average_velocity(void) const{
 }
 
 Vector3D Beam::radial_average_position(void) const{
-	Vector3D radial_average_position;
+	Vector3D radial_average_position(0,0,0);
+	if (particle_number == 0) return radial_average_position;
 	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
 		radial_average_position+= particle_list[i]->getVelocity(); // TODO need relative_radial_axis 
 	}
@@ -47,7 +51,8 @@ Vector3D Beam::radial_average_position(void) const{
 }
 
 Vector3D Beam::vertical_average_position(void) const{
-	Vector3D vertical_average_position;
+	Vector3D vertical_average_position(0,0,0);
+	if (particle_number == 0) return vertical_average_position; 
 	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
 		vertical_average_position+= Vector3D(0,0,particle_list[i]->getPosition()[2]); 
 	}

@@ -1,14 +1,16 @@
-#include "../vector3d/vector3d.h"
-#include "particle.h"
 #include <vector>
 #include <array>
+#include <memory>
+
+#include "../vector3d/vector3d.h"
+#include "particle.h"
 
 class Beam {
 	private :
 	const Particle reference_particle;
 	uint particle_number;
 	uint macro_particle_factor;
-	std::vector<Particle*> particle_list;
+	std::vector<std::unique_ptr<Particle>> particle_list;
 
 	public :
 	Beam(const Particle& p, uint my_particle_number, uint my_macro_particle_factor) :
@@ -23,7 +25,7 @@ class Beam {
 	macro_particle_factor(my_macro_particle_factor)
 	{}
 
-	~Beam() {for (uint i(0); i < particle_number; ++i) {delete particle_list[i];}}
+	~Beam() {}
 
 	void initialise(void); // allocates dynamically particle_number particles whose pointers are saved in particle_list
 
