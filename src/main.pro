@@ -6,5 +6,5 @@ SUBDIRS += \
 	physics \
 	accelerator \
 	tests \
+	textview \
 	graphical_app \
-	console_app \

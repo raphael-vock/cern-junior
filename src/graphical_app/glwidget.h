@@ -25,6 +25,6 @@ class GLWidget : public QOpenGLWidget, public Accelerator{
 		int timerId;
 		QTime stopwatch;
 	public:
-		GLWidget(QWidget* parent = nullptr) : QOpenGLWidget(parent), Accelerator(&view){}
+		GLWidget(QWidget* parent, Vector3D origin) : QOpenGLWidget(parent), Accelerator(&view, origin){}
 		virtual ~GLWidget(){}
 };

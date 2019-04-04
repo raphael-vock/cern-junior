@@ -22,28 +22,36 @@ void Accelerator::addParticle(Vector3D r, Vector3D v, double mass, double charge
 	}
 }
 
-void Accelerator::addStraightSection(Vector3D start, Vector3D end, double radius){
-	element_list.push_back(std::unique_ptr<Element>(new StraightSection(canvas, start, end, radius, time)));
+		/* void addStraightSection(double radius, const Vector3D &end); */
+		/* void addDipole(double radius, double curvature, double B_0, const Vector3D &end); */
+		/* void addQuadrupole(double radius, double b, const Vector3D &end); */
+		/* void addRadiofrequencyCavity(double radius, double curvature, double E_0, double omega, double kappa, double phi, const Vector3D &end); */
+
+void Accelerator::addStraightSection(double radius, const Vector3D &end){
+	element_list.push_back(std::unique_ptr<Element>(new StraightSection(canvas, element_list.empty() ? origin : element_list.back()->getExit_point(), end, radius, time)));
 }
 
-void Accelerator::addDipole(Vector3D start, Vector3D end, double radius, double curvature, double B_0){
-	element_list.push_back(std::unique_ptr<Element>(new Dipole(canvas, start, end, radius, curvature, time, B_0)));
+void Accelerator::addDipole(double radius, double curvature, double B_0, const Vector3D &end){
+	element_list.push_back(std::unique_ptr<Element>(new Dipole(canvas, element_list.empty() ? origin : element_list.back()->getExit_point(), end, radius, curvature, time, B_0)));
 }
 
-void Accelerator::addQuadrupole(Vector3D start, Vector3D end, double radius, double b){
-	element_list.push_back(std::unique_ptr<Element>(new Quadrupole(canvas, start, end, radius, time, b)));
+void Accelerator::addQuadrupole(double radius, double b, const Vector3D &end){
+	element_list.push_back(std::unique_ptr<Element>(new Quadrupole(canvas, element_list.empty() ? origin : element_list.back()->getExit_point(), end, radius, time, b)));
 }
 
-void Accelerator::addRadiofrequencyCavity(Vector3D start, Vector3D end, double radius, double curvature, double E_0, double omega, double kappa, double phi){
-	element_list.push_back(std::unique_ptr<Element>(new RadiofrequencyCavity(canvas, start, end, radius, curvature, time, E_0, omega, kappa, phi)));
+void Accelerator::addRadiofrequencyCavity(double radius, double curvature, double E_0, double omega, double kappa, double phi, const Vector3D &end){
+	element_list.push_back(std::unique_ptr<Element>(new RadiofrequencyCavity(canvas, element_list.empty() ? origin : element_list.back()->getExit_point(), end, radius, curvature, time, E_0, omega, kappa, phi)));
 }
 
-std::ostream& Accelerator::print(std::ostream& output){
-	output << "\nELEMENTS:\n\n";
-	if(element_list.empty()) output << "   none\n\n";
-	for(auto &E : element_list){
-		output << *E << "\n\n";
+std::ostream& Accelerator::print(std::ostream& output, bool print_elements) const{
+	if(print_elements){
+		output << "\nELEMENTS:\n\n";
+		if(element_list.empty()) output << "   none\n\n";
+		for(auto &E : element_list){
+			output << *E << "\n\n";
+		}
 	}
+
 	output << "PARTICLES:\n\n";
 	bool no_particles(true);
 	for(auto &E : element_list){

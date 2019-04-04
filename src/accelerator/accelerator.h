@@ -11,7 +11,7 @@ class Accelerator : public Drawable{
 
 		const Vector3D origin;
 	public:
-		Accelerator(Canvas* canvas = nullptr, Vector3D origin) : Drawable(canvas), time(std::make_shared<double>(0.0)){}
+		Accelerator(Canvas* canvas, Vector3D my_origin) : Drawable(canvas), time(std::make_shared<double>(0.0)), origin(my_origin){}
 
 		void weld(void);
 
@@ -19,24 +19,26 @@ class Accelerator : public Drawable{
 
 		void addParticle(Vector3D r, Vector3D v, double mass, double charge, double radius, const RGB &color = RGB::WHITE);
 
-		void addElement(const Element element);
+		void addStraightSection(double radius, const Vector3D &end);
+		void addDipole(double radius, double curvature, double B_0, const Vector3D &end);
+		void addQuadrupole(double radius, double b, const Vector3D &end);
+		void addRadiofrequencyCavity(double radius, double curvature, double E_0, double omega, double kappa, double phi, const Vector3D &end);
 
-		void addStraightSection(Vector3D start, Vector3D end, double radius);
-		void addDipole(Vector3D start, Vector3D end, double radius, double curvature, double B_0);
-		void addQuadrupole(Vector3D start, Vector3D end, double radius, double b);
-		void addRadiofrequencyCavity(Vector3D start, Vector3D end, double radius, double curvature, double E_0, double omega, double kappa, double phi);
+		void addStraightSection(double radius){ addStraightSection(radius, origin); }
+		void addDipole(double radius, double curvature, double B_0){ addDipole(radius, curvature, B_0, origin); }
+		void addQuadrupole(double radius, double b){ addQuadrupole(radius, b, origin); }
+		void addRadiofrequencyCavity(double radius, double curvature, double E_0, double omega, double kappa, double phi){ addRadiofrequencyCavity(radius, curvature, E_0, omega, kappa, phi, origin); }
 
 		virtual void draw(void) override{ canvas->draw(*this); }
 
 		void stitch(void);
 
-		std::ostream& print(std::ostream& output);
+		std::ostream& print(std::ostream& output, bool print_elements = false) const;
 
 		virtual void evolve(double dt) override;
 
 		Accelerator(const Accelerator&) = delete;
 		Accelerator& operator=(const Accelerator&) = delete;
-		virtual ~Accelerator() {}
 };
 
 std::ostream& operator<<(std::ostream& output, const Accelerator &A);

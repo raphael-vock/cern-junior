@@ -2,15 +2,14 @@
 
 #include <iostream>
 
-#include "../general/canvas.h"
-#include "../general/drawable.h"
+#include "../accelerator/accelerator.h"
 
-class TextViewer : public Canvas{
+class TextView : public Canvas{
 	private:
 		std::ostream &stream;
 	public:
-		TextViewer(std::ostream& my_stream) : stream(my_stream){}
-		virtual ~TextViewer(){}
+		TextView(std::ostream& my_stream) : stream(my_stream){}
+		virtual ~TextView(void){}
 
 		virtual void draw(const Segment &to_draw) override;
 		virtual void draw(const Particle &to_draw) override;
