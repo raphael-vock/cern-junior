@@ -186,3 +186,22 @@ std::ostream& RadiofrequencyCavity::print(std::ostream& output) const{
 	cout << "\n   RFC Parameters : (E,ω,κ,Φ) = " << '(' << E_0 << ", " << omega << ", " << kappa << ", " << phi << ')';
 	return output;
 }
+
+Vector3D Element::inverse_curvilinear_coord(double s) const{
+	if (s*s < simcst::ZERO_DISTANCE) return entry_point;
+	if (is_straight()) return s*direction().unitary();
+	else {
+		Vector3D C(center());
+		Vector3D u((entry_point - C).unitary());
+		Vector3D v(exit_point - C);
+		try {
+			v = (v - (v|u)*u).unitary();
+		} catch(std::exception) {
+			try {
+				v = (u^vctr::Z_VECTOR).unitary();
+			} catch(std::exception) {throw excptn::ELEMENT_DEGENERATE_GEOMETRY;}
+		} 
+		double beta = s*curvature; 
+		return C + (1/abs(curvature))*(cos(beta)*u + sin(beta)*v);
+	}
+}

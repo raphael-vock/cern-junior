@@ -5,10 +5,12 @@
 #include <cmath>
 #include <memory>
 
-void Beam::initialise(void) {
-	Particle macro_particle(reference_particle);
-	macro_particle.scale(macro_particle_factor);
-	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
+void CircularBeam::initialise(void) {
+	setParticle_number(particle_number/macro_particle_factor);
+	for (size_t i(0); i < particle_number; ++i){
+		Particle macro_particle(reference_particle.scale(macro_particle_factor));
+		Vector3D new_position;
+		macro_particle.setPosition(new_position);
 		particle_list.push_back(std::make_unique<Particle>(Particle(macro_particle))); 
 	}
 }
@@ -16,7 +18,7 @@ void Beam::initialise(void) {
 double Beam::average_energy(void) const{
 	if (particle_number == 0) return 0.0;
 	double average_energy(0.0);
-	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
+	for (size_t i(0); i < particle_number; ++i){
 		average_energy += particle_list[i]->energy();
 	}
 	return average_energy*macro_particle_factor/particle_number; 
@@ -26,7 +28,7 @@ double Beam::average_energy(void) const{
 Vector3D Beam::radial_average_velocity(void) const{
 	Vector3D radial_average_velocity(0,0,0);
 	if (particle_number == 0) return radial_average_velocity;
-	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
+	for (size_t i(0); i < particle_number; ++i){
 		radial_average_velocity += particle_list[i]->getVelocity(); // TODO need relative_radial_axis 
 	}
 	return (macro_particle_factor/particle_number) * radial_average_velocity;
@@ -35,7 +37,7 @@ Vector3D Beam::radial_average_velocity(void) const{
 Vector3D Beam::vertical_average_velocity(void) const{
 	Vector3D vertical_average_velocity(0,0,0);
 	if (particle_number == 0) return vertical_average_velocity;
-	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
+	for (size_t i(0); i < particle_number; ++i){
 		vertical_average_velocity += Vector3D(0,0,particle_list[i]->getVelocity()[2]); 
 	}
 	return (macro_particle_factor/particle_number) * vertical_average_velocity;
@@ -44,7 +46,7 @@ Vector3D Beam::vertical_average_velocity(void) const{
 Vector3D Beam::radial_average_position(void) const{
 	Vector3D radial_average_position(0,0,0);
 	if (particle_number == 0) return radial_average_position;
-	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
+	for (size_t i(0); i < particle_number; ++i){
 		radial_average_position+= particle_list[i]->getVelocity(); // TODO need relative_radial_axis 
 	}
 	return (macro_particle_factor/particle_number) * radial_average_position;
@@ -53,7 +55,7 @@ Vector3D Beam::radial_average_position(void) const{
 Vector3D Beam::vertical_average_position(void) const{
 	Vector3D vertical_average_position(0,0,0);
 	if (particle_number == 0) return vertical_average_position; 
-	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
+	for (size_t i(0); i < particle_number; ++i){
 		vertical_average_position+= Vector3D(0,0,particle_list[i]->getPosition()[2]); 
 	}
 	return (macro_particle_factor/particle_number) * vertical_average_position;
@@ -83,14 +85,8 @@ std::array<double,3> Beam::vertical_ellipse_coefficients(void) const{
 	return vertical_ellipse_coefficients;
 } 
 
-void Beam::move(double dt){
-	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
-		particle_list[i]->move(dt);
-	}
-}
-
 void Beam::evolve(double dt){
-	for (uint i(0); i < particle_number/macro_particle_factor; ++i){
+	for (size_t i(0); i < particle_number; ++i){
 		particle_list[i]->evolve(dt);
 	}
 }

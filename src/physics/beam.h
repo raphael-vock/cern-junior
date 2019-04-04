@@ -6,20 +6,20 @@
 #include "particle.h"
 
 class Beam {
-	private :
+	protected :
 	const Particle reference_particle;
-	uint particle_number;
-	uint macro_particle_factor;
+	size_t particle_number;
+	const size_t macro_particle_factor;
 	std::vector<std::unique_ptr<Particle>> particle_list;
 
 	public :
-	Beam(const Particle& p, uint my_particle_number, uint my_macro_particle_factor) :
+	Beam(const Particle& p, size_t my_particle_number, size_t my_macro_particle_factor) :
 	reference_particle(p),
 	particle_number(my_particle_number),
 	macro_particle_factor(my_macro_particle_factor)
 	{}
 
-	Beam(Canvas* vue, const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge, double my_radius, uint my_particle_number, uint my_macro_particle_factor, const RGB &my_color = RGB::BLUE) :
+	Beam(Canvas* vue, const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge, double my_radius, size_t my_particle_number, size_t my_macro_particle_factor, const RGB &my_color = RGB::BLUE) :
 	reference_particle(vue, x_0, v_0, my_mass, my_charge, my_radius, my_color),
 	particle_number(my_particle_number),
 	macro_particle_factor(my_macro_particle_factor)
@@ -27,7 +27,9 @@ class Beam {
 
 	~Beam() {}
 
-	void initialise(void); // allocates dynamically particle_number particles whose pointers are saved in particle_list
+	virtual void initialise(void) = 0; // allocates dynamically Particle unique pointers saved in particle_list
+	void setParticle_number(size_t number) {particle_number = number;}
+	void decrementParticle_number(void) {if (not (particle_number == 0)) --particle_number;}
 
 	Vector3D radial_average_position(void) const; // returns average position of the macro particles along radial axis
 	Vector3D vertical_average_position(void) const; // returns average position of the macro particles along vertical axis
@@ -45,4 +47,9 @@ class Beam {
 
 	void move(double dt);
 	void evolve(double dt);
+}; 
+
+class CircularBeam : public Beam {
+	public :
+	virtual void initialise(void) override;
 }; 

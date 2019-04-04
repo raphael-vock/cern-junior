@@ -68,6 +68,7 @@ class Element : public Drawable{
 
 		Vector3D relative_coords(const Vector3D &x) const;
 		Vector3D local_coords(const Vector3D &x) const;
+		Vector3D inverse_curvilinear_coord(double s) const;
 
 		double curvilinear_coord(const Vector3D &x) const;
 
