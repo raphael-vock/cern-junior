@@ -34,6 +34,7 @@ class Particle : public Drawable{
 			radius(my_radius),
 			color(my_color)
 			{}
+		Particle scale(double lambda) const;
 
 		std::ostream& print(std::ostream &stream) const;
 		virtual void draw(void) override{ canvas->draw(*this); }
