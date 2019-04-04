@@ -11,13 +11,13 @@ class Beam {
 	std::vector<Particle*> particle_list;
 
 	public :
-	Beam(const Particle& p, uint my_particle_number, double my_macro_particle_factor) :
+	Beam(const Particle& p, uint my_particle_number, uint my_macro_particle_factor) :
 	reference_particle(p),
 	particle_number(my_particle_number),
 	macro_particle_factor(my_macro_particle_factor)
 	{}
 
-	Beam(Canvas* vue, const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge, double my_radius, double my_particle_number, double my_macro_particle_factor, const RGB &my_color = RGB::BLUE) :
+	Beam(Canvas* vue, const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge, double my_radius, uint my_particle_number, uint my_macro_particle_factor, const RGB &my_color = RGB::BLUE) :
 	reference_particle(vue, x_0, v_0, my_mass, my_charge, my_radius, my_color),
 	particle_number(my_particle_number),
 	macro_particle_factor(my_macro_particle_factor)
