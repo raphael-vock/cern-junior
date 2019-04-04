@@ -22,11 +22,6 @@ void Accelerator::addParticle(Vector3D r, Vector3D v, double mass, double charge
 	}
 }
 
-		/* void addStraightSection(double radius, const Vector3D &end); */
-		/* void addDipole(double radius, double curvature, double B_0, const Vector3D &end); */
-		/* void addQuadrupole(double radius, double b, const Vector3D &end); */
-		/* void addRadiofrequencyCavity(double radius, double curvature, double E_0, double omega, double kappa, double phi, const Vector3D &end); */
-
 void Accelerator::addStraightSection(double radius, const Vector3D &end){
 	element_list.push_back(std::unique_ptr<Element>(new StraightSection(canvas, element_list.empty() ? origin : element_list.back()->getExit_point(), end, radius, time)));
 }

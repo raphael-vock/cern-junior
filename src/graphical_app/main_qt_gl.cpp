@@ -13,23 +13,49 @@ using namespace vctr;
 int main(int argc, char* argv[]){
 	QApplication a(argc, argv);
 
-	GLWidget w(nullptr, Vector3D(0,0,0));
+	GLWidget w(nullptr, Vector3D(3,2,0));
 
-	w.addQuadrupole(1.0, 1.0, Vector3D(4,0,0));
+	const double r(0.1);
+	const double k(1.0);
 
-	w.addDipole(1.0, -0.5, -0.12, Vector3D(6,2,0));
-	w.addDipole(1.0, -0.5, -0.12, Vector3D(4,4,0));
+	const double B(5.89158);
+	const double b(1.2);
 
-	/* w.addQuadrupole(1.0, 1.0, Vector3D(0,4,0)); */
-	w.addRadiofrequencyCavity(1.0, 0.0, 0.1, 1.0, 1.0, 0.0, Vector3D(0,4,0));
+	const double dt(1e-3);
 
-	w.addDipole(1.0, -0.5, -0.12, Vector3D(-2,2,0));
-	w.addDipole(1.0, -0.5, -0.12, Vector3D(0,0,0));
+	//*******************
+	w.addQuadrupole(r,b,Vector3D(3,1));
+	w.addStraightSection(r,Vector3D(3,0));
+	w.addQuadrupole(r,-b,Vector3D(3,-1));
+	w.addStraightSection(r,Vector3D(3,-2));
+
+	w.addDipole(r,k,B, Vector3D(2,-3));
+
+	w.addQuadrupole(r,b,Vector3D(1,-3));
+	w.addStraightSection(r,Vector3D(0,-3));
+	w.addQuadrupole(r,-b,Vector3D(-1,-3));
+	w.addStraightSection(r,Vector3D(-2,-3));
+
+	w.addDipole(r,k,B, Vector3D(-3,-2));
+
+	w.addQuadrupole(r,b,Vector3D(-3,-1));
+	w.addStraightSection(r,Vector3D(-3,0));
+	w.addQuadrupole(r,-b,Vector3D(-3,1));
+	w.addStraightSection(r,Vector3D(-3,2));
+
+	w.addDipole(r,k,B, Vector3D(-2,3));
+
+	w.addQuadrupole(r,b,Vector3D(-1,3));
+	w.addStraightSection(r,Vector3D(0,3));
+	w.addQuadrupole(r,-b,Vector3D(1,3));
+	w.addStraightSection(r,Vector3D(2,3));
+
+	w.addDipole(r,k,B);
+
+	w.addParticle(Vector3D(3.01,0), Vector3D(0, -2.64754e8), E*1e9/(C*C) * 0.938272, 1.60217653e-19, r, RGB::BLUE);
+	//*******************
 
 	w.weld();
-
-	w.addParticle(Vector3D(0,0,0), Vector3D(2,0,0), 0.5, 3.9855, 0.1, RGB::YELLOW);
-	w.addParticle(Vector3D(1,0,0), Vector3D(2,0,0), 0.5, 3.9855, 0.1, RGB::YELLOW);
 
 	w.print(cout);
 

@@ -12,7 +12,7 @@
 
 class Particle : public Drawable{
 	private:
-		Vector3D r; // position at time t
+		Vector3D r; // position (SI units)
 		Vector3D v; // velocity at time t 
 
 		Vector3D F; // resultant force being applied 

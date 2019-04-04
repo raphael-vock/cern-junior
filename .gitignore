@@ -47,3 +47,4 @@ src/tests/vector3d_test/makefile
 src/accelerator/Makefile
 src/color/Makefile
 *.a
+src/textview/Makefile
