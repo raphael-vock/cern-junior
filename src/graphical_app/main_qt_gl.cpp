@@ -52,7 +52,10 @@ int main(int argc, char* argv[]){
 
 	w.addDipole(r,k,B);
 
-	w.addParticle(Vector3D(3.01,0), Vector3D(0, -2.64754e8), E*1e9/(C*C) * 0.938272, 1.60217653e-19, 0.1, RGB::BLUE);
+	/* w.addParticle(Vector3D(3.01,0), Vector3D(0, -2.64754e8), E*1e9/(C*C) * 0.938272, 1.60217653e-19, 0.1, RGB::BLUE); */
+	for(double x(0.0); x <= 12; x += 0.4) w.addParticle( w.inverse_curvilinear_coord(x), Vector3D(0, -2.64754e8), E*1e9/(C*C) * 0.938272, 1.60217653e-19, 0.05, RGB::YELLOW);
+	for(double x(12); x <= 24; x += 0.4) w.addParticle( w.inverse_curvilinear_coord(x), Vector3D(0, 2.64754e8), E*1e9/(C*C) * 0.938272, 1.60217653e-19, 0.05, RGB::YELLOW);
+	/* w.addParticle(w.inverse_curvilinear_coord(1), Vector3D(0, -2.64754e8), E*1e9/(C*C) * 0.938272, 1.60217653e-19, 0.1, RGB::BLUE); */
 	//*******************
 
 	w.weld();

@@ -6,6 +6,11 @@
 using namespace std;
 using namespace excptn;
 
+double Element::length(void) const{
+	const double d(direction().norm());
+	return is_straight() ? d : 2.0*asin(d*curvature/2.0)/curvature;
+}
+
 void Element::addParticle(std::unique_ptr<Particle> &p){
 	particle_list.push_back(move(p));
 	++ number_of_particles;
@@ -188,20 +193,21 @@ std::ostream& RadiofrequencyCavity::print(std::ostream& output) const{
 }
 
 Vector3D Element::inverse_curvilinear_coord(double s) const{
-	if (s*s < simcst::ZERO_DISTANCE) return entry_point;
-	if (is_straight()) return s*direction().unitary();
-	else {
+	if(is_straight())
+		return entry_point + s*direction().unitary();
+	if(s*s < simcst::ZERO_DISTANCE)
+		return entry_point;
+	else{
 		Vector3D C(center());
 		Vector3D u((entry_point - C).unitary());
 		Vector3D v(exit_point - C);
-		try {
+		try{
 			v = (v - (v|u)*u).unitary();
-		} catch(std::exception) {
-			try {
-				v = (u^vctr::Z_VECTOR).unitary();
-			} catch(std::exception) {throw excptn::ELEMENT_DEGENERATE_GEOMETRY;}
+		}catch(std::exception){
+			try{ v = (u^vctr::Z_VECTOR).unitary(); }
+			catch(std::exception){ throw excptn::ELEMENT_DEGENERATE_GEOMETRY; }
 		} 
 		double beta = s*curvature; 
-		return C + (1/abs(curvature))*(cos(beta)*u + sin(beta)*v);
+		return C + (1.0/abs(curvature))*(cos(beta)*u + sin(beta)*v);
 	}
 }

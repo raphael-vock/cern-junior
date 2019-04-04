@@ -45,6 +45,8 @@ class Element : public Drawable{
 		double getRadius(void) const{ return radius; }
 		double getCurvature(void) const{ return curvature; }
 
+		double length(void) const;
+
 		void setSuccessor(Element* my_successor){ successor = my_successor; }
 		void setPredecessor(Element* my_predecessor){ predecessor = my_predecessor; }
 

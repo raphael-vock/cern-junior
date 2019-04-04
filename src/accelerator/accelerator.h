@@ -10,12 +10,18 @@ class Accelerator : public Drawable{
 		std::shared_ptr<double> time;
 
 		const Vector3D origin;
+
+		double length = 0.0;
 	public:
 		Accelerator(Canvas* canvas, Vector3D my_origin) : Drawable(canvas), time(std::make_shared<double>(0.0)), origin(my_origin){}
+		Accelerator(const Accelerator&) = delete;
+		Accelerator& operator=(const Accelerator&) = delete;
 
 		void weld(void);
 
 		void draw_elements(void) const{ for(auto &e : element_list) e->draw(); }
+
+		double getLength() const{ return length; }
 
 		void addParticle(Vector3D r, Vector3D v, double mass, double charge, double radius, const RGB &color = RGB::WHITE);
 
@@ -37,8 +43,7 @@ class Accelerator : public Drawable{
 
 		virtual void evolve(double dt) override;
 
-		Accelerator(const Accelerator&) = delete;
-		Accelerator& operator=(const Accelerator&) = delete;
+		Vector3D inverse_curvilinear_coord(double s) const;
 };
 
 std::ostream& operator<<(std::ostream& output, const Accelerator &A);
