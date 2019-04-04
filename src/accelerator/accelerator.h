@@ -28,6 +28,10 @@ class Accelerator : public Drawable{
 		std::ostream& print(std::ostream& output);
 
 		virtual void evolve(double dt) override;
+
+		Accelerator(const Accelerator&) = delete;
+		Accelerator& operator=(const Accelerator&) = delete;
+		virtual ~Accelerator() {}
 };
 
 std::ostream& operator<<(std::ostream& output, const Accelerator &A);
