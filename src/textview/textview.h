@@ -8,7 +8,7 @@ class TextView : public Canvas{
 	private:
 		std::ostream &stream;
 	public:
-		TextView(std::ostream& my_stream) : stream(my_stream){}
+		TextView(std::ostream& my_stream) : Canvas(), stream(my_stream){}
 		virtual ~TextView(void){}
 
 		virtual void draw(const Segment &to_draw) override;

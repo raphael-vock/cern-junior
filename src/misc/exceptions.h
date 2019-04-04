@@ -12,4 +12,6 @@ namespace excptn{
 	
 	const std::invalid_argument ELEMENT_DEGENERATE_GEOMETRY("Invalid element geometric parameters");
 	const std::invalid_argument ACCELERATOR_DEGENERATE_GEOMETRY("Invalid element geometric parameters");
+	
+	const std::invalid_argument ILLEGAL_ACCESS("Attempted illegal deletion of data");
 }

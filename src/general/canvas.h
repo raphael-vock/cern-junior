@@ -11,7 +11,11 @@ class Electric_element;
 class Accelerator;
 
 class Canvas{
+	private:
+		Canvas(const Canvas &to_copy) = delete;
+		Canvas& operator=(const Canvas &to_copy) = delete;
 	public:
+		Canvas(void){}
 		virtual ~Canvas(){}
 
 		virtual void draw(const Segment &) = 0;

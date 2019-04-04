@@ -4,9 +4,8 @@
 
 #include "element.h"
 
-class Accelerator : public Drawable{
+class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element>>{
 	protected:
-		std::vector<std::unique_ptr<Element>> element_list; // (ordered) list of elements that make up the accelerator
 		std::shared_ptr<double> time;
 
 		const Vector3D origin;
@@ -14,12 +13,19 @@ class Accelerator : public Drawable{
 		double length = 0.0;
 	public:
 		Accelerator(Canvas* canvas, Vector3D my_origin) : Drawable(canvas), time(std::make_shared<double>(0.0)), origin(my_origin){}
-		Accelerator(const Accelerator&) = delete;
-		Accelerator& operator=(const Accelerator&) = delete;
+
+		// Prohibiting copies:
+		Accelerator(const Accelerator &to_copy) = delete;
+		Accelerator& operator=(const Accelerator &to_copy) = delete;
+
+		// Masking the "deletion" operators to guarantee data integrity:
+		void erase(iterator a) const{ throw excptn::ILLEGAL_ACCESS; }
+		void erase(iterator a, iterator b) const{ throw excptn::ILLEGAL_ACCESS; }
+		void clear(void){ throw excptn::ILLEGAL_ACCESS; }
 
 		void weld(void);
 
-		void draw_elements(void) const{ for(auto &e : element_list) e->draw(); }
+		void draw_elements(void) const{ for(auto &e : *this) e->draw(); }
 
 		double getLength() const{ return length; }
 
