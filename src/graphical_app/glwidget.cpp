@@ -9,7 +9,7 @@ void GLWidget::initializeGL(){
 
 void GLWidget::timerEvent(QTimerEvent* event){
 	Q_UNUSED(event);
-	double dt = stopwatch.restart() / 1000.0;
+	double dt(time_factor * stopwatch.restart() / 1000.0);
 	evolve(dt);
 	update();
 }
@@ -28,12 +28,18 @@ void GLWidget::paintGL(){
 }
 
 void GLWidget::keyPressEvent(QKeyEvent* event){
-	constexpr double small_angle(5); // in degrees
-	constexpr double small_increment(0.5);
+	const double small_angle(event->modifiers() & Qt::ShiftModifier ? 5 : 2);
+	const double small_increment(event->modifiers() & Qt::ShiftModifier ? 0.5 : 0.2);
 
 	switch(event->key()){
 		case Qt::Key_Space:
 			pause();
+			break;
+		case Qt::Key_Plus:
+			increase_speed();
+			break;
+		case Qt::Key_Equal:
+			decrease_speed();
 			break;
 		case Qt::Key_Left:
 			view.rotate(small_angle, 0.0, -1.0, 0.0);
@@ -75,6 +81,23 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 			break;
 	};
 	update();
+}
+
+void GLWidget::mousePressEvent(QMouseEvent* event){
+	lastMousePosition = event->pos();
+}
+
+void GLWidget::mouseMoveEvent(QMouseEvent* event){
+	if (event->buttons() & Qt::LeftButton) {
+		constexpr double angle(0.1); // in degrees
+
+		QPointF d = event->pos() - lastMousePosition;
+		lastMousePosition = event->pos();
+
+		view.rotate(-angle * d.manhattanLength(), d.y(), d.x(), 0.0);
+
+		update();
+	}
 }
 
 void GLWidget::pause(void){

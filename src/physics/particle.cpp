@@ -24,6 +24,7 @@ void Particle::average_particle(const Particle& P){
 void Particle::apply_gravitational_force(Particle& P) const{
 	if(this == &P) return;
 
+	// TODO check units
 	Vector3D F_g(r - P.r);
 	F_g *= phcst::G * mass * P.mass / pow( F_g.norm2() + simcst::GRAVITY_SMOOTHING_EPSILON, 1.5 );
 	P.F += F_g;

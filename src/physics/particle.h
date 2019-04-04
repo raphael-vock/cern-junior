@@ -12,14 +12,16 @@
 
 class Particle : public Drawable{
 	private:
-		Vector3D r; // position (SI units)
-		Vector3D v; // velocity at time t 
+		// TODO come up with a good system of units!
+		
+		Vector3D r;
+		Vector3D v;
+		Vector3D F;
 
-		Vector3D F; // resultant force being applied (N)
-
-		// Physical attributes:
+		// TODO make const when possible
 		double mass;
 		double charge;
+
 		double radius;
 		RGB color;
 
@@ -55,7 +57,7 @@ class Particle : public Drawable{
 		void apply_gravitational_force(Particle& P) const; // applies gravitational force on P
 
 		double gamma(void) const;
-		double energy(void) const;
+		double energy(void) const; // in GeV
 
 		void average_particle(const Particle& Q); // returns the particle whose mass is the sum of the two masses and whose position is their barycenter
 
