@@ -1,55 +1,42 @@
 #include <vector>
-#include <array>
 #include <memory>
 
-#include "../vector3d/vector3d.h"
-#include "particle.h"
+#include "../accelerator/accelerator.h"
 
-class Beam {
-	protected :
-	const Particle reference_particle;
-	size_t particle_number;
-	const size_t macro_particle_factor;
-	std::vector<std::unique_ptr<Particle>> particle_list;
+class Beam : public Drawable, protected std::vector<std::unique_ptr<Particle>>{
+	protected:
+		const Particle reference_particle;
+		const uint N; // initial number of particles
+		const double lambda; // scaling factor between reference_particles and the macro-particles
 
-	public :
-	Beam(const Particle& p, size_t my_particle_number, size_t my_macro_particle_factor) :
-	reference_particle(p),
-	particle_number(my_particle_number),
-	macro_particle_factor(my_macro_particle_factor)
-	{}
+		std::shared_ptr<Accelerator> habitat;
+	public:
+		Beam(const Accelerator &machine, const Particle &p, uint my_N, double my_lambda) :
+			Drawable(machine.getCanvas()),
+			reference_particle(p),
+			N(my_N),
+			lambda(my_lambda)
+		{}
 
-	Beam(Canvas* vue, const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge, double my_radius, size_t my_particle_number, size_t my_macro_particle_factor, const RGB &my_color = RGB::BLUE) :
-	reference_particle(vue, x_0, v_0, my_mass, my_charge, my_radius, my_color),
-	particle_number(my_particle_number),
-	macro_particle_factor(my_macro_particle_factor)
-	{}
+		virtual ~Beam(void) override{}
 
-	~Beam() {}
+		virtual void initialize(void) = 0;
 
-	virtual void initialise(void) = 0; // allocates dynamically Particle unique pointers saved in particle_list
-	void setParticle_number(size_t number) {particle_number = number;}
-	void decrementParticle_number(void) {if (not (particle_number == 0)) --particle_number;}
+		Vector3D mean_position(void) const;
+		Vector3D mean_velocity(void) const;
 
-	Vector3D radial_average_position(void) const; // returns average position of the macro particles along radial axis
-	Vector3D vertical_average_position(void) const; // returns average position of the macro particles along vertical axis
+		double vertical_emittance(void) const;
+		double radial_emittance(void) const;
 
-	Vector3D radial_average_velocity(void) const;
-	Vector3D vertical_average_velocity(void) const;
+		std::array<double,3> radial_ellipse_coefficients(void) const; // A11, A12, A22 in this order 
+		std::array<double,3> vertical_ellipse_coefficients(void) const; // A11, A12, A22 in this order 
 
-	double vertical_emittance(void) const; // returns the emittance of a beam
-	double radial_emittance(void) const; // returns the emittance of a beam
+		double mean_energy(void) const;
 
-	std::array<double,3> radial_ellipse_coefficients(void) const; // A11, A12, A22 in this order 
-	std::array<double,3> vertical_ellipse_coefficients(void) const; // A11, A12, A22 in this order 
-
-	double average_energy(void) const;
-
-	void move(double dt);
-	void evolve(double dt);
+		void evolve(double dt) override;
 }; 
 
-class CircularBeam : public Beam {
-	public :
-	virtual void initialise(void) override;
+class Circular_beam : public Beam{
+	public:
+		virtual void initialize(void) override;
 }; 

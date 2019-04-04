@@ -35,8 +35,7 @@ void OpenGLView::draw(const Particle &to_draw){
 
 void OpenGLView::draw(const StraightSection &to_draw){
 	to_draw.draw_particles();
-	Vector3D entry_point(to_draw.getEntry_point());
-	drawCylinder(entry_point, to_draw.getExit_point() - entry_point, to_draw.getRadius());
+	drawElement(to_draw, RGB::WHITE);
 }
 
 void OpenGLView::draw(const Electric_element &to_draw){
@@ -116,7 +115,7 @@ void OpenGLView::drawTorusSection(const Vector3D &center, const Vector3D &p1, co
 	const double mu(1.0/(p*major_radius/TORUS_TUBE_HEIGHT));
 
 	const int num_cylinders(ceil(2*M_PI*major_radius*p/TORUS_TUBE_HEIGHT));
-	const int num_quads(ceil(2*M_PI*minor_radius/TORUS_QUAD_LENGTH));
+	const int num_quads(2*M_PI*minor_radius/TORUS_QUAD_LENGTH);
 
 	try{
 		Vector3D u((center - p1).unitary());
@@ -141,7 +140,7 @@ void OpenGLView::drawTorusSection(const Vector3D &center, const Vector3D &p1, co
 
 		for(int i(0); i < num_quads; ++i){
 			glBegin(GL_QUAD_STRIP);
-			for(int j(0); j <= ceil(p*num_cylinders); ++j){
+			for(int j(0); j <= p*num_cylinders; ++j){
 				setShaderColor(j % HIGHLIGHT_COLOR_FREQUENCY == 0 ? color : RGB::WHITE);
 				for(int k(1); k >= 0; --k){
 					double s((i + k) % num_quads + 0.5);
@@ -161,9 +160,9 @@ void OpenGLView::drawTorusSection(const Vector3D &center, const Vector3D &p1, co
 }
 
 void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &direction, double radius, const RGB &color){
-	const int num_cylinders(ceil(direction.norm()/CYLINDER_TUBE_HEIGHT)); // number of small cylinders
-	const int num_quads(ceil(2*M_PI*radius / CYLINDER_QUAD_LENGTH)); // number of quads per small cylinder
-	const Vector3D small_direction(CYLINDER_TUBE_HEIGHT*direction.unitary()); // direction of the small cylinders
+	const int num_cylinders(direction.norm()/CYLINDER_TUBE_HEIGHT); // number of small cylinders
+	const int num_quads(2*M_PI*radius / CYLINDER_QUAD_LENGTH); // number of quads per small cylinder
+	Vector3D small_direction(CYLINDER_TUBE_HEIGHT*direction.unitary()); // direction of the small cylinders
 
 	Vector3D u(direction.unitary());
 	Vector3D v(radius*u.orthogonal());
@@ -176,6 +175,8 @@ void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &directi
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	for(int i(0); i <= num_cylinders; ++i){
+		/* if(i == num_cylinders) small_direction = direction.unitary()*(2*M_PI*radius / CYLINDER_QUAD_LENGTH - num_quads); */
+
 		glBegin(GL_QUAD_STRIP);
 		setShaderColor(i % HIGHLIGHT_COLOR_FREQUENCY == 0 ? color : RGB::WHITE);
 		for(int j(0); j <= num_quads; ++j){
@@ -190,10 +191,11 @@ void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &directi
 }
 
 void OpenGLView::drawElement(const Element &E, const RGB &color){
+	double r(1.5*E.getRadius());
 	if(E.is_straight()){
 		Vector3D entry_point(E.getEntry_point());
-		drawCylinder(entry_point, E.getExit_point() - entry_point, E.getRadius(), color);
+		drawCylinder(entry_point, E.getExit_point() - entry_point, r, color);
 	}else{
-		drawTorusSection(E.center(), E.getEntry_point(), E.getExit_point(), E.getRadius(), color);
+		drawTorusSection(E.center(), E.getEntry_point(), E.getExit_point(), r, color);
 	}
 }

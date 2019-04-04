@@ -14,6 +14,8 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 	public:
 		Accelerator(Canvas* canvas, Vector3D my_origin) : Drawable(canvas), time(std::make_shared<double>(0.0)), origin(my_origin){}
 
+		Canvas* getCanvas(void) const{ return canvas; }
+
 		// Prohibiting copies:
 		Accelerator(const Accelerator &to_copy) = delete;
 		Accelerator& operator=(const Accelerator &to_copy) = delete;

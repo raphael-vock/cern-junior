@@ -11,6 +11,7 @@ namespace simcst{ // simulation constants
 	constexpr double ZERO_TIME(1e-30);
 	constexpr double ZERO_DISTANCE(1e-10);
 	constexpr double ZERO_VECTOR_NORM2(1e-50);
+	constexpr double ZERO_LAMBDA(1e-3);
 
 	constexpr double DEFAULT_MASS(1.0);
 	constexpr double DEFAULT_RADIUS(1.0);
@@ -29,8 +30,8 @@ namespace simcst{ // simulation constants
 	constexpr double CYLINDER_QUAD_LENGTH(0.05);
 	constexpr double TORUS_QUAD_LENGTH(0.05);
 
-	constexpr double CYLINDER_TUBE_HEIGHT(0.05);
-	constexpr double TORUS_TUBE_HEIGHT(0.005);
+	constexpr double CYLINDER_TUBE_HEIGHT(0.08);
+	constexpr double TORUS_TUBE_HEIGHT(0.05);
 
 	constexpr int HIGHLIGHT_COLOR_FREQUENCY(1);
 
