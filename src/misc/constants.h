@@ -1,10 +1,15 @@
 #pragma once
 
 namespace phcst{ // physical constants
-	// the following are given in SI units
-	constexpr double G(6.674e-11); // universal gratational constant
-	constexpr double C(2.998e8); // speed of light in a vacuum
-	constexpr double E(1.60218e-19); // electric charge of an electron
+	// the following are given in atomic units
+	constexpr double ATOMIC_G(2.400530e-43); // universal gratational constant
+	constexpr double ATOMIC_C(137.0); //  speed of light, given by 1/α where α is the fine structure constant (≈1/137)
+	constexpr double ATOMIC_C2(ATOMIC_C*ATOMIC_C); //  speed of light, given by 1/α where α is the fine structure constant (≈1/137)
+
+	constexpr double ATOMIC_LENGTH_TO_M(5.291772e-11);
+	constexpr double ATOMIC_TO_M_S(2.187680e+6);
+	constexpr double ATOMIC_ENERGY_TO_GEV(2.721138e-8);
+	constexpr double ATOMIC_FORCE_TO_N(8.238725e-8);
 }
 
 namespace simcst{ // simulation constants
@@ -22,7 +27,7 @@ namespace simcst{ // simulation constants
 
 	constexpr double BARNES_HUT_THETA(0.5);
 
-	constexpr double GRAVITY_SMOOTHING_EPSILON(1e-1);
+	constexpr double GRAVITY_SMOOTHING_EPSILON(1.0); // NOTE: this is in atomic units (of length)
 
 	constexpr double COLLISION_ETA = 0.8;
 
@@ -39,4 +44,6 @@ namespace simcst{ // simulation constants
 	constexpr int HIGHLIGHT_COLOR_FREQUENCY(1);
 
 	constexpr int CYLINDER_NUM_SIDES(20);
+
+	constexpr double REPRESENTED_RADIUS_ELECTRON(0.1);
 }

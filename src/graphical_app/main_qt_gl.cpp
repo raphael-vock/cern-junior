@@ -52,12 +52,7 @@ int main(int argc, char* argv[]){
 
 	w.addDipole(r,k,B);
 
-	w.addCircularBeam( Particle(nullptr, Vector3D(0,0), Vector3D(2.64e8,0), E*1e9/(C*C) * 0.938272, 1.60217653e-19, 0.02, RGB::BLUE), 1000, 1.0 );
-	/* for(double x(0.0); x <= 24; x += 0.4){ */
-	/* 	auto thing(w.position_and_trajectory(x)); */
-	/* 	w.addParticle( thing[0], Vector3D(0, -2.64754e8), E*1e9/(C*C) * 0.938272, 1.60217653e-19, 0.08, RGB::BLUE); */
-	/* 	std::cout << thing[1] << std::endl; */
-	/* } */
+	w.addCircularBeam( Electron(Vector3D(0,0), Vector3D(100,0)), 100, 1.0 );
 
 	w.weld();
 	w.activate();

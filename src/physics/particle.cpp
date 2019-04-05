@@ -5,6 +5,12 @@
 
 using namespace phcst;
 
+void Particle::scale(double lambda){
+	mass *= lambda;
+	charge *= lambda;
+	radius *= pow(lambda, 1.0/3.0);
+}
+
 bool Particle::is_touching(const Particle& q) const{
 	return Vector3D::distance(r, q.r) <= radius + q.radius;
 }
@@ -21,12 +27,15 @@ void Particle::apply_gravitational_force(Particle& P) const{
 
 	// TODO check units
 	Vector3D F_g(r - P.r);
-	F_g *= phcst::G * mass * P.mass / pow( F_g.norm2() + simcst::GRAVITY_SMOOTHING_EPSILON, 1.5 );
+	F_g *= ATOMIC_G * mass * P.mass / pow( F_g.norm2() + simcst::GRAVITY_SMOOTHING_EPSILON, 1.5 );
 	P.F += F_g;
 }
 
 void Particle::move(double dt){
-	v += (dt / (gamma()*mass)) * F;
+	// For this calculation we need to convert mass from natural units to c.g.s.
+	// 1 GeV/c^2 = 1.7826619 x 10-24 g
+
+	v += (dt / (gamma()*mass)) * F ;
 	r += dt * v;
 }
 
@@ -37,6 +46,7 @@ void Particle::evolve(double dt){
 
 void Particle::swallow(Particle& q){
 	double q_mass(q.getMass());
+	// TODO check units
 
 	v *= mass;
 	v += q_mass*(q.getVelocity());
@@ -57,6 +67,9 @@ void Particle::add_force(const Vector3D & my_F){
 }
 
 void Particle::add_magnetic_force(const Vector3D &B, double dt){
+	// For this calculation we need to convert charge from natural units to c.g.s.
+	// 1 GeV/c^2 = 1.7826619 x 10-24 g
+
 	if(dt <= simcst::ZERO_TIME) return;
 	Vector3D magnetic_force(charge*(v^B));
 	Vector3D axis(v^magnetic_force);
@@ -69,21 +82,21 @@ void Particle::add_electric_force(const Vector3D &E){
 }
 
 double Particle::gamma(void) const{
-	return 1.0/(sqrt(1.0 - v.norm2() / (phcst::C * phcst::C)));
+	return 1.0/(sqrt(1.0 - v.norm2()/ATOMIC_C2));
 }
 
 double Particle::energy(void) const{
-	return gamma()*mass*phcst::C*phcst::C;
+	return gamma()*mass*ATOMIC_C2;
 }
 
 std::ostream& Particle::print(std::ostream& output) const{
-	output << "   Position: " << r
-	<< "\n   Velocity: " << v
-	<< "\n   Gamma: " << gamma()
-	<< "\n   Energy (GeV): " << energy()*1e-9/E
-	<< "\n   Mass (GeV/c^2): " << mass*(C*C*1e-9/E)
-	<< "\n   Charge: " << charge
-	<< "\n   Force: " << F
+	output << "   Position (m) " << ATOMIC_LENGTH_TO_M * r
+	<< "\n   Velocity (c) " << (1.0/ATOMIC_C) * v
+	<< "\n   Gamma " << gamma()
+	<< "\n   Energy (GeV) " << energy()*ATOMIC_ENERGY_TO_GEV
+	<< "\n   Mass (GeV/c^2) " << mass*ATOMIC_ENERGY_TO_GEV/ATOMIC_C2
+	<< "\n   Charge (e) " << charge
+	<< "\n   Force (N) " << F*ATOMIC_FORCE_TO_N
 	<< std::endl;
 	return output; 
 }

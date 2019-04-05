@@ -75,13 +75,11 @@ void CircularBeam::activate(){
 
 	for(size_t i(1); i <= N; ++i){
 		std::array<Vector3D,2> position_and_trajectory(habitat->position_and_trajectory(i*h));
-		habitat->addParticle(
-			position_and_trajectory[0], // position
-			model_particle.getVelocity().norm()*position_and_trajectory[1], // velocity
-			lambda * model_particle.getMass(),
-			lambda * model_particle.getCharge(),
-			pow(lambda, 1.0/3.0) * model_particle.getRadius(), // this is so that the volume of the macro-particle is exactly lambda times that of model_particle
-			model_particle.getColor()
-		);
+		Particle copy(model_particle);
+		copy.setPosition(position_and_trajectory[0]);
+		copy.setVelocity(position_and_trajectory[1]);
+		copy.scale(lambda);
+
+		habitat->addParticle(copy);
 	}
 }

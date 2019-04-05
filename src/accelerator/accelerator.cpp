@@ -19,10 +19,11 @@ void Accelerator::activate(void){
 	}
 }
 
-void Accelerator::addParticle(Vector3D r, Vector3D v, double mass, double charge, double radius, const RGB &color){
+void Accelerator::addParticle(Particle to_copy){
+	to_copy.setCanvas(canvas);
 	for(auto &E : *this){
-		if(E->contains(r)){
-			std::unique_ptr<Particle> p(new Particle(canvas, r, v, mass, charge, radius, color));
+		if(E->contains(to_copy)){
+			std::unique_ptr<Particle> p(to_copy.copy());
 			E->addParticle(p);
 			return;
 		}

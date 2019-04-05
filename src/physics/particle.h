@@ -11,22 +11,8 @@
 #include "../misc/constants.h"
 
 class Particle : public Drawable{
-	private:
-		// TODO come up with a good system of units!
-		
-		Vector3D r;
-		Vector3D v;
-		Vector3D F;
-
-		// TODO make const when possible
-		double mass;
-		double charge;
-
-		double radius;
-		RGB color;
-
-	public:
-		explicit Particle(Canvas* vue, const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge, double my_radius, const RGB &my_color = RGB::BLUE) :
+	protected:
+		explicit Particle(Canvas* vue, const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge, double my_radius, RGB const* my_color = &RGB::WHITE) :
 			Drawable(vue),
 			r(Vector3D(x_0)),
 			v(Vector3D(v_0)),
@@ -35,7 +21,36 @@ class Particle : public Drawable{
 			charge(my_charge),
 			radius(my_radius),
 			color(my_color)
-			{}
+	{}
+	private:
+		// We use the atomic unit system 
+		// https://en.wikipedia.org/wiki/Atomic_units
+		Vector3D r;
+		Vector3D v;
+		Vector3D F;
+
+		double mass;
+		double charge;
+
+		// for graphical representation (i.e. not physical):
+		double radius;
+		RGB const* color;
+
+	public:
+		explicit Particle(const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge, double my_radius = 0.0, RGB const* my_color = &RGB::WHITE) :
+			Drawable(nullptr),
+			r(Vector3D(x_0)),
+			v(Vector3D(v_0)),
+			F(vctr::ZERO_VECTOR),
+			mass(my_mass),
+			charge(my_charge),
+			radius(my_radius),
+			color(my_color)
+		{}
+
+		virtual Particle* copy(void) const{ return new Particle(*this); }; // polymorphic copy method
+
+		void scale(double lambda);
 
 		std::ostream& print(std::ostream &stream) const;
 		virtual void draw(void) override{ canvas->draw(*this); }
@@ -43,10 +58,14 @@ class Particle : public Drawable{
 		double getMass(void) const{ return mass; }
 		double getCharge(void) const{ return charge; }
 		double getRadius(void) const{ return radius; }
-		RGB getColor(void) const{ return color; }
+		RGB getColor(void) const{ return *color; }
 		Vector3D getPosition(void) const{ return r; }
 		Vector3D getVelocity(void) const{ return v; }
 		Vector3D getForce(void) const{ return F; }
+
+		void setCanvas(Canvas* c){ canvas = c; }
+		void setPosition(const Vector3D &x){ r = x; }
+		void setVelocity(const Vector3D &u){ v = u; }
 
 		void reset_force(void){ F = vctr::ZERO_VECTOR; }
 
@@ -66,6 +85,14 @@ class Particle : public Drawable{
 
 		void move(double dt);
 		virtual void evolve(double dt) override;
+};
+
+class Electron : public Particle{
+	public:
+		Electron(const Vector3D &x_0, const Vector3D &v_0) :
+			Particle(nullptr, x_0, v_0, 1.0, 1.0, simcst::REPRESENTED_RADIUS_ELECTRON, &RGB::BLUE)
+		{}
+		virtual Electron* copy(void) const override{ return new Electron(*this); }
 };
 
 std::ostream& operator<<(std::ostream& output, Particle const& particle);

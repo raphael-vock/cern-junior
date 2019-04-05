@@ -33,7 +33,7 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 
 		double getLength() const{ return length; }
 
-		void addParticle(Vector3D r, Vector3D v, double mass, double charge, double radius, const RGB &color = RGB::WHITE);
+		void addParticle(Particle to_copy);
 		void addCircularBeam(const Particle &model, uint N, double lambda);
 
 		void addStraightSection(double radius, const Vector3D &end);
