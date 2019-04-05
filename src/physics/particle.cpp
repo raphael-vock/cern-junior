@@ -5,11 +5,6 @@
 
 using namespace phcst;
 
-Particle Particle::scale(double lambda) const{
-	if(lambda < 0.0) lambda = 0.0;
-	return Particle(canvas, r, v, lambda*mass, lambda*charge, pow(lambda, 1.0/3.0)*radius);
-}
-
 bool Particle::is_touching(const Particle& q) const{
 	return Vector3D::distance(r, q.r) <= radius + q.radius;
 }

@@ -4,7 +4,7 @@
 double Beam::mean_energy(void) const{
 	double mean(0.0);
 	for(const auto &p : *this){
-		mean += p->energy();
+		mean += (**p).energy();
 	}
 	return N ? (lambda/N) * mean : 0.0;
 }
@@ -12,23 +12,31 @@ double Beam::mean_energy(void) const{
 Vector3D Beam::mean_position(void) const{
 	double radial(0.0);
 	double vertical(0.0);
+	int n(0);
 	for(const auto &p : *this){
-		radial += p->getPosition()[0]; // TODO project on local trajectory
-		vertical += p->getPosition()[1];
+		if(*p){
+			radial += (**p).getPosition()[0]; // TODO project on local trajectory
+			vertical += (**p).getPosition()[1];
+			++n;
+		}
 	}
 	Vector3D mean(radial, vertical);
-	return N ? (lambda/N)*mean : mean;
+	return n ? n*mean : mean;
 }
 
 Vector3D Beam::mean_velocity(void) const{
 	double radial(0.0);
 	double vertical(0.0);
+	int n(0);
 	for(const auto &p : *this){
-		radial += p->getVelocity()[0]; // TODO project on local trajectory
-		vertical += p->getVelocity()[1];
+		if(*p){
+			radial += (**p).getVelocity()[0]; // TODO project on local trajectory
+			vertical += (**p).getVelocity()[1];
+			++n;
+		}
 	}
 	Vector3D mean(radial, vertical);
-	return N ? (lambda/N)*mean : mean;
+	return n ? n*mean : mean;
 }
 
 double Beam::vertical_emittance(void) const{
@@ -49,14 +57,31 @@ std::array<double,3> Beam::vertical_ellipse_coefficients(void) const{
 
 void Beam::evolve(double dt){
 	for(const auto &p : *this){
-		p->evolve(dt);
+		if(*p) (**p).evolve(dt);
 	}
 }
 
-void Circular_beam::initialize(void) {
-	if(lambda < simcst::ZERO_LAMBDA) throw excptn::ZERO_LAMBDA;
-	for(size_t i(0); i < N/lambda; ++i){
-		push_back(std::unique_ptr<Particle>(new Particle(reference_particle.scale(lambda))));
-	}
+std::ostream& Beam::print(std::ostream& output) const{
+	output << "Model particle:\n" << model_particle;
+	// TODO	
+	return output;
 }
 
+void CircularBeam::activate(){
+	if(N == 0) return;
+
+	double l(habitat->getLength());
+	double h(l / N);
+
+	for(size_t i(1); i <= N; ++i){
+		std::array<Vector3D,2> position_and_trajectory(habitat->position_and_trajectory(i*h));
+		habitat->addParticle(
+			position_and_trajectory[0], // position
+			model_particle.getVelocity().norm()*position_and_trajectory[1], // velocity
+			lambda * model_particle.getMass(),
+			lambda * model_particle.getCharge(),
+			pow(lambda, 1.0/3.0) * model_particle.getRadius(), // this is so that the volume of the macro-particle is exactly lambda times that of model_particle
+			model_particle.getColor()
+		);
+	}
+}

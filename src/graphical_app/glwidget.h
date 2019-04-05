@@ -23,9 +23,9 @@ class GLWidget : public QOpenGLWidget, public Accelerator{
 		QPoint lastMousePosition; // for remembering mouse position
 
 		// time control
-		double time_factor = 1e-9;
-		void increase_speed(void){ time_factor *= 1.4142; }
-		void decrease_speed(void){ time_factor /= 1.4142; }
+		double dt = simcst::DEFAULT_DT;
+		void increase_speed(void){ dt *= 1.4142; }
+		void decrease_speed(void){ dt /= 1.4142; }
 
 		// viewpoint
 		OpenGLView view;

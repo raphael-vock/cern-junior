@@ -7,12 +7,13 @@
 class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element>>{
 	protected:
 		std::shared_ptr<double> time;
+		std::vector<Beam*> beams;
 
 		const Vector3D origin;
 
 		double length = 0.0;
 	public:
-		Accelerator(Canvas* canvas, Vector3D my_origin) : Drawable(canvas), time(std::make_shared<double>(0.0)), origin(my_origin){}
+		explicit Accelerator(Canvas* canvas, Vector3D my_origin) : Drawable(canvas), time(std::make_shared<double>(0.0)), origin(my_origin){}
 
 		Canvas* getCanvas(void) const{ return canvas; }
 
@@ -26,12 +27,14 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 		void clear(void){ throw excptn::ILLEGAL_ACCESS; }
 
 		void weld(void);
+		void activate(void);
 
 		void draw_elements(void) const{ for(auto &e : *this) e->draw(); }
 
 		double getLength() const{ return length; }
 
 		void addParticle(Vector3D r, Vector3D v, double mass, double charge, double radius, const RGB &color = RGB::WHITE);
+		void addCircularBeam(const Particle &model, uint N, double lambda);
 
 		void addStraightSection(double radius, const Vector3D &end);
 		void addDipole(double radius, double curvature, double B_0, const Vector3D &end);
@@ -51,7 +54,7 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 
 		virtual void evolve(double dt) override;
 
-		Vector3D inverse_curvilinear_coord(double s) const;
+		std::array<Vector3D,2> position_and_trajectory(double s) const; // returns coordinate and local trajectory of point on the ideal orbit with given curvilinear coordinate
 };
 
 std::ostream& operator<<(std::ostream& output, const Accelerator &A);

@@ -6,9 +6,42 @@
 using namespace std;
 using namespace excptn;
 
-double Element::length(void) const{
-	const double d(direction().norm());
-	return is_straight() ? d : 2.0*asin(d*curvature/2.0)/curvature;
+Element::Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<double> my_clock) :
+	Drawable(display),
+	entry_point(entry),
+	exit_point(exit),
+	radius(my_radius),
+	curvature(my_curvature),
+	clock(my_clock),
+	dir(0,0,0),
+	u(0,0,0),
+	v(0,0,0),
+	w(0,0,0)
+{
+	// initializing length
+	double d(direction().norm());
+	length = is_straight() ? d : 2.0*asin(d*curvature/2.0)/curvature;
+
+	// initializing dir and (u,v,w)
+	try{
+		dir = (exit-entry).unitary();
+		if(is_straight()){
+			u = direction().unitary();
+			v = u.orthogonal();
+		}else{
+			Vector3D C(center());
+			u = (entry_point - C).unitary();
+			v = exit_point - C;
+			try{
+				v = (v - (v|u)*u).unitary();
+			}
+			catch(std::exception){
+				v = (u^vctr::Z_VECTOR).unitary();
+			}
+		} 
+		w = u^v;
+	}
+	catch(std::exception){ throw excptn::ELEMENT_DEGENERATE_GEOMETRY; }
 }
 
 void Element::addParticle(std::unique_ptr<Particle> &p){
@@ -17,7 +50,7 @@ void Element::addParticle(std::unique_ptr<Particle> &p){
 }
 
 bool Element::is_straight(void) const{
-	return abs(curvature) <= simcst::ZERO_DISTANCE;
+	return abs(curvature) <= simcst::ZERO_CURVATURE;
 }
 
 std::ostream& Element::print(std::ostream& output) const{
@@ -66,18 +99,12 @@ Vector3D Element::relative_coords(const Vector3D &x) const{
 }
 
 Vector3D Element::local_coords(const Vector3D &x) const{
-	try{
-		Vector3D y(relative_coords(x));
-		Vector3D d(direction().unitary());
-		return y - (y|d)*d;
-	}
-	catch(std::exception){
-		throw ELEMENT_DEGENERATE_GEOMETRY;
-	}
+	Vector3D y(relative_coords(x));
+	return y - (y|u)*u;
 }
 
 double Element::curvilinear_coord(const Vector3D &x) const{
-	double l((local_coords(x) - relative_coords(x))|direction().unitary());
+	double l(relative_coords(x)|dir);
 	return is_straight() ? l : asin(l*curvature) / curvature;
 }
 
@@ -99,13 +126,12 @@ bool Element::has_collided(const Vector3D &r) const{
 
 bool Element::is_after(const Vector3D &r) const{
 	Vector3D rel(relative_coords(r));
-	Vector3D dir(direction());
-	return (rel|dir) > dir.norm2();
+	Vector3D D(direction());
+	return (rel|D) > D.norm2();
 }
 
 bool Element::is_before(const Vector3D &r) const{
 	Vector3D rel(relative_coords(r));
-	Vector3D dir(direction());
 	return (rel|dir) < 0.0;
 }
 
@@ -119,7 +145,6 @@ void Element::evolve(double dt){
 		/* if(successor) successor->add_lorentz_force(*particle_list[i], dt); */
 		/* if(predecessor) predecessor->add_lorentz_force(*particle_list[i], dt); */
 
-		/* std::cout << particle_list[i]->getForce() << std::endl; */
 		particle_list[i]->evolve(dt);
 		
 		if(is_after(*particle_list[i])){
@@ -145,11 +170,11 @@ std::ostream& StraightSection::print(std::ostream& output) const{
 	return output;
 }
 
-void Magnetic_element::add_lorentz_force(Particle& p, double dt) const{
+void MagneticElement::add_lorentz_force(Particle& p, double dt) const{
 	p.add_magnetic_force(B(p.getPosition(), *clock), dt);
 }
 
-void Electric_element::add_lorentz_force(Particle& p, double dt) const{
+void ElectricElement::add_lorentz_force(Particle& p, double dt) const{
 	p.add_electric_force(E(p.getPosition(), *clock));
 }
 
@@ -198,16 +223,14 @@ Vector3D Element::inverse_curvilinear_coord(double s) const{
 	if(s*s < simcst::ZERO_DISTANCE)
 		return entry_point;
 	else{
-		Vector3D C(center());
-		Vector3D u((entry_point - C).unitary());
-		Vector3D v(exit_point - C);
-		try{
-			v = (v - (v|u)*u).unitary();
-		}catch(std::exception){
-			try{ v = (u^vctr::Z_VECTOR).unitary(); }
-			catch(std::exception){ throw excptn::ELEMENT_DEGENERATE_GEOMETRY; }
-		} 
-		double beta = s*curvature; 
-		return C + (1.0/abs(curvature))*(cos(beta)*u + sin(beta)*v);
+		double beta(s*curvature);
+		return center() + (1.0/abs(curvature))*(cos(beta)*u + sin(beta)*v);
 	}
+}
+
+Vector3D Element::local_trajectory(double s) const{
+	if(is_straight()) return dir;
+
+	double beta(s*curvature);
+	return -sin(beta)*u + cos(beta)*v;
 }

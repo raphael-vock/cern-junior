@@ -8,14 +8,14 @@ void GLWidget::initializeGL(){
 }
 
 void GLWidget::timerEvent(QTimerEvent* event){
-	Q_UNUSED(event);
-	double dt(time_factor * stopwatch.restart() / 1000.0);
+	/* Q_UNUSED(event); */
+	/* double dt(time_factor * stopwatch.restart() / 1000.0); */
 	evolve(dt);
 	update();
 }
 
 void GLWidget::resizeGL(int width, int height){
-	glViewport(0, 0, width, height);// draw on entire screen
+	glViewport(0.0, 0.0, width, height);// draw on entire screen
 
 	QMatrix4x4 matrix;
 	matrix.perspective(70.0, qreal(width) / qreal(height ? height : 1.0), 1e-3, 1e5);

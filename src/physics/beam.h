@@ -1,26 +1,35 @@
 #include <vector>
 #include <memory>
 
+#include "../misc/exceptions.h"
+
 #include "../accelerator/accelerator.h"
 
-class Beam : public Drawable, protected std::vector<std::unique_ptr<Particle>>{
+class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_ptr<Particle>>>{
 	protected:
-		const Particle reference_particle;
-		const uint N; // initial number of particles
+		const Particle model_particle;
+		const uint N; // number of particles that will effectively be created
 		const double lambda; // scaling factor between reference_particles and the macro-particles
 
-		std::shared_ptr<Accelerator> habitat;
+		Accelerator* habitat; // the accelerator that the beam lives in
 	public:
-		Beam(const Accelerator &machine, const Particle &p, uint my_N, double my_lambda) :
+		explicit Beam(Accelerator& machine, const Particle &p, uint number_of_particles, double my_lambda) :
 			Drawable(machine.getCanvas()),
-			reference_particle(p),
-			N(my_N),
-			lambda(my_lambda)
-		{}
+			model_particle(p),
+			N(number_of_particles / my_lambda),
+			lambda(my_lambda),
+			habitat(&machine)
+		{ 
+			if(my_lambda <= simcst::ZERO_LAMBDA) throw excptn::ZERO_LAMBDA; 
+		}
+
 
 		virtual ~Beam(void) override{}
 
-		virtual void initialize(void) = 0;
+		void draw_particles(void) const{ for(const auto &p : *this) (**p).draw(); }
+		virtual void draw(void) override{ canvas->draw(*this); }
+
+		virtual void activate(void) = 0;
 
 		Vector3D mean_position(void) const;
 		Vector3D mean_velocity(void) const;
@@ -34,9 +43,12 @@ class Beam : public Drawable, protected std::vector<std::unique_ptr<Particle>>{
 		double mean_energy(void) const;
 
 		void evolve(double dt) override;
+
+		std::ostream& print(std::ostream& output) const;
 }; 
 
-class Circular_beam : public Beam{
+class CircularBeam : public Beam{
 	public:
-		virtual void initialize(void) override;
+		using Beam::Beam;
+		virtual void activate(void) override;
 }; 

@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "../accelerator/accelerator.h"
+#include "../physics/beam.h"
 
 class TextView : public Canvas{
 	private:
@@ -13,8 +14,9 @@ class TextView : public Canvas{
 
 		virtual void draw(const Segment &to_draw) override;
 		virtual void draw(const Particle &to_draw) override;
+		virtual void draw(const Beam &to_draw) override;
 		virtual void draw(const StraightSection &to_draw) override;
-		virtual void draw(const Magnetic_element &to_draw) override;
-		virtual void draw(const Electric_element &to_draw) override;
+		virtual void draw(const MagneticElement &to_draw) override;
+		virtual void draw(const ElectricElement &to_draw) override;
 		virtual void draw(const Accelerator &to_draw) override;
 };

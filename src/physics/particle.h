@@ -26,7 +26,7 @@ class Particle : public Drawable{
 		RGB color;
 
 	public:
-		Particle(Canvas* vue, const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge, double my_radius, const RGB &my_color = RGB::BLUE) :
+		explicit Particle(Canvas* vue, const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge, double my_radius, const RGB &my_color = RGB::BLUE) :
 			Drawable(vue),
 			r(Vector3D(x_0)),
 			v(Vector3D(v_0)),
@@ -36,7 +36,6 @@ class Particle : public Drawable{
 			radius(my_radius),
 			color(my_color)
 			{}
-		Particle scale(double lambda) const;
 
 		std::ostream& print(std::ostream &stream) const;
 		virtual void draw(void) override{ canvas->draw(*this); }

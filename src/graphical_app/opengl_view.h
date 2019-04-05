@@ -25,9 +25,10 @@ class OpenGLView : public Canvas{
 		// drawing methods, inherited from Canvas
 		virtual void draw(const Segment &to_draw) override;
 		virtual void draw(const Particle &to_draw) override;
+		virtual void draw(const Beam &to_draw) override;
 		virtual void draw(const StraightSection &to_draw) override;
-		virtual void draw(const Magnetic_element &to_draw) override;
-		virtual void draw(const Electric_element &to_draw) override;
+		virtual void draw(const MagneticElement &to_draw) override;
+		virtual void draw(const ElectricElement &to_draw) override;
 		virtual void draw(const Accelerator &to_draw) override;
 
 		// initalization methods
@@ -41,8 +42,9 @@ class OpenGLView : public Canvas{
 
 		// drawing
 		void drawSphere(const Vector3D &x, double r, RGB color);
+
 		void drawCylinder(const Vector3D &basepoint, const Vector3D &direction, double radius, const RGB &color = RGB::WHITE);
-		void drawTorusSection(const Vector3D &center, const Vector3D &p1, const Vector3D &p2, double minor_radius, const RGB &color);
+		void drawTorusSection(const Element &E, const RGB &color);
 
 		void drawElement(const Element &E, const RGB &color);
 };

@@ -9,9 +9,11 @@ INCLUDEPATH += \
 SOURCES += \
 	particle.cpp \
 	box.cpp \
-	node.cpp
+	node.cpp \
+	beam.cpp \
 
 HEADERS += \
 	particle.h \
 	box.h \
 	node.h \
+	beam.h \

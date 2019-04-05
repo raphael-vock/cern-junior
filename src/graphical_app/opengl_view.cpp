@@ -5,7 +5,9 @@
 
 #include "../misc/constants.h"
 #include "../misc/exceptions.h"
+
 #include "../accelerator/accelerator.h"
+#include "../physics/beam.h"
 
 using namespace simcst;
 
@@ -29,6 +31,10 @@ void OpenGLView::draw(const Segment &to_draw){
 	glEnd();
 }
 
+void OpenGLView::draw(const Beam &to_draw){
+	to_draw.draw_particles();
+}
+
 void OpenGLView::draw(const Particle &to_draw){
 	drawSphere(to_draw.getPosition(), to_draw.getRadius(), to_draw.getColor());
 }
@@ -38,12 +44,12 @@ void OpenGLView::draw(const StraightSection &to_draw){
 	drawElement(to_draw, RGB::WHITE);
 }
 
-void OpenGLView::draw(const Electric_element &to_draw){
+void OpenGLView::draw(const ElectricElement &to_draw){
 	to_draw.draw_particles();
 	drawElement(to_draw, RGB::ELECTRIC_BLUE);
 }
 
-void OpenGLView::draw(const Magnetic_element &to_draw){
+void OpenGLView::draw(const MagneticElement &to_draw){
 	to_draw.draw_particles();
 	drawElement(to_draw, RGB::RED);
 }
@@ -107,33 +113,25 @@ void OpenGLView::drawSphere(const Vector3D &x, double r, RGB color){
 	sphere.draw(prog, VertexId);
 }
 
-void OpenGLView::drawTorusSection(const Vector3D &center, const Vector3D &p1, const Vector3D &p2, double minor_radius, const RGB &color){
-	const double major_radius(Vector3D::distance(center, p1));
-	const double p(1/M_PI*asin( Vector3D::distance(p1, p2)/(2*major_radius))); // proportion of the torus to be drawn (0 ≤ p ≤ 1)
-
-	const double lambda(TORUS_QUAD_LENGTH/minor_radius);
-	const double mu(1.0/(p*major_radius/TORUS_TUBE_HEIGHT));
-
-	const int num_cylinders(ceil(2*M_PI*major_radius*p/TORUS_TUBE_HEIGHT));
-	const int num_quads(2*M_PI*minor_radius/TORUS_QUAD_LENGTH);
-
+void OpenGLView::drawTorusSection(const Element& E, const RGB &color){
 	try{
-		Vector3D u((center - p1).unitary());
+		const Vector3D center(E.center());
+		const Vector3D p1(E.getEntry_point());
+		const Vector3D p2(E.getExit_point());
 
-		Vector3D v((center - p2).unitary());
-		try{
-			v = (v - (u|v)*u).unitary();
-		}
-		catch(std::exception){
-			try{
-				v = u^vctr::Z_VECTOR.unitary();
-			}
-			catch(std::exception){
-				throw excptn::ELEMENT_DEGENERATE_GEOMETRY;
-			}
-		}
+		const Vector3D u(-E.getBasis_vector_u());
+		const Vector3D v(-E.getBasis_vector_v());
+		const Vector3D w(E.getBasis_vector_w());
 
-		Vector3D w(u^v);
+		const double major_radius(Vector3D::distance(center, p1));
+		const double minor_radius(E.getRadius());
+		const double p(1/M_PI*asin( Vector3D::distance(p1, p2)/(2*major_radius))); // proportion of the torus to be drawn (0 ≤ p ≤ 1)
+
+		const double lambda(TORUS_QUAD_LENGTH/minor_radius);
+		const double mu(1.0/(p*major_radius/TORUS_TUBE_HEIGHT));
+
+		const int num_cylinders(ceil(2*M_PI*major_radius*p/TORUS_TUBE_HEIGHT));
+		const int num_quads(2*M_PI*minor_radius/TORUS_QUAD_LENGTH);
 
 		prog.setUniformValue("view", pov_matrix);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -191,11 +189,11 @@ void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &directi
 }
 
 void OpenGLView::drawElement(const Element &E, const RGB &color){
-	double r(1.5*E.getRadius());
+	double r(E.getRadius());
 	if(E.is_straight()){
 		Vector3D entry_point(E.getEntry_point());
 		drawCylinder(entry_point, E.getExit_point() - entry_point, r, color);
 	}else{
-		drawTorusSection(E.center(), E.getEntry_point(), E.getExit_point(), r, color);
+		drawTorusSection(E, color);
 	}
 }
