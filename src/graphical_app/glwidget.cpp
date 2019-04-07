@@ -38,9 +38,11 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 			break;
 		case Qt::Key_Plus:
 			increase_speed();
+			std::cout << dt << std::endl;
 			break;
 		case Qt::Key_Equal:
 			decrease_speed();
+			std::cout << dt << std::endl;
 			break;
 		case Qt::Key_Left:
 			view.rotate(small_angle, 0.0, -1.0, 0.0);

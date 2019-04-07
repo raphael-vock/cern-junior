@@ -12,7 +12,7 @@ namespace phcst{ // physical constants
 }
 
 namespace simcst{ // simulation constants
-	constexpr double DEFAULT_DT(1e-10);
+	constexpr double DEFAULT_DT(1e-11);
 
 	constexpr double ZERO_TIME(1e-30);
 	constexpr double ZERO_DISTANCE(1e-10);

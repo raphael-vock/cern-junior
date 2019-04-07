@@ -52,7 +52,7 @@ int main(int argc, char* argv[]){
 
 	w.addDipole(r,k,B);
 
-	w.addCircularBeam(Proton(Vector3D(3.00984, -0.391837), 2.0, Vector3D(1,0)), 200, 1);
+	w.addCircularBeam(Proton(Vector3D(3.00984, -0.391837), 2.0, Vector3D(1,0)), 5000, 1);
 
 	w.weld();
 	w.activate();
