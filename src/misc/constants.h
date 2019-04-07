@@ -35,11 +35,10 @@ namespace simcst{ // simulation constants
 	constexpr double FIELD_LINE_LENGTH(10);
 	constexpr double FIELD_LINE_SAMPLE_POINT_DENSITY(0.8);
 
-	constexpr double CYLINDER_QUAD_LENGTH(0.05);
-	constexpr double TORUS_QUAD_LENGTH(0.05);
-
-	constexpr double CYLINDER_TUBE_HEIGHT(0.08);
-	constexpr double TORUS_TUBE_HEIGHT(0.05);
+	constexpr double QUAD_LENGTH(0.05);
+	constexpr double TUBE_HEIGHT(0.05);
+	
+	constexpr int GAP_RATIO(5);
 
 	constexpr int HIGHLIGHT_COLOR_FREQUENCY(1);
 

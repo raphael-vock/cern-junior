@@ -21,6 +21,7 @@ class RGB{
 		static const RGB BLUE;
 
 		static const RGB YELLOW;
+		static const RGB SKY_BLUE;
 		static const RGB ELECTRIC_BLUE;
 };
 

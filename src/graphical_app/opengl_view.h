@@ -44,7 +44,9 @@ class OpenGLView : public Canvas{
 		void drawSphere(const Vector3D &x, double r, RGB color);
 
 		void drawCylinder(const Vector3D &basepoint, const Vector3D &direction, double radius, const RGB &color = RGB::WHITE);
-		void drawTorusSection(const Element &E, const RGB &color);
+
+		void drawStraightElement(const Element &E, const RGB &color);
+		void drawCurvedElement(const Element &E, const RGB &color);
 
 		void drawElement(const Element &E, const RGB &color);
 };
