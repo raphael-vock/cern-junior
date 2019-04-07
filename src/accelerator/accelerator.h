@@ -28,6 +28,7 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 
 		void weld(void);
 		void activate(void);
+		void initialize(void){ weld(); activate(); }
 
 		void draw_elements(void) const{ for(auto &e : *this) e->draw(); }
 

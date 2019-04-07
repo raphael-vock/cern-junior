@@ -125,8 +125,8 @@ void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &directi
 	translation.translate(basepoint[0], basepoint[1], basepoint[2]);
 	prog.setUniformValue("view", pov_matrix * translation);
 
-	/* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
-	glPolygonMode(GL_FILL, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	/* glPolygonMode(GL_FILL, GL_LINE); */
 	setShaderColor(color);
 
 	glBegin(GL_QUAD_STRIP);

@@ -47,8 +47,13 @@ int main(){
 	w.addDipole(r,k,B);
 
 	// *********************
+	w.addParticle(Proton(Vector3D(3.01, 0), 2.0, Vector3D(0, -2.64754e+08)));
+	w.initialize();
 
-	w.show();
+	for(int i(1); i <= 5e3; ++i){
+		w.evolve(dt);
+		w.draw();
+	}
 
 	return 0;
 }
