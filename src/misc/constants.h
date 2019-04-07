@@ -12,7 +12,8 @@ namespace phcst{ // physical constants
 }
 
 namespace simcst{ // simulation constants
-	constexpr double DEFAULT_DT(1e-11);
+	constexpr double DEFAULT_TIMESTEP(1e-11);
+	constexpr int DEPTH_FACTOR(5); // number of intermediate updates between each timestep
 
 	constexpr double ZERO_TIME(1e-30);
 	constexpr double ZERO_DISTANCE(1e-10);
@@ -35,15 +36,16 @@ namespace simcst{ // simulation constants
 	constexpr double FIELD_LINE_LENGTH(10);
 	constexpr double FIELD_LINE_SAMPLE_POINT_DENSITY(0.8);
 
-	constexpr double QUAD_LENGTH(0.05);
-	constexpr double TUBE_HEIGHT(0.05);
-	
-	constexpr int GAP_RATIO(5);
+	constexpr double QUAD_LENGTH(0.1);
+	constexpr double TUBE_HEIGHT(0.08);
+	constexpr double GAP_LENGTH(0.4);
+
+	constexpr int GAP_RATIO(GAP_LENGTH/TUBE_HEIGHT);
 
 	constexpr int HIGHLIGHT_COLOR_FREQUENCY(1);
 
 	constexpr int CYLINDER_NUM_SIDES(20);
 
-	constexpr double REPRESENTED_RADIUS_ELECTRON(0.02);
-	constexpr double REPRESENTED_RADIUS_PROTON(0.02);
+	constexpr double REPRESENTED_RADIUS_ELECTRON(0.01);
+	constexpr double REPRESENTED_RADIUS_PROTON(0.01);
 }

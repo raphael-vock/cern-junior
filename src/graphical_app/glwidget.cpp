@@ -10,7 +10,8 @@ void GLWidget::initializeGL(){
 void GLWidget::timerEvent(QTimerEvent* event){
 	/* Q_UNUSED(event); */
 	/* double dt(time_factor * stopwatch.restart() / 1000.0); */
-	evolve(dt);
+	double dt(timestep/simcst::DEPTH_FACTOR);
+	for(int i(1); i <= simcst::DEPTH_FACTOR; ++i) evolve(dt);
 	update();
 }
 
@@ -38,11 +39,9 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 			break;
 		case Qt::Key_Plus:
 			increase_speed();
-			std::cout << dt << std::endl;
 			break;
 		case Qt::Key_Equal:
 			decrease_speed();
-			std::cout << dt << std::endl;
 			break;
 		case Qt::Key_Left:
 			view.rotate(small_angle, 0.0, -1.0, 0.0);

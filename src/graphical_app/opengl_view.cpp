@@ -59,7 +59,7 @@ void OpenGLView::draw(const Accelerator &to_draw){
 }
 
 void OpenGLView::init(){
-	 // Initializes the OpenGL POV, and builds the shader.
+	 // initializes the OpenGL POV, and builds the shader.
 
 	prog.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vertex_shader.glsl");
 	prog.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fragment_shader.glsl");
@@ -125,7 +125,8 @@ void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &directi
 	translation.translate(basepoint[0], basepoint[1], basepoint[2]);
 	prog.setUniformValue("view", pov_matrix * translation);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	/* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
+	glPolygonMode(GL_FILL, GL_LINE);
 	setShaderColor(color);
 
 	glBegin(GL_QUAD_STRIP);
@@ -153,9 +154,9 @@ void OpenGLView::drawCurvedElement(const Element &E, const RGB &color){
 
 		const double theta(2.0*asin( Vector3D::distance(p1, p2)/(2.0*major_radius)));
 
-		const int num_cylinders(ceil(theta*major_radius/TUBE_HEIGHT));
+		const int num_cylinders(theta*major_radius/TUBE_HEIGHT);
 
-		for(int i(0); i <= num_cylinders; i += GAP_RATIO){
+		for(int i(0); i < num_cylinders; i += GAP_RATIO){
 			double alpha(i * theta / num_cylinders);
 			Vector3D base(center + major_radius*(cos(alpha)*u + sin(alpha)*v));
 			drawCylinder(base, TUBE_HEIGHT*(sin(alpha)*u - cos(alpha)*v), minor_radius, color);
@@ -169,12 +170,12 @@ void OpenGLView::drawStraightElement(const Element &E, const RGB &color){
 	const double d(direction.norm());
 
 	const Vector3D small_direction(TUBE_HEIGHT * direction.unitary());
-	const int num_cylinders(ceil(d/TUBE_HEIGHT));
+	const int num_cylinders(d/TUBE_HEIGHT);
 
 	const double r(E.getRadius());
 	const Vector3D base(E.getEntry_point());
 
-	for(int i(0); i <= num_cylinders; i += GAP_RATIO){
+	for(int i(0); i < num_cylinders; i += GAP_RATIO){
 		drawCylinder(base + i*small_direction, small_direction, r, color);
 	}
 }
