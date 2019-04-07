@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cmath>
 
 #include "../general/drawable.h"
 #include "../general/canvas.h"
@@ -23,14 +24,15 @@ class Particle : public Drawable{
 			color(my_color)
 	{}
 	private:
-		// We use the atomic unit system 
-		// https://en.wikipedia.org/wiki/Atomic_units
-		Vector3D r;
-		Vector3D v;
-		Vector3D F;
+		// We use the cgs unit system for everything except v which is measured in natural units (i.e. v=0.5 means 50% the speed of light)
+		// https://en.wikipedia.org/wiki/Centimetre–gram–second_system_of_units
+		
+		Vector3D r; // position (in cm)
+		Vector3D v; // velocity (in c)
+		Vector3D F; // force (in dyn)
 
-		double mass;
-		double charge;
+		double mass; // (in g)
+		double charge; // (in statC)
 
 		// for graphical representation (i.e. not physical):
 		double radius;
@@ -41,9 +43,20 @@ class Particle : public Drawable{
 			Drawable(nullptr),
 			r(Vector3D(x_0)),
 			v(Vector3D(v_0)),
-			F(vctr::ZERO_VECTOR),
+			F(0,0,0),
 			mass(my_mass),
 			charge(my_charge),
+			radius(my_radius),
+			color(my_color)
+		{}
+
+		explicit Particle(const Vector3D &x_0_m, double E_gev, const Vector3D &dir, double mass_gev_c2, double charge_e, double my_radius = 0.0, RGB const* my_color = &RGB::WHITE) :
+			Drawable(nullptr),
+			r(1e2*x_0_m),
+			v(dir.is_zero() or E_gev <= simcst::ZERO_ENERGY_GEV ? vctr::ZERO_VECTOR : sqrt(1.0 - (mass_gev_c2*mass_gev_c2)/(E_gev*E_gev))*dir.unitary()),
+			F(0,0,0),
+			mass(mass_gev_c2 / phcst::GEV_C2_CGS),
+			charge(charge_e * phcst::E_CGS),
 			radius(my_radius),
 			color(my_color)
 		{}

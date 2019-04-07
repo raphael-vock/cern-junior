@@ -1,15 +1,16 @@
 #pragma once
 
 namespace phcst{ // physical constants
-	// the following are given in atomic units
-	constexpr double ATOMIC_G(2.400530e-43); // universal gratational constant
-	constexpr double ATOMIC_C(137.0); //  speed of light, given by 1/α where α is the fine structure constant (≈1/137)
-	constexpr double ATOMIC_C2(ATOMIC_C*ATOMIC_C); //  speed of light, given by 1/α where α is the fine structure constant (≈1/137)
+	// the following are given in c.g.s. units
+	constexpr double G_CGS(6.67428e-8); // universal gratational constant
+	constexpr double C_CGS(2.99792458e10); // speed of light
+	constexpr double C2_CGS(C_CGS * C_CGS); // speed of light squared
+	constexpr double E_CGS(4.80320427e-10); // elementary charge
 
-	constexpr double ATOMIC_LENGTH_TO_M(5.291772e-11);
-	constexpr double ATOMIC_TO_M_S(2.187680e+6);
-	constexpr double ATOMIC_ENERGY_TO_GEV(2.721138e-8);
-	constexpr double ATOMIC_FORCE_TO_N(8.238725e-8);
+	constexpr double GEV_C2_CGS(1e-13*C2_CGS/E_CGS);
+	constexpr double GEV_CGS(1.602176621e-3);
+	constexpr double C_CHARGE_CGS(3.33564e-10);
+	constexpr double T_CGS(1e4);
 }
 
 namespace simcst{ // simulation constants
@@ -18,6 +19,7 @@ namespace simcst{ // simulation constants
 	constexpr double ZERO_TIME(1e-30);
 	constexpr double ZERO_DISTANCE(1e-10);
 	constexpr double ZERO_VECTOR_NORM2(1e-50);
+	constexpr double ZERO_ENERGY_GEV(1e-10);
 	constexpr double ZERO_CURVATURE(1e-5);
 	constexpr double ZERO_LAMBDA(1e-3);
 

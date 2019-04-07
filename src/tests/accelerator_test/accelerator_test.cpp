@@ -46,19 +46,9 @@ int main(){
 
 	w.addDipole(r,k,B);
 
-	w.addParticle(Particle(Vector3D(3.01,0), Vector3D(0, -2.64754e8), 1e9/(ATOMIC_C2) * 0.938272, 1.0, r, &RGB::BLUE));
 	// *********************
 
 	w.show();
-
-	w.evolve(dt);
-	w.draw();
-	w.evolve(dt);
-	w.draw();
-	w.evolve(dt);
-	w.draw();
-	w.evolve(dt);
-	w.draw();
 
 	return 0;
 }

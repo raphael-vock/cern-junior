@@ -86,7 +86,6 @@ double Vector3D::distance(const Vector3D& u, const Vector3D& v){
 }
 
 bool Vector3D::is_zero(void) const{
-	// calculation is optimized because this method will be called very very frequently!
 	if(x*x >= simcst::ZERO_VECTOR_NORM2) return false;
 	if(y*y >= simcst::ZERO_VECTOR_NORM2) return false;
 	if(z*z >= simcst::ZERO_VECTOR_NORM2) return false;
@@ -122,11 +121,11 @@ Vector3D Vector3D::orthogonal(void) const{
 }
 
 Vector3D Vector3D::rotated(Vector3D u, double alpha) const{
-	try{ u.normalize(); }
+	try{
+		u.normalize();
+		return (cos(alpha)*(*this)) + (1.0-cos(alpha))*((*this)|u)*u + sin(alpha)*(u^(*this));
+	}
 	catch(std::invalid_argument){ return *this; } // u is a zero-vector then nothing happens
-	return    (cos(alpha)*(*this))
-     		  + (1.0-cos(alpha))*((*this)|u)*u
-		  + sin(alpha)*(u^(*this));
 }
 
 Vector3D operator*(const double &lambda, const Vector3D& u){
