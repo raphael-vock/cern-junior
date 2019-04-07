@@ -41,7 +41,7 @@ void OpenGLView::draw(const Particle &to_draw){
 
 void OpenGLView::draw(const StraightSection &to_draw){
 	to_draw.draw_particles();
-	drawElement(to_draw, RGB::WHITE);
+	drawElement(to_draw, RGB::BLACK);
 }
 
 void OpenGLView::draw(const ElectricElement &to_draw){
@@ -172,9 +172,7 @@ void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &directi
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	for(int i(0); i <= num_cylinders; ++i){
-		/* if(i == num_cylinders) small_direction = direction.unitary()*(2*M_PI*radius / CYLINDER_QUAD_LENGTH - num_quads); */
-
+	for(int i(0); i <= num_cylinders; i += 3){
 		glBegin(GL_QUAD_STRIP);
 		setShaderColor(i % HIGHLIGHT_COLOR_FREQUENCY == 0 ? color : RGB::WHITE);
 		for(int j(0); j <= num_quads; ++j){

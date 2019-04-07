@@ -73,11 +73,12 @@ void CircularBeam::activate(){
 	double l(habitat->getLength());
 	double h(l / N);
 
+	const double v(model_particle.getVelocity().norm());
 	for(size_t i(1); i <= N; ++i){
 		std::array<Vector3D,2> position_and_trajectory(habitat->position_and_trajectory(i*h));
 		Particle copy(model_particle);
 		copy.setPosition(position_and_trajectory[0]);
-		copy.setVelocity(position_and_trajectory[1]);
+		copy.setVelocity(v*position_and_trajectory[1]);
 		copy.scale(lambda);
 
 		habitat->addParticle(copy);

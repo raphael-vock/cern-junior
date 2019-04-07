@@ -2,15 +2,13 @@
 
 namespace phcst{ // physical constants
 	// the following are given in c.g.s. units
-	constexpr double G_CGS(6.67428e-8); // universal gratational constant
-	constexpr double C_CGS(2.99792458e10); // speed of light
-	constexpr double C2_CGS(C_CGS * C_CGS); // speed of light squared
-	constexpr double E_CGS(4.80320427e-10); // elementary charge
+	constexpr double G_USI(6.674e-11); // universal gratational constant
+	constexpr double C_USI(2.99792458e8); // speed of light
+	constexpr double C2_USI(C_USI * C_USI); // speed of light squared
+	constexpr double E_USI(1.602176487e-19); // elementary charge
 
-	constexpr double GEV_C2_CGS(1e-13*C2_CGS/E_CGS);
-	constexpr double GEV_CGS(1.602176621e-3);
-	constexpr double C_CHARGE_CGS(3.33564e-10);
-	constexpr double T_CGS(1e4);
+	constexpr double MASS_PROTON_GEV_C2(0.938272);
+	constexpr double MASS_ELECTRON_GEV_C2(5.10999e-4);
 }
 
 namespace simcst{ // simulation constants
@@ -47,5 +45,6 @@ namespace simcst{ // simulation constants
 
 	constexpr int CYLINDER_NUM_SIDES(20);
 
-	constexpr double REPRESENTED_RADIUS_ELECTRON(0.1);
+	constexpr double REPRESENTED_RADIUS_ELECTRON(0.02);
+	constexpr double REPRESENTED_RADIUS_PROTON(0.02);
 }

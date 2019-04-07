@@ -50,13 +50,13 @@ class Particle : public Drawable{
 			color(my_color)
 		{}
 
-		explicit Particle(const Vector3D &x_0_m, double E_gev, const Vector3D &dir, double mass_gev_c2, double charge_e, double my_radius = 0.0, RGB const* my_color = &RGB::WHITE) :
+		explicit Particle(const Vector3D &x_0_m, double E_gev, const Vector3D &dir, double mass_gev_c2, double charge_e, double my_radius = simcst::REPRESENTED_RADIUS_ELECTRON, RGB const* my_color = &RGB::WHITE) :
 			Drawable(nullptr),
-			r(1e2*x_0_m),
+			r(x_0_m),
 			v(dir.is_zero() or E_gev <= simcst::ZERO_ENERGY_GEV ? vctr::ZERO_VECTOR : sqrt(1.0 - (mass_gev_c2*mass_gev_c2)/(E_gev*E_gev))*dir.unitary()),
 			F(0,0,0),
-			mass(mass_gev_c2 / phcst::GEV_C2_CGS),
-			charge(charge_e * phcst::E_CGS),
+			mass(1e9*phcst::E_USI/phcst::C2_USI * mass_gev_c2),
+			charge(phcst::E_USI * charge_e),
 			radius(my_radius),
 			color(my_color)
 		{}
@@ -94,18 +94,26 @@ class Particle : public Drawable{
 
 		bool is_touching(const Particle& q) const;
 
-		void swallow(Particle &q);
-
 		void move(double dt);
 		virtual void evolve(double dt) override;
 };
 
 class Electron : public Particle{
 	public:
-		Electron(const Vector3D &x_0, const Vector3D &v_0) :
-			Particle(nullptr, x_0, v_0, 1.0, 1.0, simcst::REPRESENTED_RADIUS_ELECTRON, &RGB::BLUE)
+		explicit Electron(const Vector3D &x_0, const double E, const Vector3D &dir) :
+			Particle(x_0, E, dir, phcst::MASS_ELECTRON_GEV_C2, -1.0, simcst::REPRESENTED_RADIUS_ELECTRON, &RGB::BLUE)
 		{}
+
 		virtual Electron* copy(void) const override{ return new Electron(*this); }
+};
+
+class Proton : public Particle{
+	public:
+		explicit Proton(const Vector3D &x_0, const double E, const Vector3D &dir) :
+			Particle(x_0, E, dir, phcst::MASS_PROTON_GEV_C2, 1.0, simcst::REPRESENTED_RADIUS_PROTON, &RGB::BLUE)
+		{}
+
+		virtual Proton* copy(void) const override{ return new Proton(*this); }
 };
 
 std::ostream& operator<<(std::ostream& output, Particle const& particle);

@@ -142,8 +142,6 @@ bool Element::contains(const Vector3D &r) const{
 void Element::evolve(double dt){
 	for(int i(0); i <= number_of_particles-1;){
 		add_lorentz_force(*particle_list[i], dt);
-		/* if(successor) successor->add_lorentz_force(*particle_list[i], dt); */
-		/* if(predecessor) predecessor->add_lorentz_force(*particle_list[i], dt); */
 
 		particle_list[i]->evolve(dt);
 		

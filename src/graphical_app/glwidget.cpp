@@ -23,6 +23,7 @@ void GLWidget::resizeGL(int width, int height){
 }
 
 void GLWidget::paintGL(){
+	glClearColor(1.0, 1.0, 1.0, 1.0); // white background color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	draw();
 }
