@@ -91,7 +91,7 @@ class Element : public Drawable{
 		bool is_before(const Particle &p) const{ return is_before(p.getPosition()); }
 		bool contains(const Particle &p) const{ return contains(p.getPosition()); }
 		
-		virtual void add_lorentz_force(Particle &, double) const{}
+		virtual void add_lorentz_force(Particle &, double) const = 0;
 		virtual void evolve(double dt) override;
 }; 
 
