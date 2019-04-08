@@ -6,6 +6,9 @@ void Accelerator::weld(void){
 	if(N <= 1) return;
 
 	for(size_t i(0); i <= N-2; ++i){
+		if(at(i)->getExit_point() != at(i+1)->getEntry_point()){
+			throw excptn::NON_MATCHING_LINK_POINTS;
+		}
 		at(i)->setSuccessor(at(i+1).get());
 		at(i+1)->setPredecessor(at(i).get());
 	}

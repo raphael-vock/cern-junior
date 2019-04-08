@@ -11,5 +11,5 @@ class Drawable{
 		virtual ~Drawable(void){}
 
 		virtual void draw(void) = 0;
-		virtual void evolve(double dt){};
+		virtual void evolve(double dt) = 0;
 };

@@ -11,7 +11,7 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 
 		const Vector3D origin;
 
-		double length = 0.0;
+		double length = 0.0; // geometric length of the accelerator, i.e. length of the ideal orbit
 	public:
 		explicit Accelerator(Canvas* canvas, Vector3D my_origin) : Drawable(canvas), time(std::make_shared<double>(0.0)), origin(my_origin){}
 

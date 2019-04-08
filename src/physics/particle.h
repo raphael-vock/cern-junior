@@ -24,15 +24,12 @@ class Particle : public Drawable{
 			color(my_color)
 	{}
 	private:
-		// We use the cgs unit system for everything except v which is measured in natural units (i.e. v=0.5 means 50% the speed of light)
-		// https://en.wikipedia.org/wiki/Centimetre–gram–second_system_of_units
-		
-		Vector3D r; // position (in cm)
+		Vector3D r; // position (in m)
 		Vector3D v; // velocity (in c)
-		Vector3D F; // force (in dyn)
+		Vector3D F; // force (in N)
 
-		double mass; // (in g)
-		double charge; // (in statC)
+		double mass; // (in kg)
+		double charge; // (in C)
 
 		// for graphical representation (i.e. not physical):
 		double radius;
