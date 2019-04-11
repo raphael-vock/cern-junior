@@ -157,4 +157,42 @@ Ensemble, ils nous procurent un puissant moyen de représenter des fonctions pur
 \ \linebreak
 \textbf{(P6.3)} Afin d'alléger par la suite le corps de certaines méthodes, \textbf{nous avons implémenté le calcul du centre de courbure} avec la méthode \T{Element::center(void)}. Celui-ci n'a de sens que si la courbure est non nulle (i.e. l'élément est courbe) donc une exception est lancée dans le cas contraire.
 
+\section{La classe \T{Accelerator}}
+
+\subsection{Conception}
+
+\ \linebreak
+\noindent \textbf{(P7.1)} La classe \T{Accelerator} \emph{est} par héritage \T{private} une collection de pointeurs sur des \T{Element}, c'est d'ailleurs ce schéma que nous adoptons pour la conception de la majorité de nos classes. Un accélérateur contient un \T{shared\_ptr} sur un timer, faisant office de chronomètre commun à tous les éléments composant l'accélérateur, ce qui se revèle utile pour les éléments dont le champ dépend du temps comme la \T{RadiofrequencyCavity}. Enfin pour sa construction un accélérateur contient une origne, vue comme un \T{Vector3D}, ainsi qu'une longueur (0 par défaut). Concrètement les différents éléments de l'accélérateur sont "soudés" par la méthode \T{weld()} qui lie chaque élément à son succésseur et prédecesseur.
+
+\ \linebreak
+\noindent \textbf{(P7.2)} Nous avons supprimé le constructeur de copie par défaut ainsi que l'opérateur d'afféctation \T{=} de la classe \T{Accelerator} pour garantir l'intégrité des ses données. Cette classe contient en effet une liste de pointeurs intelligents sur des éléments \T{vector<unique\_ptr><Element> >}. Bien que nous puissions effectuer une telle copie en faisant une copie profonde des éléments de la liste, nous considérons que cette solution a peu de sens et nous n'en aurions quand bien même pas l'utilité. 
+
+\subsection{Révision des éléments}
+
+\ \linebreak
+\noindent \textbf{(P8.1)} La méthode \T{has\_collided()} de la classe \T{Element} doit se comporter de façon différente si elle est appelée sur un élément courbe ou sur un élément droit. Dans une première approche il s'agirait donc en terme de programation orientée objet d'une méthode virtuelle. Toutefois afin d'éviter une duplication inutile du code et par soucis de conception, nous avons fais le choix de représenter les éléments droits comme des éléments courbe de courbure nulle, en remarquant que toutes les méthodes appliquées à ces éléments sont les mêmes que celles appliquées aux élements courbes lorsque la courbure tend vers 0.
+
+\ \linebreak
+\noindent \textbf{(P8.2)} Si la méthode \T{has\_collided()} était virtuelle, on s'attendrait à ce qu'ell soit virtuelle pure puisqu'on ne saurait la définir dans le cas d'un élément qui ne soit ni courbe si droit, faisant de la classe \T{Element} une classe abstraite. Ce n'est cependant pas le cas dans notre conception des éléments puisque nous voyons les éléments droits comme des élements de courbure nulle. La classe \T{Element} n'a pas besoin d'être abstraite.
+
+\section{Conception du système}
+
+\subsection{Objets dessinables}
+
+\ \linebreak
+\noindent \textbf{(P9.1)} La méthode \T{draw()} a un comportement différent selon le \T{Canvas} qu'elle doit dessiner, il s'agit donc d'une méthode virtuelle.
+
+\ \linebreak
+\noindent \textbf{(P9.2)} La classe \T{Accelerator} est, par héritage privé, une collection d'éléments et possède une collection de \T{Particle} plus tard remplacées par des \T{Beam}, les faisceaux. On souhaite que la méthode \T{draw()} s'applique à chacun des éléments et chacune des particules selon les caractéristiques propres à l'instance. Nous avons donc besoin, dans un cadre de programation orientée objet, de \emph{polymorphisme} et plus précisément de résolution dynamique des liens. La classe \T{Accelerator} doit donc être une collection de pointeurs sur des \T{Element} et contenir une collection de pointeurs sur des \T{Beam}. 
+
+\ \linebreak
+\noindent \textbf{(P9.3)} Nous devons à présent être vigilants vis à vis de la copie puisque notre classe contient des pointeurs. Une solution serait de redéfinir le constructeur de copie ainsi que l'opérateur d'affectation \T{=} en implémentant une copie \emph{profonde} et non de surface afin de garantir l'intégrité des données. Toutefois nous ne souhaitons pas copier d'accélerateur, ce qui aurait d'ailleurs peu d'utilité et de sens, nous supprimons simplement ce constructeur et l'opérateur \T{=} avec le mot réservé \T{delete}. 
+
+\section{La classe \T{Beam}}
+
+\subsection{Conception}
+
+\ \linebreak
+\noindent \textbf{(P11.1)} Un \T{Beam}, ou faisceau, est par héritage \T{private}, une collection de \T{Particle}. Ses attributs, constants, sont une référence sur la particule modèle du faisceau, le nombre de macroparticules crées \T{N}, le facteur $\lambda$ de ces macroparticules ainsi qu'un pointeur sur l'accélérateur dans lequel l'instance évolue. Puisque l'émittance, radiale et verticale, ainsi que les six coefficients des ellipses de phases et l'énergie moyenne du faisceau seront recalculés fréquemment nous avons décidé de les implementer comme méthodes. 
+
 \end{document}
