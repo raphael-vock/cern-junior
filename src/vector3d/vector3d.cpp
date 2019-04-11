@@ -100,20 +100,21 @@ bool Vector3D::operator!=(const Vector3D& v) const{
 	return not (*this == v);
 }
 
-void Vector3D::normalize(void){
+Vector3D Vector3D::normalize(void){
 	if(this->is_zero()) throw excptn::ZERO_VECTOR_UNITARY;
 	else (*this) *= 1.0/norm();
+	return *this;
 }
 
 Vector3D Vector3D::unitary(void) const{
-	if(this->is_zero()) throw excptn::ZERO_VECTOR_UNITARY;
-	else return (1.0/norm())*(*this);
+	Vector3D copy(*this);
+	return copy.normalize();
 }
 
 Vector3D Vector3D::orthogonal(void) const{
-	if(x*x > simcst::ZERO_VECTOR_NORM2) return Vector3D(-y/x, 1.0, 0.0).unitary();
-	if(y*y > simcst::ZERO_VECTOR_NORM2) return Vector3D(1.0, -x/y, 0.0).unitary();
-	if(z*z > simcst::ZERO_VECTOR_NORM2) return Vector3D(1.0, 0.0, -x/z).unitary();
+	if(x*x > simcst::ZERO_VECTOR_NORM2) return Vector3D(-y/x, 1.0, 0.0).normalize();
+	if(y*y > simcst::ZERO_VECTOR_NORM2) return Vector3D(1.0, -x/y, 0.0).normalize();
+	if(z*z > simcst::ZERO_VECTOR_NORM2) return Vector3D(1.0, 0.0, -x/z).normalize();
 	else{
 		// (is zero vector)
 		return vctr::X_VECTOR;
@@ -128,12 +129,12 @@ Vector3D Vector3D::rotated(Vector3D u, double alpha) const{
 	catch(std::invalid_argument){ return *this; } // u is a zero-vector then nothing happens
 }
 
-Vector3D operator*(const double &lambda, const Vector3D& u){
-	return u * lambda;
+bool Vector3D::are_orthogonal(const Vector3D &u, const Vector3D &v){
+	return abs(u|v) <= simcst::ZERO_VECTOR_NORM2;
 }
 
-double Vector3D::mixed_prod(const Vector3D &u, const Vector3D &v, const Vector3D &w){
-	return u|(v^w);
+Vector3D operator*(const double &lambda, const Vector3D& u){
+	return u * lambda;
 }
 
 std::ostream& Vector3D::print(std::ostream& output) const{

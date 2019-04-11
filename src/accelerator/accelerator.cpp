@@ -22,12 +22,13 @@ void Accelerator::activate(void){
 	}
 }
 
-void Accelerator::addParticle(Particle to_copy){
-	to_copy.setCanvas(canvas);
+void Accelerator::addParticle(const Particle &to_copy){
+	std::unique_ptr<Particle> copy(to_copy.copy());
+	copy->setCanvas(canvas);
+
 	for(auto &E : *this){
 		if(E->contains(to_copy)){
-			std::unique_ptr<Particle> p(to_copy.copy());
-			E->addParticle(p);
+			E->addParticle(copy);
 			return;
 		}
 	}
@@ -37,7 +38,6 @@ void Accelerator::addCircularBeam(const Particle &model, uint N, double lambda){
 	beams.push_back(new CircularBeam(*this, model, N, lambda));
 }
 
-// TODO replace new with make_unique
 void Accelerator::addStraightSection(double radius, const Vector3D &end){
 	push_back(std::unique_ptr<Element>(new StraightSection(canvas, empty() ? origin : back()->getExit_point(), end, radius, time)));
 	length += back()->getLength();
@@ -53,8 +53,28 @@ void Accelerator::addQuadrupole(double radius, double b, const Vector3D &end){
 	length += back()->getLength();
 }
 
-void Accelerator::addRadiofrequencyCavity(double radius, double curvature, double E_0, double omega, double kappa, double phi, const Vector3D &end){
-	push_back(std::unique_ptr<Element>(new RadiofrequencyCavity(canvas, empty() ? origin : back()->getExit_point(), end, radius, curvature, time, E_0, omega, kappa, phi)));
+void Accelerator::addFodoStructure(double radius, double b, double L, const Vector3D &end){
+	Vector3D start(empty() ? origin : back()->getExit_point());
+	double l((end - start).norm()/2.0 - L);
+	if(l <= 0.0) throw excptn::ELEMENT_DEGENERATE_GEOMETRY;
+
+	try{
+		Vector3D dir((end-start).unitary());
+
+		// Focusing quadrupole:
+		addQuadrupole(radius, b, start + l*dir);
+		// First straight section:
+		addStraightSection(radius, start + (L+l)*dir);
+		// Defocusing quadrupole:
+		addQuadrupole(radius, -b, start + (L+2.0*l)*dir);
+		// Second straight section:
+		addStraightSection(radius, end);
+	}
+	catch(std::exception){ throw excptn::ELEMENT_DEGENERATE_GEOMETRY; }
+}
+
+void Accelerator::addRadiofrequencyCavity(double radius, double E_0, double omega, double kappa, double phi, const Vector3D &end){
+	push_back(std::unique_ptr<Element>(new RadiofrequencyCavity(canvas, empty() ? origin : back()->getExit_point(), end, radius, time, E_0, omega, kappa, phi)));
 	length += back()->getLength();
 }
 

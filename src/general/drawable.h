@@ -10,6 +10,7 @@ class Drawable{
 		Drawable(Canvas* my_canvas) : canvas(my_canvas){}
 		virtual ~Drawable(void){}
 
+		Canvas* getCanvas(void) const{ return canvas; }
+
 		virtual void draw(void) = 0;
-		virtual void evolve(double dt) = 0;
 };

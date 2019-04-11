@@ -1,33 +1,51 @@
 #include "box.h"
 
-double Box::volume(void) const{
-	return width*depth*height;
+std::array<Vector3D,8> Box::getVertices(void) const{
+	// TODO replace with "getVertices"
+	return {
+		center - width - height - depth,
+		center - width - height + depth,
+		center - width + height - depth,
+		center - width + height + depth,
+
+		center + width + height - depth,
+		center + width + height + depth,
+		center + width - height - depth,
+		center + width - height + depth,
+	};
 }
 
 bool Box::contains(const Particle &x) const{
-	std::array<double,3> point_coords(x.getPosition().getCoords());
-	std::array<double,3> origin_coords(origin.getCoords());
+	Vector3D rel_coords(x.getPosition() - center + width + depth + height);
 
-	double delta_x(point_coords[0] - origin_coords[0]);
-	double delta_y(point_coords[1] - origin_coords[1]);
-	double delta_z(point_coords[2] - origin_coords[2]);
-	return 0.0 <= delta_x and delta_x <= width
-	   and 0.0 <= delta_y and delta_y <= depth
-	   and 0.0 <= delta_z and delta_z <= height;
+	double a(0.5*rel_coords|width);
+	double b(0.5*rel_coords|depth);
+	double c(0.5*rel_coords|height);
+
+	return
+		0.0 <= a and a <= width.norm2() and
+		0.0 <= b and b <= depth.norm2() and
+		0.0 <= c and c <= height.norm2();
 }
 
-void Box::print(void) const{
-	std::cout << origin << std::endl;
-	std::cout << Vector3D(width, depth, height) << std::endl;
-	std::cout << "\n";
+std::ostream& Box::print(std::ostream &output) const{
+	output << center << "\n";
+	output << width << "\n";
+	output << depth << "\n";
+	output << height << "\n\n";
+	return output;
 }
 
 Box Box::octant(bool right, bool back, bool top) const{
-	std::array<double,3> originCoords(origin.getCoords());
+	Vector3D new_center(center);
 
-	if(right) originCoords[0] += width*0.5;
-	if(back) originCoords[1] += depth*0.5;
-	if(top) originCoords[2] += height*0.5;
+	Vector3D new_width(0.5*width);
+	Vector3D new_depth(0.5*depth);
+	Vector3D new_height(0.5*height);
 
-	return Box(originCoords[0], originCoords[1], originCoords[2], width*0.5, depth*0.5, height*0.5);
+	new_center += (right ? 1 : -1) * new_width;
+	new_center += (back ? 1 : -1) * new_depth;
+	new_center += (top ? 1 : -1) * new_height;
+
+	return Box(canvas, new_center, new_width, new_depth, new_height);
 }

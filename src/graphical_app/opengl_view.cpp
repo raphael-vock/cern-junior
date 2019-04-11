@@ -31,27 +31,37 @@ void OpenGLView::draw(const Segment &to_draw){
 	glEnd();
 }
 
+void OpenGLView::draw(const Box &to_draw){
+	std::array<Vector3D,8> points(to_draw.getVertices());
+
+	prog.setUniformValue("view", pov_matrix);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	glBegin(GL_QUAD_STRIP);
+	for(int i(0); i <= 9; ++i){
+		glVertex3d(points[i%8][0], points[i%8][1], points[i%8][2]);
+	}
+	glEnd();
+}
+
 void OpenGLView::draw(const Beam &to_draw){
-	to_draw.draw_particles();
+	// TODO
 }
 
 void OpenGLView::draw(const Particle &to_draw){
-	drawSphere(to_draw.getPosition(), to_draw.getRadius(), to_draw.getColor());
+	setShaderColor(*to_draw.getColor());
+	drawSphere(to_draw.getPosition(), to_draw.getRadius());
 }
 
-void OpenGLView::draw(const StraightSection &to_draw){
+void OpenGLView::draw(const Element &to_draw){
 	to_draw.draw_particles();
-	drawElement(to_draw, RGB::SKY_BLUE);
-}
 
-void OpenGLView::draw(const ElectricElement &to_draw){
-	to_draw.draw_particles();
-	drawElement(to_draw, RGB::ELECTRIC_BLUE);
-}
+	setShaderColor(RGB::PURPLE);
+	if(matrix_mode) to_draw.draw_octree();
 
-void OpenGLView::draw(const MagneticElement &to_draw){
-	to_draw.draw_particles();
-	drawElement(to_draw, RGB::RED);
+	setShaderColor(*to_draw.getColor());
+	if(to_draw.is_straight()) drawStraightElement(to_draw);
+	else drawCurvedElement(to_draw);
 }
 
 void OpenGLView::draw(const Accelerator &to_draw){
@@ -102,18 +112,18 @@ void OpenGLView::rotate(double angle, double x, double y, double z){
 	pov_matrix = rotation * pov_matrix;
 }
 
-void OpenGLView::drawSphere(const Vector3D &x, double r, RGB color){
+void OpenGLView::drawSphere(const Vector3D &x, double r){
 	QMatrix4x4 matrix;
 	matrix.translate(x[0], x[1], x[2]);
 	matrix.scale(r);
 
 	prog.setUniformValue("view", pov_matrix * matrix);
-	setShaderColor(color);
-	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+	// TODO mutualize
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	sphere.draw(prog, VertexId);
 }
 
-void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &direction, double radius, const RGB &color){
+void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &direction, double radius){
 	Vector3D u(direction.unitary());
 	Vector3D v(radius*u.orthogonal());
 	u = u^v;
@@ -126,8 +136,6 @@ void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &directi
 	prog.setUniformValue("view", pov_matrix * translation);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	/* glPolygonMode(GL_FILL, GL_LINE); */
-	setShaderColor(color);
 
 	glBegin(GL_QUAD_STRIP);
 	for(int i(0); i <= num_quads; ++i){
@@ -140,7 +148,7 @@ void OpenGLView::drawCylinder(const Vector3D &basepoint, const Vector3D &directi
 	glEnd();
 }
 
-void OpenGLView::drawCurvedElement(const Element &E, const RGB &color){
+void OpenGLView::drawCurvedElement(const Element &E){
 	try{
 		const Vector3D center(E.center());
 		const Vector3D p1(E.getEntry_point());
@@ -159,13 +167,13 @@ void OpenGLView::drawCurvedElement(const Element &E, const RGB &color){
 		for(int i(0); i < num_cylinders; i += GAP_RATIO){
 			double alpha(i * theta / num_cylinders);
 			Vector3D base(center + major_radius*(cos(alpha)*u + sin(alpha)*v));
-			drawCylinder(base, TUBE_HEIGHT*(sin(alpha)*u - cos(alpha)*v), minor_radius, color);
+			drawCylinder(base, TUBE_HEIGHT*(sin(alpha)*u - cos(alpha)*v), minor_radius);
 		}
 	}
 	catch(std::exception){ throw excptn::ELEMENT_DEGENERATE_GEOMETRY; }
 }
 
-void OpenGLView::drawStraightElement(const Element &E, const RGB &color){
+void OpenGLView::drawStraightElement(const Element &E){
 	const Vector3D direction(E.getExit_point() - E.getEntry_point());
 	const double d(direction.norm());
 
@@ -176,15 +184,6 @@ void OpenGLView::drawStraightElement(const Element &E, const RGB &color){
 	const Vector3D base(E.getEntry_point());
 
 	for(int i(0); i < num_cylinders; i += GAP_RATIO){
-		drawCylinder(base + i*small_direction, small_direction, r, color);
-	}
-}
-
-void OpenGLView::drawElement(const Element &E, const RGB &color){
-	double r(E.getRadius());
-	if(E.is_straight()){
-		drawStraightElement(E, color);
-	}else{
-		drawCurvedElement(E, color);
+		drawCylinder(base + i*small_direction, small_direction, r);
 	}
 }

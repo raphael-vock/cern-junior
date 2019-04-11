@@ -3,12 +3,10 @@
 #include "drawable.h"
 
 class Segment;
+class Box;
 class Particle;
 class Beam;
 class Element;
-class StraightSection;
-class MagneticElement;
-class ElectricElement;
 class Accelerator;
 
 class Canvas{
@@ -20,13 +18,12 @@ class Canvas{
 		virtual ~Canvas(){}
 
 		virtual void draw(const Segment &) = 0;
+		virtual void draw(const Box &) = 0;
 
 		virtual void draw(const Particle &) = 0;
 		virtual void draw(const Beam &) = 0;
 
-		virtual void draw(const StraightSection &) = 0;
-		virtual void draw(const MagneticElement &) = 0;
-		virtual void draw(const ElectricElement &) = 0;
+		virtual void draw(const Element &) = 0;
 
 		virtual void draw(const Accelerator &) = 0;
 };

@@ -6,27 +6,39 @@
 void Node::subdivide(void){
 	type = INT;
 	for(int i(0); i <= 1; ++i) for(int j(0); j <= 1; ++j) for(int k(0); k <= 1; ++k){
-		children[i + 2*j + 4*k] = new Node(domain.octant(i,j,k));
+		children[i + 2*j + 4*k] = std::unique_ptr<Node>(new Node(domain.octant(i,j,k)));
 	}
+}	 
+
+void Node::reset(void){
+	if(type == INT){
+		for(auto &c : children){
+			c.reset();
+		}
+	}
+	type = EMPTY;
 }
 
 bool Node::insert(Particle* my_particle){
-	assert(my_particle);
+	// TODO change this method from pointer to reference
 	if(not domain.contains(*my_particle)) return false;
 	switch(type){
 		case INT:{
-			virtual_particle.average_particle(*my_particle);
-			for(auto child : children) if(child->insert(my_particle)) return true;
+			virtual_particle.incorporate(*my_particle);
+			for(const auto &child : children) if(child->insert(my_particle)) return true;
 			return false;
 		}
 		case EXT:{
-			virtual_particle.average_particle(*my_particle);
+			// TODO handle this correctly
+			if(my_particle->getPosition() == tenant->getPosition()) return false;
+
+			virtual_particle.incorporate(*my_particle);
 			subdivide();
 
-			for(auto child : children) if(child->insert(tenant)) break;
+			for(const auto &child : children) if(child->insert(tenant)) break;
 			tenant = nullptr;
 
-			for(auto child : children) if(child->insert(my_particle)) return true;
+			for(const auto &child : children) if(child->insert(my_particle)) return true;
 			return false;
 		}
 		case EMPTY:{
@@ -38,38 +50,34 @@ bool Node::insert(Particle* my_particle){
 	}
 }
 
-void Node::increment_gravity(Particle& P) const{
+void Node::apply_electromagnetic_force(Particle& P) const{
 	if(type == EMPTY) return;
 	if(type == EXT){
-		virtual_particle.apply_gravitational_force(P);
+		virtual_particle.apply_electromagnetic_force(P);
 		return;
 	}
 	// else type == INT
 
-	const double ratio(pow(domain.volume(),1.0/3) / Vector3D::distance(P.getPosition(), virtual_particle.getPosition()));
+	const double ratio(pow(domain.getVolume(),1.0/3) / Vector3D::distance(P.getPosition(), virtual_particle.getPosition()));
 
 	if(ratio <= simcst::BARNES_HUT_THETA){
-		virtual_particle.apply_gravitational_force(P);
+		virtual_particle.apply_electromagnetic_force(P);
 	}else{
-		for(auto child : children){
-			child->increment_gravity(P);
+		for(const auto &child : children){
+			child->apply_electromagnetic_force(P);
 		}
 	}
 }
 
-void Node::apply_gravity(Particle& P) const{
-	P.reset_force();
-	increment_gravity(P);
-}
-
 void Node::print_elements(void) const{
-	if(type == INT) for(auto child : children) child->print_elements();
+	if(type == INT) for(const auto &child : children) child->print_elements();
 	if(type == EXT){
 		std::cout << *tenant << std::endl;
 		std::cout << " is in\n";
-		domain.print();
+		domain.print(std::cout);
 	}
 }
+
 void Node::print_type(void){
 	if(type == INT) std::cout << "INT\n";
 	if(type == EXT) std::cout << "EXT\n";
@@ -80,4 +88,16 @@ void Node::info(void) const{
 	std::cout << "Node info:\n";
 	std::cout << virtual_particle.getPosition() << std::endl;
 	std::cout << "Total mass = " << virtual_particle.getMass() << "\n";
+}
+
+void Node::draw(void) const{
+	if(type == EXT){
+		domain.getCanvas()->draw(domain);
+	}
+
+	if(type == INT){
+		for(const auto &child : children){
+			child->draw();
+		}
+	}
 }

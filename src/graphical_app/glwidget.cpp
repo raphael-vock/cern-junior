@@ -81,6 +81,9 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 		case Qt::Key_E:
 			view.rotate(small_angle, 0.0, 0.0, +1.0);
 			break;
+		case Qt::Key_M:
+			view.toggle_matrix_mode();
+			break;
 	};
 	update();
 }

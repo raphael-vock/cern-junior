@@ -7,7 +7,7 @@
 
 class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_ptr<Particle>>>{
 	protected:
-		const Particle model_particle;
+		const Particle &model_particle;
 		const uint N; // number of particles that will effectively be created
 		const double lambda; // scaling factor between reference_particles and the macro-particles
 
@@ -15,7 +15,7 @@ class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_
 	public:
 		explicit Beam(Accelerator& machine, const Particle &p, uint number_of_particles, double my_lambda) :
 			Drawable(machine.getCanvas()),
-			model_particle(p),
+			model_particle(*p.copy()),
 			N(number_of_particles / my_lambda),
 			lambda(my_lambda),
 			habitat(&machine)
@@ -42,7 +42,7 @@ class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_
 
 		double mean_energy(void) const;
 
-		void evolve(double dt) override;
+		void evolve(double dt);
 
 		std::ostream& print(std::ostream& output) const;
 }; 

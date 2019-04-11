@@ -14,6 +14,8 @@ class Vector3D{
 	public:
 		// Constructor, getters, setters:
 		explicit Vector3D(double a, double b, double c = 0) : x(a), y(b), z(c){}
+		Vector3D(void) : Vector3D(0,0,0){}
+
 		std::array<double,3> getCoords(void) const; // return coords in an array
 		double operator[](int i) const; // overload of index operator allows easy access to individual coordinates
 
@@ -43,11 +45,12 @@ class Vector3D{
 		static double distance(const Vector3D& u, const Vector3D& v);
 
 		// Various
-		void normalize(void); // divides by the norm to get a unit vector and returns the result. undefined behavior if norm() == 0.0
+		Vector3D normalize(void); // divides by the norm to get a unit vector and returns the result. undefined behavior if norm() == 0.0
 		Vector3D unitary(void) const; // same as normalize(), but returns the result
 		Vector3D rotated(Vector3D u, double alpha) const; // returns result of rotating around a given axis by a given angle angle
 		Vector3D orthogonal(void) const; // returns a unitary orthogonal vector
-		static double mixed_prod(const Vector3D &, const Vector3D &, const Vector3D &); // returns mixed product of (u,v,w) i.e. u|(v^w) where | is the dot product
+		static double mixed_prod(const Vector3D &u, const Vector3D &v, const Vector3D &w){ return u|(v^w); }
+		static bool are_orthogonal(const Vector3D &u, const Vector3D &v);
 
 		std::ostream& print(std::ostream& output) const;
 };

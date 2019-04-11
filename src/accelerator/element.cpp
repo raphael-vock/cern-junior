@@ -13,18 +13,17 @@ Element::Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, d
 	radius(my_radius),
 	curvature(my_curvature),
 	clock(my_clock),
-	dir(0,0,0),
-	u(0,0,0),
-	v(0,0,0),
-	w(0,0,0)
+	dir((exit-entry).unitary()),
+	length(is_straight() ? direction().norm() : 2.0*asin(direction().norm()*curvature/2.0)/curvature),
+	tree(Box(
+			canvas,
+			entry_point + 0.5*direction(),
+			0.5*direction() + (is_straight() ? vctr::ZERO_VECTOR : radius*dir),
+			is_straight() ? radius : radius + (1.0/curvature)*(1.0-sqrt(abs(1.0-0.25*curvature*curvature*direction().norm2())))
+	))
 {
-	// initializing length
-	double d(direction().norm());
-	length = is_straight() ? d : 2.0*asin(d*curvature/2.0)/curvature;
-
-	// initializing dir and (u,v,w)
+	// initializing (u,v,w)
 	try{
-		dir = (exit-entry).unitary();
 		if(is_straight()){
 			u = direction().unitary();
 			v = u.orthogonal();
@@ -140,6 +139,15 @@ bool Element::contains(const Vector3D &r) const{
 }
 
 void Element::evolve(double dt){
+	tree.reset();
+	for(const auto &p : particle_list){
+		tree.insert(p.get());
+	}
+
+	for(const auto &p : particle_list){
+		tree.apply_electromagnetic_force(*p);
+	}
+
 	for(int i(0); i <= number_of_particles-1;){
 		add_lorentz_force(*particle_list[i], dt);
 
@@ -188,9 +196,7 @@ Vector3D Quadrupole::B(const Vector3D &x, double) const{
 }
 
 Vector3D RadiofrequencyCavity::E(const Vector3D &x, double t) const{
-	// TODO work out how to calculate direction properly
-	Vector3D axis((exit_point - entry_point).unitary());
-	return E_0*sin(omega*t - kappa * curvilinear_coord(x) + phi) * axis;
+	return E_0*sin(omega*t - kappa*curvilinear_coord(x) + phi) * dir;
 }
 
 // PRINTING METHODS

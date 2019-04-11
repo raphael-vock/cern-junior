@@ -11,3 +11,4 @@
 [ ] add explicit keyword to constructors
 [ ] replace Accelerator::addX methods using a polymorphic copy
 [ ] optimise Beam calculations
+[ ] make mass, charge static class attributes 

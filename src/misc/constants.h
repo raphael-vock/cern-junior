@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath> // for M_PI
+
 namespace phcst{ // physical constants
 	// the following are given in c.g.s. units
 	constexpr double G_USI(6.674e-11); // universal gratational constant
@@ -9,11 +11,16 @@ namespace phcst{ // physical constants
 
 	constexpr double MASS_PROTON_GEV_C2(0.938272);
 	constexpr double MASS_ELECTRON_GEV_C2(5.10999e-4);
+
+	constexpr double EPSILON_0_USI(8.85e-12);
+	constexpr double K(0.25/(M_PI*EPSILON_0_USI)); // used for calculating electromagnetic interactions between particles
 }
 
 namespace simcst{ // simulation constants
 	constexpr double DEFAULT_TIMESTEP(1e-11);
 	constexpr int DEPTH_FACTOR(5); // number of intermediate updates between each timestep
+	
+	constexpr double ZERO_CHARGE(1.6e-19);
 
 	constexpr double ZERO_TIME(1e-30);
 	constexpr double ZERO_DISTANCE(1e-10);
@@ -28,7 +35,7 @@ namespace simcst{ // simulation constants
 
 	constexpr double BARNES_HUT_THETA(0.5);
 
-	constexpr double GRAVITY_SMOOTHING_EPSILON(1.0); // NOTE: this is in atomic units (of length)
+	constexpr double SMOOTHING_CONSTANT(1e-50);
 
 	constexpr double COLLISION_ETA = 0.8;
 

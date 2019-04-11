@@ -21,41 +21,28 @@ int main(int argc, char* argv[]){
 	const double B(5.89158);
 	const double b(1.2);
 
-	const double dt(1e-3);
+	const double E(1e7);
+	const double omega(2e9);
+	const double kappa(1e-1);
+	const double phi(0.0);
 
 	//*******************
-	w.addQuadrupole(r,b,Vector3D(3,1));
-	w.addStraightSection(r,Vector3D(3,0));
-	w.addQuadrupole(r,-b,Vector3D(3,-1));
-	w.addStraightSection(r,Vector3D(3,-2));
-
+	w.addRadiofrequencyCavity(r, E, omega, kappa, phi, Vector3D(3,-2));
+	/* w.addFodoStructure(r, b, 1.0,  Vector3D(3,-2)); */
 	w.addDipole(r,k,B, Vector3D(2,-3));
-
-	w.addQuadrupole(r,b,Vector3D(1,-3));
-	w.addStraightSection(r,Vector3D(0,-3));
-	w.addQuadrupole(r,-b,Vector3D(-1,-3));
-	w.addStraightSection(r,Vector3D(-2,-3));
-
+	w.addFodoStructure(r, b, 1.0,  Vector3D(-2,-3));
 	w.addDipole(r,k,B, Vector3D(-3,-2));
-
-	w.addQuadrupole(r,b,Vector3D(-3,-1));
-	w.addStraightSection(r,Vector3D(-3,0));
-	w.addQuadrupole(r,-b,Vector3D(-3,1));
-	w.addStraightSection(r,Vector3D(-3,2));
+	/* w.addFodoStructure(r, b, 1.0,  Vector3D(-3,2)); */
+	w.addRadiofrequencyCavity(r, E, omega, kappa, phi, Vector3D(-3,2));
 
 	w.addDipole(r,k,B, Vector3D(-2,3));
-
-	w.addQuadrupole(r,b,Vector3D(-1,3));
-	w.addStraightSection(r,Vector3D(0,3));
-	w.addQuadrupole(r,-b,Vector3D(1,3));
-	w.addStraightSection(r,Vector3D(2,3));
-
+	w.addFodoStructure(r, b, 1.0,  Vector3D(2,3));
 	w.addDipole(r,k,B);
+	//*******************
+	/* w.addCircularBeam(Electron(Vector3D(3,1.5), 1.81, Vector3D(1,1)), 1000, 1.0); */
+	w.addCircularBeam(Proton(Vector3D(), 2.0, Vector3D(1,1)), 1000, 1.0);
 
-	w.addCircularBeam(Proton(Vector3D(3.00984, -0.391837), 2.0, Vector3D(1,0)), 5000, 1);
-
-	w.weld();
-	w.activate();
+	w.initialize();
 
 	w.show();
 

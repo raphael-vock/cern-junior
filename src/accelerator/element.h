@@ -8,6 +8,7 @@
 #include "../misc/exceptions.h"
 
 #include "../physics/particle.h"
+#include "../physics/node.h"
 
 class Element : public Drawable{
 	protected:
@@ -28,10 +29,13 @@ class Element : public Drawable{
 
 		Vector3D dir;
 		double length;
+
 		// Orthonormal basis of the plane containing the element. Useful for graphics
 		Vector3D u;
 		Vector3D v;
 		Vector3D w;
+
+		Node tree;
 
 	public:
 		Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<double> my_clock);
@@ -44,6 +48,7 @@ class Element : public Drawable{
 		Vector3D getExit_point(void) const{ return exit_point; }
 		double getRadius(void) const{ return radius; }
 		double getCurvature(void) const{ return curvature; }
+		virtual const RGB* getColor(void) const = 0;
 
 		Vector3D getBasis_vector_u(void) const{ return u; }
 		Vector3D getBasis_vector_v(void) const{ return v; }
@@ -92,7 +97,9 @@ class Element : public Drawable{
 		bool contains(const Particle &p) const{ return contains(p.getPosition()); }
 		
 		virtual void add_lorentz_force(Particle &, double) const = 0;
-		virtual void evolve(double dt) override;
+		void evolve(double dt);
+
+		void draw_octree(void) const{ tree.draw(); }
 }; 
 
 std::ostream& operator<<(std::ostream& output, const Element &E);
@@ -107,6 +114,8 @@ class StraightSection : public Element{
 		virtual std::ostream& print(std::ostream& output) const override;
 		virtual void draw(void) override{ canvas->draw(*this); }
 
+		virtual const RGB* getColor(void) const override{ return &RGB::SKY_BLUE; }
+
 		virtual void add_lorentz_force(Particle& p, double dt) const override{ return; } // no electromagnetic interaction
 };
 
@@ -115,6 +124,7 @@ class ElectricElement : public Element{
 		using Element::Element;
 		virtual ~ElectricElement(void) override{}
 
+		virtual const RGB* getColor(void) const override{ return &RGB::BLUE; }
 		virtual void add_lorentz_force(Particle& p, double dt) const override;
 		virtual Vector3D E(const Vector3D &x, double t = 0.0) const = 0;
 };
@@ -123,6 +133,8 @@ class MagneticElement : public Element{
 	public:
 		using Element::Element;
 		virtual ~MagneticElement(void) override{}
+
+		virtual const RGB* getColor(void) const override{ return &RGB::RED; }
 
 		virtual void add_lorentz_force(Particle& p, double dt) const override;
 		virtual Vector3D B(const Vector3D &x, double t = 0.0) const = 0;
@@ -162,8 +174,8 @@ class RadiofrequencyCavity : public ElectricElement{
 		const double kappa;
 		const double phi;
 	public:
-		RadiofrequencyCavity(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<double> my_clock, double my_E_0, double my_omega, double my_kappa, double my_phi) :
-			ElectricElement(display, entry, exit, my_radius, my_curvature, my_clock),
+		RadiofrequencyCavity(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, std::shared_ptr<double> my_clock, double my_E_0, double my_omega, double my_kappa, double my_phi) :
+			ElectricElement(display, entry, exit, my_radius, 0.0, my_clock),
 			E_0(my_E_0),
 			omega(my_omega),
 			kappa(my_kappa),
@@ -172,8 +184,6 @@ class RadiofrequencyCavity : public ElectricElement{
 
 		virtual Vector3D E(const Vector3D &x, double dt) const override;
 		virtual std::ostream& print(std::ostream& output) const override;
-
-		virtual void evolve(double dt) override{ Element::evolve(dt); }
 
 		virtual void draw(void) override{ canvas->draw(*this); }
 };

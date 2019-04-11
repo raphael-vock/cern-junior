@@ -4,20 +4,44 @@
 #include "../vector3d/vector3d.h"
 #include "particle.h"
 
-class Box{
+#include "../general/drawable.h"
+
+class Box : public Drawable{
 	private:
-		Vector3D origin;
-		double width;
-		double depth;
-		double height;
+		const Vector3D center;
+
+		const Vector3D width;
+		const Vector3D depth;
+		const Vector3D height;
+
+		const double volume;
+
+		Box(Canvas* canvas, const Vector3D &my_center, const Vector3D &my_width, const Vector3D &my_depth, const Vector3D &my_height) :
+			Drawable(canvas),
+			center(my_center),
+			width(my_width),
+			depth(my_depth),
+			height(my_height),
+			volume(8.0*width.norm()*depth.norm()*height.norm())
+		{}
+
 	public:
-		Box(Vector3D my_origin, double my_width, double my_depth, double my_height) : origin(my_origin), width(my_width), depth(my_depth), height(my_height){}
+		Box(Canvas* canvas, const Vector3D &my_center, const Vector3D &my_width, double length) :
+			Drawable(canvas),
+			center(my_center),
+			width(my_width),
+			depth(length*my_width.orthogonal()),
+			height(length*(width^depth).unitary()),
+			volume(8.0*width.norm()*depth.norm()*height.norm())
+		{}
 
-		Box(double x, double y, double z, double my_width, double my_depth, double my_height) : origin(Vector3D(x,y,z)), width(my_width), depth(my_depth), height(my_height){}
+		std::array<Vector3D,8> getVertices(void) const;
 
-		double volume(void) const;
+		double getVolume(void) const{ return volume; };
 
 		bool contains(const Particle &x) const;
-		void print(void) const;
+		std::ostream& print(std::ostream& output) const;
 		Box octant(bool right, bool back, bool top) const;
+
+		virtual void draw(void) override{ canvas->draw(*this); }
 };

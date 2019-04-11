@@ -20,15 +20,14 @@ class OpenGLView : public Canvas{
 	public:
 		// to be a little more efficient
 		void setShaderColor(const RGB &color);
-		void setShaderPoint(const Vector3D &point);
+		void setShaderPoint(const Vector3D &point);// TODO do we need this?
 
 		// drawing methods, inherited from Canvas
 		virtual void draw(const Segment &to_draw) override;
+		virtual void draw(const Box &to_draw) override;
 		virtual void draw(const Particle &to_draw) override;
 		virtual void draw(const Beam &to_draw) override;
-		virtual void draw(const StraightSection &to_draw) override;
-		virtual void draw(const MagneticElement &to_draw) override;
-		virtual void draw(const ElectricElement &to_draw) override;
+		virtual void draw(const Element &to_draw) override;
 		virtual void draw(const Accelerator &to_draw) override;
 
 		// initalization methods
@@ -40,13 +39,15 @@ class OpenGLView : public Canvas{
 		void translate(double x, double y, double z);
 		void rotate(double angle, double dir_x, double dir_y, double dir_z);
 
+		// runtime parameters
+		bool matrix_mode = false;
+		void toggle_matrix_mode(void){ matrix_mode = !matrix_mode; }
+
 		// drawing
-		void drawSphere(const Vector3D &x, double r, RGB color);
+		void drawSphere(const Vector3D &x, double r);
 
-		void drawCylinder(const Vector3D &basepoint, const Vector3D &direction, double radius, const RGB &color = RGB::WHITE);
+		void drawCylinder(const Vector3D &basepoint, const Vector3D &direction, double radius);
 
-		void drawStraightElement(const Element &E, const RGB &color);
-		void drawCurvedElement(const Element &E, const RGB &color);
-
-		void drawElement(const Element &E, const RGB &color);
+		void drawStraightElement(const Element &E);
+		void drawCurvedElement(const Element &E);
 };
