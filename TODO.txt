@@ -4,11 +4,9 @@
 [x] replace IFNDEF by pragma once
 [x] delete canvas copy constructor
 [x] finish cylinder
-[ ] properly calculate Vector3D axis in RadiofrequencyCavity::field
-[-] in OpenGLView use QVector3D instead of Vector3D (?)
+[x] properly calculate Vector3D axis in RadiofrequencyCavity::field
 [ ] replace Element::is_before(), is_after() by more general methods
-[ ] specify copy constructors
-[ ] add explicit keyword to constructors
-[ ] replace Accelerator::addX methods using a polymorphic copy
+[x] add explicit keyword to constructors
+[x] replace Accelerator::addX methods using a polymorphic copy
 [ ] optimise Beam calculations
 [ ] make mass, charge static class attributes 

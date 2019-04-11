@@ -39,11 +39,11 @@ namespace simcst{ // simulation constants
 
 	constexpr double COLLISION_ETA = 0.8;
 
-	constexpr double FIELD_LINE_SEGMENT_LENGTH(1e-1);
-	constexpr double FIELD_LINE_LENGTH(10);
-	constexpr double FIELD_LINE_SAMPLE_POINT_DENSITY(0.8);
+	/* constexpr double FIELD_LINE_SEGMENT_LENGTH(1e-1); */
+	/* constexpr double FIELD_LINE_LENGTH(10); */
+	/* constexpr double FIELD_LINE_SAMPLE_POINT_DENSITY(0.8); */
 
-	constexpr double QUAD_LENGTH(0.1);
+	constexpr double QUAD_LENGTH(0.02);
 	constexpr double TUBE_HEIGHT(0.08);
 	constexpr double GAP_LENGTH(0.4);
 

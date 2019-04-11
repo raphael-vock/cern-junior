@@ -54,10 +54,14 @@ void OpenGLView::draw(const Particle &to_draw){
 }
 
 void OpenGLView::draw(const Element &to_draw){
-	to_draw.draw_particles();
 
-	setShaderColor(RGB::PURPLE);
-	if(matrix_mode) to_draw.draw_octree();
+	if(matrix_mode){
+		setShaderColor(RGB::PURPLE);
+		if(matrix_mode) to_draw.draw_octree();
+	}else{
+		to_draw.draw_particles();
+	}
+
 
 	setShaderColor(*to_draw.getColor());
 	if(to_draw.is_straight()) drawStraightElement(to_draw);
