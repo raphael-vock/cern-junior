@@ -10,3 +10,4 @@
 [x] replace Accelerator::addX methods using a polymorphic copy
 [ ] optimise Beam calculations
 [ ] make mass, charge static class attributes 
+[ ] profile code, compare inline vs non inline for critical methods

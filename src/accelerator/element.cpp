@@ -2,12 +2,19 @@
 
 #include "../misc/exceptions.h"
 #include "element.h"
+#include <algorithm>
 
 using namespace std;
 using namespace excptn;
 
 Element::Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<double> my_clock) :
 	Drawable(display),
+	Node(Box(
+			canvas,
+			entry + 0.5*(exit - entry),
+			0.5*(exit - entry) + (abs(my_curvature) <= simcst::ZERO_CURVATURE ? vctr::ZERO_VECTOR : my_radius*(exit-entry).unitary()),
+			(abs(my_curvature) <= simcst::ZERO_CURVATURE ? my_radius : my_radius + (1.0/my_curvature)*(1.0-sqrt(abs(1.0-0.25*my_curvature*my_curvature*(exit - entry).norm2())))
+	))),
 	entry_point(entry),
 	exit_point(exit),
 	radius(my_radius),
@@ -15,12 +22,8 @@ Element::Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, d
 	clock(my_clock),
 	dir((exit-entry).unitary()),
 	length(is_straight() ? direction().norm() : 2.0*asin(direction().norm()*curvature/2.0)/curvature),
-	tree(Box(
-			canvas,
-			entry_point + 0.5*direction(),
-			0.5*direction() + (is_straight() ? vctr::ZERO_VECTOR : radius*dir),
-			is_straight() ? radius : radius + (1.0/curvature)*(1.0-sqrt(abs(1.0-0.25*curvature*curvature*direction().norm2())))
-	))
+	entry_point_particle(std::unique_ptr<Particle>(new Particle(entry_point, vctr::ZERO_VECTOR, 0.0, 0.0))),// TODO get rid of
+	exit_point_particle(std::unique_ptr<Particle>(new Particle(entry_point, vctr::ZERO_VECTOR, 0.0, 0.0)))
 {
 	// initializing (u,v,w)
 	try{
@@ -43,9 +46,9 @@ Element::Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, d
 	catch(std::exception){ throw excptn::ELEMENT_DEGENERATE_GEOMETRY; }
 }
 
-void Element::addParticle(std::unique_ptr<Particle> &p){
-	particle_list.push_back(move(p));
-	++ number_of_particles;
+void Element::apply_forces(Particle &p, double dt) const{
+	apply_lorentz_force(p, dt);
+	apply_electromagnetic_force(p);
 }
 
 bool Element::is_straight(void) const{
@@ -62,15 +65,6 @@ std::ostream& Element::print(std::ostream& output) const{
 	}
 	return output;
 }	
-
-bool Element::print_elements(std::ostream& output) const{
-	// returns true iff there is at least one element
-	for(auto &p : particle_list){
-		p->print(output);
-		output << "\n";
-	}
-	return not particle_list.empty();
-}
 
 std::ostream& operator<<(std::ostream& output, const Element &E){
 	return E.print(output);
@@ -134,54 +128,18 @@ bool Element::is_before(const Vector3D &r) const{
 	return (rel|dir) < 0.0;
 }
 
-bool Element::contains(const Vector3D &r) const{
-	return not is_after(r) and not is_before(r) and not has_collided(r);
-}
-
-void Element::evolve(double dt){
-	tree.reset();
-	for(const auto &p : particle_list){
-		tree.insert(p.get());
-	}
-
-	for(const auto &p : particle_list){
-		tree.apply_electromagnetic_force(*p);
-	}
-
-	for(int i(0); i <= number_of_particles-1;){
-		add_lorentz_force(*particle_list[i], dt);
-
-		particle_list[i]->evolve(dt);
-		
-		if(is_after(*particle_list[i])){
-			if(successor) successor->addParticle(particle_list[i]);
-			particle_list.erase(particle_list.begin()+i);
-			-- number_of_particles;
-		}else if(is_before(*particle_list[i])){
-			if(predecessor) predecessor->addParticle(particle_list[i]);
-			particle_list.erase(particle_list.begin()+i);
-			-- number_of_particles;
-		}else if(has_collided(*particle_list[i])){
-			particle_list.erase(particle_list.begin()+i);
-			-- number_of_particles;
-		}else{
-			++i;
-		}
-	}
-}
-
 std::ostream& StraightSection::print(std::ostream& output) const{
 	output << "Straight section:\n";
 	Element::print(output);
 	return output;
 }
 
-void MagneticElement::add_lorentz_force(Particle& p, double dt) const{
-	p.add_magnetic_force(B(p.getPosition(), *clock), dt);
+void MagneticElement::apply_lorentz_force(Particle& p, double dt) const{
+	p.add_magnetic_force(B(p, *clock), dt);
 }
 
-void ElectricElement::add_lorentz_force(Particle& p, double dt) const{
-	p.add_electric_force(E(p.getPosition(), *clock));
+void ElectricElement::apply_lorentz_force(Particle& p, double dt) const{
+	p.add_electric_force(E(p, *clock));
 }
 
 // FIELD EQUATIONS

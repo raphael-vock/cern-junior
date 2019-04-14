@@ -24,15 +24,15 @@ bool Node::insert(Particle* my_particle){
 	if(not domain.contains(*my_particle)) return false;
 	switch(type){
 		case INT:{
-			virtual_particle.incorporate(*my_particle);
+			total_charge.incorporate(*my_particle);
 			for(const auto &child : children) if(child->insert(my_particle)) return true;
 			return false;
 		}
 		case EXT:{
 			// TODO handle this correctly
-			if(my_particle->getPosition() == tenant->getPosition()) return false;
+			if(*my_particle == *tenant) return false;
 
-			virtual_particle.incorporate(*my_particle);
+			total_charge.incorporate(*my_particle);
 			subdivide();
 
 			for(const auto &child : children) if(child->insert(tenant)) break;
@@ -44,7 +44,7 @@ bool Node::insert(Particle* my_particle){
 		case EMPTY:{
 			type = EXT;
 			tenant = my_particle;
-			virtual_particle = *my_particle;
+			total_charge = *my_particle;
 			return true;
 		}
 	}
@@ -53,15 +53,15 @@ bool Node::insert(Particle* my_particle){
 void Node::apply_electromagnetic_force(Particle& P) const{
 	if(type == EMPTY) return;
 	if(type == EXT){
-		virtual_particle.apply_electromagnetic_force(P);
+		P.receive_electromagnetic_force(total_charge);
 		return;
 	}
-	// else type == INT
+	// else, type == INT
 
-	const double ratio(pow(domain.getVolume(),1.0/3) / Vector3D::distance(P.getPosition(), virtual_particle.getPosition()));
+	const double ratio(pow(domain.getVolume(),1.0/3) / Vector3D::distance(P, total_charge));
 
 	if(ratio <= simcst::BARNES_HUT_THETA){
-		virtual_particle.apply_electromagnetic_force(P);
+		P.receive_electromagnetic_force(total_charge);
 	}else{
 		for(const auto &child : children){
 			child->apply_electromagnetic_force(P);
@@ -84,20 +84,14 @@ void Node::print_type(void){
 	if(type == EMPTY) std::cout << "EMPTY\n";
 }
 
-void Node::info(void) const{
-	std::cout << "Node info:\n";
-	std::cout << virtual_particle.getPosition() << std::endl;
-	std::cout << "Total mass = " << virtual_particle.getMass() << "\n";
-}
-
-void Node::draw(void) const{
+void Node::draw_tree(void) const{
 	if(type == EXT){
 		domain.getCanvas()->draw(domain);
 	}
 
 	if(type == INT){
 		for(const auto &child : children){
-			child->draw();
+			child->draw_tree();
 		}
 	}
 }

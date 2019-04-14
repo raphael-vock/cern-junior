@@ -1,10 +1,14 @@
 #include "../misc/exceptions.h"
 #include "beam.h"
 
+void Beam::update(void){
+	// TODO
+}
+
 double Beam::mean_energy(void) const{
 	double mean(0.0);
 	for(const auto &p : *this){
-		mean += (**p).energy();
+		mean += (*p)->getEnergy();
 	}
 	return N ? (lambda/N) * mean : 0.0;
 }
@@ -15,8 +19,8 @@ Vector3D Beam::mean_position(void) const{
 	int n(0);
 	for(const auto &p : *this){
 		if(*p){
-			radial += (**p).getPosition()[0]; // TODO project on local trajectory
-			vertical += (**p).getPosition()[1];
+			radial += (**p)[0]; // TODO project on local trajectory
+			vertical += (**p)[1];
 			++n;
 		}
 	}
@@ -85,4 +89,5 @@ void CircularBeam::activate(){
 
 		habitat->addParticle(*copy);
 	}
+	shrink_to_fit();
 }

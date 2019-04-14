@@ -16,7 +16,7 @@ std::array<Vector3D,8> Box::getVertices(void) const{
 }
 
 bool Box::contains(const Particle &x) const{
-	Vector3D rel_coords(x.getPosition() - center + width + depth + height);
+	Vector3D rel_coords(x - center + width + depth + height);
 
 	double a(0.5*rel_coords|width);
 	double b(0.5*rel_coords|depth);

@@ -7,6 +7,8 @@
 class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element>>{
 	protected:
 		std::shared_ptr<double> time;
+
+		std::vector<std::unique_ptr<Particle>> particles;
 		std::vector<Beam*> beams;
 
 		const Vector3D origin;
@@ -26,9 +28,10 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 
 		void weld(void);
 		void activate(void);
-		void initialize(void){ weld(); activate(); }
+		void initialize(void);
 
-		void draw_elements(void) const{ for(auto &e : *this) e->draw(); }
+		void draw_elements(void) const;
+		void draw_particles(void) const;
 
 		double getLength() const{ return length; }
 

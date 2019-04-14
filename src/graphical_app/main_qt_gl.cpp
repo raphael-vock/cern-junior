@@ -31,8 +31,8 @@ int main(int argc, char* argv[]){
 	w.addFodoStructure(r, b, 1.0,  Vector3D(2,3));
 	w.addDipole(r,k,B);
 	//*******************
-	/* w.addCircularBeam(Electron(Vector3D(3,1.5), 1.81, Vector3D(1,1)), 1000, 1.0); */
-	w.addCircularBeam(Proton(Vector3D(3,1.5), 2.0, Vector3D(1,1)), 2000, 1.0);
+	
+	w.addCircularBeam(Proton(Vector3D(3,1.5), 2.0, Vector3D(1,1)), 3e3, 1.0);
 
 	w.initialize();
 

@@ -23,8 +23,9 @@ class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_
 			if(my_lambda <= simcst::ZERO_LAMBDA) throw excptn::ZERO_LAMBDA; 
 		}
 
-
 		virtual ~Beam(void) override{}
+
+		void update(void);
 
 		void draw_particles(void) const{ for(const auto &p : *this) (**p).draw(); }
 		virtual void draw(void) override{ canvas->draw(*this); }

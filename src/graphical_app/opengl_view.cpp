@@ -50,18 +50,14 @@ void OpenGLView::draw(const Beam &to_draw){
 
 void OpenGLView::draw(const Particle &to_draw){
 	setShaderColor(*to_draw.getColor());
-	drawSphere(to_draw.getPosition(), to_draw.getRadius());
+	drawSphere(to_draw, to_draw.getRadius());
 }
 
 void OpenGLView::draw(const Element &to_draw){
-
 	if(matrix_mode){
 		setShaderColor(RGB::PURPLE);
-		if(matrix_mode) to_draw.draw_octree();
-	}else{
-		to_draw.draw_particles();
+		to_draw.draw_tree();
 	}
-
 
 	setShaderColor(*to_draw.getColor());
 	if(to_draw.is_straight()) drawStraightElement(to_draw);
@@ -70,6 +66,9 @@ void OpenGLView::draw(const Element &to_draw){
 
 void OpenGLView::draw(const Accelerator &to_draw){
 	to_draw.draw_elements();
+	if(not matrix_mode){
+		to_draw.draw_particles();
+	}
 }
 
 void OpenGLView::init(){

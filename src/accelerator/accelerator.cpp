@@ -22,13 +22,25 @@ void Accelerator::activate(void){
 	}
 }
 
-void Accelerator::addParticle(const Particle &to_copy){
-	std::unique_ptr<Particle> copy(to_copy.copy());
-	copy->setCanvas(canvas);
+void Accelerator::initialize(void){
+	weld();
+	activate();
+}
 
+void Accelerator::draw_elements(void) const{
+	for(auto &e : *this) e->draw();
+}
+
+void Accelerator::draw_particles(void) const{
+	for(auto &p : particles) if(p) p->draw();
+}
+
+void Accelerator::addParticle(const Particle &to_copy){
 	for(auto &E : *this){
 		if(E->contains(to_copy)){
-			E->addParticle(copy);
+			particles.push_back(to_copy.copy());
+			particles.back()->setElement(E.get());
+			particles.back()->setCanvas(canvas);
 			return;
 		}
 	}
@@ -88,11 +100,10 @@ std::ostream& Accelerator::print(std::ostream& output, bool print_elements) cons
 	}
 
 	output << "PARTICLES:\n\n";
-	bool no_particles(true);
-	for(auto &E : *this){
-		if(E->print_elements(output)) no_particles = false;
+	for(const auto &p : particles){
+		p->print(output);
 	}
-	if(no_particles) output << "   none\n\n";
+	if(particles.empty()) output << "   none\n\n";
 
 	return output;
 }
@@ -103,7 +114,24 @@ std::ostream& operator<<(std::ostream& output, Accelerator &A){
 
 void Accelerator::evolve(double dt){
 	*time += dt;
-	for(std::unique_ptr<Element> &e : *this) e->evolve(dt);
+
+	for(auto &e : *this){
+		e->reset();
+	}
+
+	for(auto &p : particles){
+		if(p){
+			if(p->has_collided()){
+				p.reset();
+			}else{
+				p->insert_into_tree();
+			}
+		}
+	}
+
+	for(auto &p : particles){
+		if(p) p->evolve(dt);
+	}
 }
 
 std::array<Vector3D,2> Accelerator::position_and_trajectory(double s) const{

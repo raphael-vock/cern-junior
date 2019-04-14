@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <cmath>
+#include <functional>
 #include <memory> // for unique_ptr
 
 #include "../general/drawable.h"
@@ -10,10 +11,10 @@
 #include "../physics/particle.h"
 #include "../physics/node.h"
 
-class Element : public Drawable{
+class Element : public Drawable, public Node{
 	protected:
-		const Vector3D entry_point; // entry position
-		const Vector3D exit_point; // exit position
+		Vector3D entry_point; // entry position
+		Vector3D exit_point; // exit position
 
 		const double radius; // radius of the vaccum chamber
 		const double curvature; // radial curvature (potentially zero)
@@ -21,11 +22,7 @@ class Element : public Drawable{
 		Element* successor = nullptr; // pointer to the following element
 		Element* predecessor = nullptr; // pointer to the previous element
 
-		std::vector<std::unique_ptr<Particle>> particle_list; // list of particles contained inside
-
 		const std::shared_ptr<double> clock;
-
-		int number_of_particles = 0;
 
 		Vector3D dir;
 		double length;
@@ -35,12 +32,14 @@ class Element : public Drawable{
 		Vector3D v;
 		Vector3D w;
 
-		Node tree;
+	private:
+		std::unique_ptr<Particle> entry_point_particle;
+		std::unique_ptr<Particle> exit_point_particle;
 
 	public:
-		Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<double> my_clock);
+		virtual ~Element(void){}
 
-		void draw_particles(void) const{ for(const auto &p : particle_list) p->draw(); }
+		Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<double> my_clock);
 
 		void setCanvas(Canvas* c){ canvas = c; }
 
@@ -57,19 +56,18 @@ class Element : public Drawable{
 
 		double getLength(void) const{ return length; };
 
+		Element* getSuccessor(void) const{ return successor; }
+		Element* getPredecessor(void) const{ return predecessor; }
+
 		void setSuccessor(Element* my_successor){ successor = my_successor; }
 		void setPredecessor(Element* my_predecessor){ predecessor = my_predecessor; }
 
-		void addParticle(std::unique_ptr<Particle> &p);
-
-		virtual ~Element(void){}
+		void apply_forces(Particle &p, double dt) const;
 
 		virtual std::ostream& print(std::ostream& output) const;
 		// Base method prints only basic information (i.e. about its shape)
 		// Subclass overrides will add additional information e.g. type of the element, electric/magnetic fields, other parameters...
 
-		bool print_elements(std::ostream& output) const;
-		
 		void link(Element &nextElement);
 
 		bool is_straight(void) const;
@@ -89,17 +87,13 @@ class Element : public Drawable{
 		bool has_collided(const Vector3D &r) const; // returns true iff r has collided with the element's edge
 		bool is_after(const Vector3D &r) const; // returns true iff r has passed to the next element
 		bool is_before(const Vector3D &r) const; // returns true iff r has passed to the next element
-		bool contains(const Vector3D &r) const; // returns true iff r has passed to the next element
 
-		bool has_collided(const Particle &p) const{ return has_collided(p.getPosition()); }
-		bool is_after(const Particle &p) const{ return is_after(p.getPosition()); }
-		bool is_before(const Particle &p) const{ return is_before(p.getPosition()); }
-		bool contains(const Particle &p) const{ return contains(p.getPosition()); }
-		
-		virtual void add_lorentz_force(Particle &, double) const = 0;
+		bool contains(const Vector3D &r) const{ return not is_after(r) and not is_before(r) and not has_collided(r); }// returns true iff r has passed to the next element;
+
+		void sort(void);
+
+		virtual void apply_lorentz_force(Particle &, double) const = 0;
 		void evolve(double dt);
-
-		void draw_octree(void) const{ tree.draw(); }
 }; 
 
 std::ostream& operator<<(std::ostream& output, const Element &E);
@@ -116,7 +110,7 @@ class StraightSection : public Element{
 
 		virtual const RGB* getColor(void) const override{ return &RGB::SKY_BLUE; }
 
-		virtual void add_lorentz_force(Particle& p, double dt) const override{ return; } // no electromagnetic interaction
+		virtual void apply_lorentz_force(Particle& p, double dt) const override{ return; } // no electromagnetic interaction
 };
 
 class ElectricElement : public Element{
@@ -125,7 +119,7 @@ class ElectricElement : public Element{
 		virtual ~ElectricElement(void) override{}
 
 		virtual const RGB* getColor(void) const override{ return &RGB::BLUE; }
-		virtual void add_lorentz_force(Particle& p, double dt) const override;
+		virtual void apply_lorentz_force(Particle& p, double dt) const override;
 		virtual Vector3D E(const Vector3D &x, double t = 0.0) const = 0;
 };
 
@@ -136,7 +130,7 @@ class MagneticElement : public Element{
 
 		virtual const RGB* getColor(void) const override{ return &RGB::RED; }
 
-		virtual void add_lorentz_force(Particle& p, double dt) const override;
+		virtual void apply_lorentz_force(Particle& p, double dt) const override;
 		virtual Vector3D B(const Vector3D &x, double t = 0.0) const = 0;
 };
 
@@ -151,7 +145,7 @@ class Dipole : public MagneticElement{
 
 		virtual void draw(void) override{ canvas->draw(*this); }
 
-		virtual Vector3D B(const Vector3D &x, double dt) const override;
+		virtual Vector3D B(const Vector3D &x, double dt) const override final;
 };
 
 class Quadrupole : public MagneticElement{
@@ -161,7 +155,7 @@ class Quadrupole : public MagneticElement{
 		Quadrupole(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, std::shared_ptr<double> my_clock, double my_b) :
 			MagneticElement(display, entry, exit, my_radius, 0.0, my_clock), b(my_b){}
 
-		virtual Vector3D B(const Vector3D &x, double dt) const override;
+		virtual Vector3D B(const Vector3D &x, double dt) const override final;
 		virtual std::ostream& print(std::ostream& output) const override;
 
 		virtual void draw(void) override{ canvas->draw(*this); }
@@ -182,7 +176,7 @@ class RadiofrequencyCavity : public ElectricElement{
 			phi(my_phi)
 			{}
 
-		virtual Vector3D E(const Vector3D &x, double dt) const override;
+		virtual Vector3D E(const Vector3D &x, double dt) const override final;
 		virtual std::ostream& print(std::ostream& output) const override;
 
 		virtual void draw(void) override{ canvas->draw(*this); }

@@ -12,45 +12,59 @@
 #include "../vector3d/vector3d.h"
 #include "../misc/constants.h"
 
-class Particle : public Drawable{
+class Element;
+
+class PointCharge : public Vector3D{
 	protected:
-		explicit Particle(Canvas* vue, const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge, RGB const* my_color = &RGB::WHITE) :
+		double charge;
+		double gamma;
+	public:
+		PointCharge(const Vector3D &x_0, double q) : Vector3D(x_0), charge(q), gamma(1.0){}
+
+		Vector3D electromagnetic_force(const PointCharge &Q) const;
+
+		double getCharge(void) const{ return charge; }
+		double getGamma(void) const{ return gamma; }
+
+		void incorporate(const PointCharge& Q); // makes *this the "average" particle between itself and Q, weighted by charge
+};
+
+class Particle : public Drawable, public PointCharge{
+	friend Beam;// TODO needed?
+
+	protected:
+		explicit Particle(Canvas* vue, const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge) :
 			Drawable(vue),
-			r(Vector3D(x_0)),
+			PointCharge(x_0,my_charge),
 			v(Vector3D(v_0)),
 			F(vctr::ZERO_VECTOR),
-			mass(my_mass),
-			charge(my_charge)
-	{ update_gamma(); }
+			mass(my_mass)
+	{ update_attributes(); }
+
 	private:
-		Vector3D r; // position (in m)
 		Vector3D v; // velocity (in c)
 		Vector3D F; // force (in N)
 
 		double mass; // (in kg)
-		double charge; // (in C)
 
-		// derived physical attributes:
-		double gamma;
+		double energy;
+
+		Element* current_element;
 
 	public:
 		explicit Particle(const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge) :
 			Drawable(nullptr),
-			r(Vector3D(x_0)),
+			PointCharge(x_0,my_charge),
 			v(Vector3D(v_0)),
-			F(0,0,0),
-			mass(my_mass),
-			charge(my_charge)
-		{ update_gamma(); }
+			mass(my_mass)
+		{ update_attributes(); }
 
-		explicit Particle(const Vector3D &x_0_m, double E_gev, const Vector3D &dir, double mass_gev_c2, double charge_e) :
+		explicit Particle(const Vector3D &x_0, double E_gev, const Vector3D &dir, double mass_gev_c2, double charge_e) :
 			Drawable(nullptr),
-			r(x_0_m),
+			PointCharge(x_0,phcst::E_USI*charge_e),
 			v(dir.is_zero() or E_gev <= simcst::ZERO_ENERGY_GEV ? vctr::ZERO_VECTOR : sqrt(1.0 - (mass_gev_c2*mass_gev_c2)/(E_gev*E_gev))*dir.unitary()),
-			F(0,0,0),
-			mass(1e9*phcst::E_USI/phcst::C2_USI * mass_gev_c2),
-			charge(phcst::E_USI * charge_e)
-		{ update_gamma(); }
+			mass(1e9*phcst::E_USI/phcst::C2_USI * mass_gev_c2)
+		{ update_attributes(); }
 
 		virtual std::string particle_type(void) const{ return "Generic particle"; }
 
@@ -62,35 +76,41 @@ class Particle : public Drawable{
 		virtual void draw(void) override{ canvas->draw(*this); }
 
 		double getMass(void) const{ return mass; }
-		double getCharge(void) const{ return charge; }
 		virtual double getRadius(void) const{ return 0.0; };
 
-		Vector3D getPosition(void) const{ return r; }
 		Vector3D getVelocity(void) const{ return v; }
 		Vector3D getForce(void) const{ return F; }
+
+		void setPosition(const Vector3D &x){ (this)->Vector3D::operator=(x); }
+
+		void setVelocity(const Vector3D &x){ v = x; }
+
+		void setElement(Element* e){ current_element = e; }
 
 		virtual const RGB* getColor(void) const{ return &RGB::BLACK; }
 
 		void setCanvas(Canvas* c){ canvas = c; }
-		void setPosition(const Vector3D &x){ r = x; }
-		void setVelocity(const Vector3D &u){ v = u; }
 
-		void reset_force(void){ F = vctr::ZERO_VECTOR; }
+		inline void reset_force(void){ F = vctr::ZERO_VECTOR; }
 
-		void add_force(const Vector3D& my_F);
+		inline void add_force(const Vector3D& my_F){ F += my_F; };
 		void add_magnetic_force(const Vector3D& B, double dt);
 		void add_electric_force(const Vector3D &E);
-		void apply_electromagnetic_force(Particle& P) const; // applies gravitational force on P
+		void receive_electromagnetic_force(const PointCharge &Q);
 
-		void update_gamma(void);
-		double energy(void) const; // in GeV
+		double getEnergy(void) const{ return energy; };
 
-		void incorporate(const Particle& Q); // makes *this the "average" particle between itself and Q, weighted by charge
-
-		bool is_touching(const Particle& q) const;
+		inline void update_attributes(void){
+			gamma = 1.0/(sqrt(1.0 - v.norm2()));
+			energy = gamma*mass*phcst::C2_USI; 
+		}
 
 		void move(double dt);
+
+		void insert_into_tree(void);
 		void evolve(double dt);
+
+		bool has_collided(void) const;
 };
 
 class Electron : public Particle{

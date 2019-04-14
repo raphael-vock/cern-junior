@@ -7,7 +7,7 @@
 
 class Node;// TODO is forward declaration necessary?
 
-class Node {
+class Node{
 	private:
 		// TODO use unique_ptr
 		std::array<std::unique_ptr<Node>,8> children;
@@ -17,9 +17,9 @@ class Node {
 		enum node_type { INT, EXT, EMPTY };
 		node_type type;
 
-		Particle virtual_particle; // the theoretical particle that represents the cell,
-						   // i.e. its charge is the total charge of the particles in the cell
-						   // and its position is their barycenter
+		PointCharge total_charge;        // the theoretical particle that represents the cell,
+						         // i.e. its charge is the total charge of the particles in the cell
+						         // and its position is their barycenter weighted by charge
 
 	public:
 		// TODO make private
@@ -31,14 +31,12 @@ class Node {
 
 		void apply_electromagnetic_force(Particle& P) const; // recursively increments gravity on P according to Barnes-Hut approximation with parameter THETA
 
-		Node(Box my_Box) : domain(my_Box), type(EMPTY), virtual_particle(vctr::ZERO_VECTOR, vctr::ZERO_VECTOR, 0.0, 0.0){}
+		Node(Box my_Box) : domain(my_Box), type(EMPTY), total_charge(vctr::ZERO_VECTOR, 0.0){}
 
 		bool insert(Particle* my_Point);
 
 		void print_elements(void) const;
 		void print_type(void);
 
-		void info(void) const;
-
-		void draw(void) const;// TODO
+		void draw_tree(void) const;
 };

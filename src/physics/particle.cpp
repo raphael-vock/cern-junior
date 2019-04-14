@@ -4,58 +4,44 @@
 
 #include "particle.h"
 
+#include "../accelerator/element.h"
+
 using namespace std;
 using namespace phcst;
+
+Vector3D PointCharge::electromagnetic_force(const PointCharge &Q) const{
+	Vector3D F(*this - Q);
+	F *= phcst::K*charge*charge/((gamma*gamma)*(F.norm2() + simcst::SMOOTHING_CONSTANT));
+	return F;
+}
+
+void PointCharge::incorporate(const PointCharge &P){
+	const double q(P.charge);
+
+	*this *= charge;
+	gamma *= charge;
+
+	*this += q*P;
+	gamma += q*P.gamma;
+
+	charge += q;
+
+	*this *= 1.0/charge;
+
+	// TODO what if charge is zero? would a geometric mean be more suitable?
+}
+
 
 void Particle::scale(double lambda){
 	mass *= lambda;
 	charge *= lambda;
 }
 
-void Particle::incorporate(const Particle& P){
-	const double q(P.charge);
-
-	r *= charge;
-	v *= charge;
-
-	r += q*P.r;
-	v += q*P.r;
-
-	charge += q;
-
-	// TODO what if charge is zero?
-	r *= 1.0/charge;
-
-	// TODO would a geometric mean be more suitable?
-}
-
-void Particle::apply_electromagnetic_force(Particle& P) const{
+void Particle::receive_electromagnetic_force(const PointCharge &Q){
 	// TODO this must be for sufficiently large values of gamma 
-	
-	if(this == &P) return;
-	if(abs(charge) <= simcst::ZERO_CHARGE) return;
+	if(this == &Q) return;
 
-	Vector3D F_g(r - P.r);
-
-	F_g *= phcst::K*charge*charge/((gamma*gamma)*(F_g.norm2() + simcst::SMOOTHING_CONSTANT));
-
-	P.add_force(F_g);
-}
-
-void Particle::move(double dt){
-	v += dt/(gamma*mass*C_USI) * F;
-	r += dt * C_USI * v;
-}
-
-void Particle::evolve(double dt){
-	move(dt);
-	reset_force();
-
-	update_gamma();
-}
-
-void Particle::add_force(const Vector3D & my_F){
-	F += my_F;
+	add_force(Q.electromagnetic_force(Q));
 }
 
 void Particle::add_magnetic_force(const Vector3D &B, double dt){
@@ -71,24 +57,16 @@ void Particle::add_electric_force(const Vector3D &E){
 	add_force(charge*E);
 }
 
-void Particle::update_gamma(void){
-	gamma = 1.0/(sqrt(1.0 - v.norm2()));
-}
-
-double Particle::energy(void) const{
-	return gamma*mass*C2_USI;
-}
-
 ostream& Particle::print(ostream& output) const{
 	int indent(25);
 
 	output << "   " << particle_type() << ":\n";
 
 	output << setw(' ')
-	<< setw(indent) << "Position (m)  " <<  r << "\n"
+	<< setw(indent) << "Position (m)  " <<  *this << "\n"
 	<< setw(indent) << "Velocity (m)  " << C_USI*v << "\n"
 	<< setw(indent) << "Gamma  " << gamma << "\n"
-	<< setw(indent) << "Energy (GeV)  " << 1e-9/E_USI*energy() << "\n"
+	<< setw(indent) << "Energy (GeV)  " << 1e-9/E_USI*energy << "\n"
 	<< setw(indent) << "Mass (GeV/c^2)  " << C2_USI*1e-9/E_USI*mass << "\n"
 	<< setw(indent) << "Charge (C)  " << charge << "\n"
 	<< setw(indent) << "Force (N)  " << F  << "\n"
@@ -99,3 +77,31 @@ ostream& Particle::print(ostream& output) const{
 ostream& operator<<(ostream& output, const Particle &particle){
 	return particle.print(output);
 }      
+
+void Particle::move(double dt){
+	v += dt/(gamma*mass*phcst::C_USI) * F;
+	*this += dt * phcst::C_USI * v;
+
+	if(current_element->is_after(*this)){
+		current_element = current_element->getSuccessor();
+	}
+
+	if(current_element->is_before(*this)){
+		current_element = current_element->getPredecessor();
+	}
+}
+
+void Particle::insert_into_tree(void){
+	current_element->insert(this);
+}
+
+void Particle::evolve(double dt){
+	current_element->apply_forces(*this, dt);
+	move(dt);
+	reset_force();
+	update_attributes();
+}
+
+bool Particle::has_collided(void) const{
+	return current_element->has_collided(*this);
+}
