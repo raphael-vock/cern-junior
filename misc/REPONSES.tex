@@ -2,6 +2,8 @@
 \usepackage[top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
 \usepackage[fleqn]{amsmath}
 \usepackage{amssymb}
+\usepackage{tikz-cd}
+\usetikzlibrary{arrows}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -194,5 +196,39 @@ Ensemble, ils nous procurent un puissant moyen de représenter des fonctions pur
 
 \ \linebreak
 \noindent \textbf{(P11.1)} Un \T{Beam}, ou faisceau, est par héritage \T{private}, une collection de \T{Particle}. Ses attributs, constants, sont une référence sur la particule modèle du faisceau, le nombre de macroparticules crées \T{N}, le facteur $\lambda$ de ces macroparticules ainsi qu'un pointeur sur l'accélérateur dans lequel l'instance évolue. Puisque l'émittance, radiale et verticale, ainsi que les six coefficients des ellipses de phases et l'énergie moyenne du faisceau seront recalculés fréquemment nous avons décidé de les implementer comme méthodes. 
+
+\ \bigskip
+
+L'organisation des classes est présentée ci-dessous
+
+\ \linebreak
+\ \linebreak
+\begin{tikzpicture}
+
+\node (P0) at (4.5,0) {\T{Drawable}};
+\node (P1) at (13.5,0) {\T{Canvas}};
+\node (P2) at (9,-2) {\T{Element}};
+\node (P3) at (12, -2) {\T{opengl\_view}};
+\node (P4) at (15, -2) {\T{textview}};
+\node (P5) at (6,-2) {\T{Accelerator}};
+\node (P6) at (3,-2) {\T{Particle}};
+\node (P7) at (0,-2) {\T{Box}};
+\node (P8) at (10.5,-6) {\T{text\_widget}};
+\node (P9) at (9.25,-3.5) {\T{GLWidget}};
+
+\path[-angle 90,font=\scriptsize] 
+(P0) edge [dotted, red] (P1)
+(P0) edge (P2)
+(P0) edge (P5)
+(P0) edge (P6)
+(P0) edge (P7)
+(P1) edge (P3)
+(P1) edge (P4)
+(P4) edge (P8)
+(P3) edge (P9)
+(P5) edge (P8)
+(P5) edge (P9)
+
+\end{tikzpicture}
 
 \end{document}
