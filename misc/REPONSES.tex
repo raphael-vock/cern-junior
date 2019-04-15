@@ -201,10 +201,11 @@ Ensemble, ils nous procurent un puissant moyen de représenter des fonctions pur
 
 L'organisation des classes est présentée ci-dessous
 
+D'abord les classes liées au graphisme
+
 \ \linebreak
 \ \linebreak
 \begin{tikzpicture}
-
 \node (P0) at (4.5,0) {\T{Drawable}};
 \node (P1) at (13.5,0) {\T{Canvas}};
 \node (P2) at (9,-2) {\T{Element}};
@@ -218,17 +219,16 @@ L'organisation des classes est présentée ci-dessous
 
 \path[-angle 90,font=\scriptsize] 
 (P0) edge [dotted, red] (P1)
-(P0) edge (P2)
-(P0) edge (P5)
-(P0) edge (P6)
-(P0) edge (P7)
-(P1) edge (P3)
-(P1) edge (P4)
-(P4) edge (P8)
-(P3) edge (P9)
-(P5) edge (P8)
-(P5) edge (P9)
-
+(P2) edge (P0)
+(P5) edge (P0)
+(P6) edge (P0)
+(P7) edge (P0)
+(P3) edge (P1)
+(P4) edge (P1)
+(P8) edge (P4)
+(P9) edge (P3)
+(P8) edge (P5)
+(P9) edge (P5)
 \end{tikzpicture}
 
 \end{document}
