@@ -4,7 +4,7 @@
 \usepackage{amssymb}
 \usepackage{tikz}
 \usetikzlibrary{arrows}
-\usetikzlibrary{shapes,snakes}
+\usetikzlibrary{shapes,decorations}
 \usepackage{comment}
 
 \usepackage[utf8]{inputenc}
@@ -91,10 +91,10 @@ Certes, il s'agit de calculs simples avec des \double\ donc les arguments de com
 \section{Premiers éléments}
 
 \subsection{Les éléments en général}
-\noindent \textbf{(P6.1)} Dans la hiérarchie des classes représentant les divers éléments de l'accélérateur, nous avons mis comme nœud une classe abstraite nommée \T{Element} dont les attributs représentent les paramètres purement géométriques (points d'entrée et de sortie, rayon, paramètre de courbure) et relationnels (l'addresse de l'élément suivant, une liste des addresses des \T{Particle} contenues dans l'instance) des éléments. Nous considérons les éléments comme \textit{a priori} courbes, en sachant qu'on peut prendre une courbure nulle et l'instance dégénère en un élément droit. Nous définissons entre autres une méthode virtuelle pure \T{add\_lorentz\_force(Particle \&p, double dt)} pour mettre en œuvre les intéractions élément-particule ; son comportement est délégué aux sous-classes suivantes:
+\noindent \textbf{(P6.1)} Dans la hiérarchie des classes représentant les divers éléments de l'accélérateur, nous avons mis comme nœud une classe abstraite nommée \T{Element} dont les attributs représentent les paramètres purement géométriques (points d'entrée et de sortie, rayon, paramètre de courbure) et relationnels (l'addresse de l'élément suivant, une liste des addresses des \T{Particle} contenues dans l'instance) des éléments. Nous considérons les éléments comme \textit{a priori} courbes, en sachant qu'on peut prendre une courbure nulle et l'instance dégénère en un élément droit. Nous définissons entre autres une méthode virtuelle pure \T{apply\_lorentz\_force(Particle \&p, double dt)} pour mettre en œuvre les intéractions élément-particule ; son comportement est délégué aux sous-classes suivantes:
 
 \begin{itemize}
-\item \T{Electric\_element} est une sous-classe d'\T{Element} avec un attribut supplémentaire, un champ de électrique \T{E} (dont nous discuterons de la représentation au passage suivant). Ainsi nous spécalisons la méthode \T{add\_lorentz\_force(Particle \&p)} en évaluant le champ vectoriel \T{E} au point où se trouve $\T{p}$ et en incrémentant la force résultante de \T{p} via la relation $\boldsymbol{\mathrm{F}}=q\boldsymbol{\mathrm{E}}$.
+\item \T{Electric\_element} est une sous-classe d'\T{Element} avec un attribut supplémentaire, un champ de électrique \T{E} (dont nous discuterons de la représentation au passage suivant). Ainsi nous spécalisons la méthode \T{apply\_lorentz\_force(Particle \&p)} en évaluant le champ vectoriel \T{E} au point où se trouve $\T{p}$ et en incrémentant la force résultante de \T{p} via la relation $\boldsymbol{\mathrm{F}}=q\boldsymbol{\mathrm{E}}$.
 
 \item \T{Magnetic\_element}, quant à elle, a comme attribut supplémentaire un champ magnétique \T{B}. Dans ce cas nous spécalisons \T{add\_lorentz\_force(Particle \&p)} en évaluant $\T{B}$ en $\T{p}$ puis en appliquant la méthode relativiste $$\T{Particle::add\_magnetic\_force(const Vector3D \&B, double dt)}$$ déclarée auparavant dans \T{particle.h}.
 
@@ -202,22 +202,78 @@ Nous représentons les champs magnétiques des éléments par une méthode virtu
 \noindent \textbf{(P11.1)} Un \T{Beam}, ou faisceau, est par héritage \T{private}, une collection de \T{Particle}. Ses attributs, constants, sont une référence sur la particule modèle du faisceau, le nombre de macroparticules crées \T{N}, le facteur $\lambda$ de ces macroparticules ainsi qu'un pointeur sur l'accélérateur dans lequel l'instance évolue. Puisque l'émittance, radiale et verticale, ainsi que les six coefficients des ellipses de phases et l'énergie moyenne du faisceau seront recalculés fréquemment nous avons décidé de les implementer comme méthodes. 
 
 \newpage
-\section{Quelques schémas}
+\section{Hiérarchie des classes}\noindent
+Ci-dessous deux schémas représentant les hiérarchies relationnelles des classes.
 
-Les schémas ci dessous représentent l'organisation des différentes classes du projet, dans sa conception graphique et physique. 
+\subsection{Légende}
+\begin{tikzpicture}[transform shape,mylabel/.style={thin, draw=black, align=center, minimum width=0.5cm, minimum height=0.5cm,fill=white,font=\normalsize}]
+\node (L0) at (0,0) {};
+\node (R0) at (3,0) {};
+\node (T0) at (3,0) [label=right: hérite de] {};
 
-\ \linebreak
-\ \linebreak
+\node (L1) at (0,-1) {};
+\node (R1) at (3,-1) {};
+\node (T1) at (3,-1) [label=right: hérite de \textit{via} \T{template}] {};
+
+\node (L2) at (0,-2) {};
+\node (R2) at (3,-2) {};
+\node (T2) at (3,-2) [label=right: contient une ou plusieurs instances de] {};
+
+\node (L3) at (0,-3) {};
+\node (R3) at (3,-3) {};
+\node (T3) at (3,-3) [label=right: contient un ou plusieurs pointeurs vers des instances de] {};
+
+\draw [->]
+(L0) edge (R0)
+(L1) edge node[mylabel] {\T{template}} (R1)
+(L2) edge [red] (R2)
+(L3) edge [red, dashed] (R3); 
+\end{tikzpicture}
+
+\subsection{Des classes liées aux objets de la simulation}
+\begin{tikzpicture}[transform shape,mylabel/.style={thin, draw=black, align=center, minimum width=0.5cm, minimum height=0.5cm,fill=white,font=\normalsize}]
+
+\node (P0) at (2,0) {\T{Vector3D}};
+\node (P1) at (2,-3) {\T{PointCharge}}; 
+\node (P9) at (2, -6) {\T{Particle}};
+\node (P3) at (12, -10) {\T{Beam}};
+\node (P4) at (12, 0) {\T{Accelerator}};
+\node (P6) at (12, -4) {\T{Element}};
+\node (P7) at (12, -6) {\T{Node}};
+\node (P8) at (8.66, -8) {\T{Box}};
+
+\draw [->]
+(P4) edge node[mylabel] {\T{vector<unique\_ptr<>\,>}} (P6)
+(P3) edge [bend left = 20] node[mylabel] {\T{std::vector<unique\_ptr<unique\_ptr<>\,>\,>}} (P9.south)
+
+(P7) edge [loop right, dashed, red] (P7.south)
+(P4) edge [red] (P0)
+(P1) edge (P0)
+(P9) edge (P1)
+(P6) edge (P7)
+(P7) edge [red] (P8)
+(P4) edge [dashed, red] (P9)
+(P6) edge [red] (P0)
+(P7) edge [red] (P1)
+(P8) edge [red] (P0)
+(P9) edge [bend left = 60, red] (P0)
+(P4.south east) edge [bend left = 60, dashed, red] (P3.north)
+(P3) edge [bend left = -60, dashed, red] (P4.east); 
+
+\end{tikzpicture}
+
+\subsection{Des classes liées à la représentation de la simulation}
+
 \begin{tikzpicture} [->]
 \node (P0) at (4.5,0) {\T{Drawable}};
 \node (P1) at (13.5,0) {\T{Canvas}};
 \node (P2) at (9,-2) {\T{Element}};
-\node (P3) at (12, -2) {\T{opengl\_view}};
-\node (P4) at (15, -2) {\T{textview}};
+\node (P3) at (12, -2) {\T{TextView}};
+\node (P4) at (15, -2) {\T{OpenGLView}};
 \node (P5) at (6,-2) {\T{Accelerator}};
 \node (P6) at (3,-2) {\T{Particle}};
 \node (P7) at (0,-2) {\T{Box}};
-\node (P8) at (10.5,-6) {\T{text\_widget}};
+\node (P8) at (10.5,-6) {\T{ConsoleWidget}};
 \node (P9) at (9.25,-3.5) {\T{GLWidget}};
 
 \path
@@ -231,67 +287,10 @@ Les schémas ci dessous représentent l'organisation des différentes classes du
 (P8) edge (P4)
 (P9) edge (P3)
 (P8) edge (P5)
-(P9) edge (P5)
+(P9) edge (P5); 
 \end{tikzpicture}
 
 \ \linebreak
 \ \linebreak
-\begin{tikzpicture}
-\node (P0) at (2,0) {\T{Vector3D}};
-\node (P1) at (2,-3) {\T{PointCharge}}; 
-\node (P2) at (2,-8) [rectangle,draw] {\T{vector<unique\_ptr<unique\_ptr>\,>\,>}}; 
-\node (P9) at (2, -6) {\T{Particle}};
-\node (P3) at (12, -10) {\T{Beam}};
-\node (P4) at (12, 0) {\T{Accelerator}};
-\node (P5) at (12, -2) [rectangle,draw] {\T{vector<>}};
-\node (P6) at (12, -4) {\T{Element}};
-\node (P7) at (12, -6) {\T{Node}};
-\node (P8) at (8.66, -8) {\T{Box}};
-
-\draw
-(P4) edge [--] (P5)
-(P3) edge [-- , bend left = 20] (P2.south)
-
-(P7) edge [-> , loop right, dashed, red] (P7)
-(P4) edge [-> , red] (P0)
-(P1) edge [->] (P0)
-(P9) edge [->] (P1)
-(P2) edge [->] (P9)
-(P5) edge [->] (P6)
-(P6) edge [->] (P7)
-(P7) edge [-> , red] (P8)
-(P4) edge [-> , dashed, red] (P9)
-(P6) edge [-> , red] (P0)
-(P7) edge [-> , red] (P1)
-(P8) edge [-> , red] (P0)
-(P9) edge [-> , bend left = 60, red] (P0)
-(P4.south east) edge [-> , bend left = 60, dashed, red] (P3.north east)
-(P3.south east) edge [-> , bend left = -60, dashed, red] (P4.north east)
-\end{tikzpicture}
-
-\ \linebreak
-\ \linebreak
-
-\textbf{Légende} 
-\ \linebreak
-\ \linebreak
-
-\begin{tikzpicture}
-\node (L0) at (0,0) {};
-\node (R0) at (3,0) {};
-\node (T0) at (4,0) {: `hérite de'}; 
-\node (L1) at (0,-1) {}; 
-\node (R1) at (3,-1) {}; 
-\node (T1) at (6,-1) {: `contient un/des instance(s) de'}; 
-\node (L2) at (0,-2) {}; 
-\node (R2) at (3, -2) {}; 
-\node (T2) at (7.5,-2) {: `contient un/des pointeurs vers une instance de'}; 
-
-\draw
-(L0) edge [->] (R0)
-(L1) edge [->  red] (R1)
-(L2) edge [-> , red, dashed] (R2)
-
-\end{tikzpicture}
 
 \end{document}

@@ -57,16 +57,19 @@ Création d'un fichier test pour la classe Particule, ce dernier écrit en sorti
 
 --------------------------------------------------
 ## Semaine 3 :
-R: Cela sort un peu du cadre du projet mais je décide d'essayer d'implémenter l'algorithme de Barnes-Hut pour accélérer les calculs des intéractions gravitationnelles des particules. Celui-ci est en O(n.log(n)) donc très intéressant si on a un grand nombre de particules en jeu.
+R: Cela sort un peu du cadre du projet mais je décide d'essayer d'implémenter l'algorithme de Barnes-Hut pour accélérer les calculs des interactions gravitationnelles des particules. Celui-ci est en O(n.log(n)) donc très intéressant si on a un grand nombre de particules en jeu.
 
 R (quelques jours plus tard): Après avoir résolu un bug fort pénible, l'implémentation de Barnes-Hut est un succès. La simulation de problème à n corps pour 10^4 voire 10^5 particules peut maintenant être exécutée aisément même sur un ordinateur peu puissant. Évidemment l'algorithme peut facilement être adapté pour le calcul de forces électromagnétique.
 
-L: Finalisation de la classe Particle et écriture d'un fichier test.
+L: Finalisation de la classe Particle et écriture d'un fichier test. Modification du fichier test des vecteurs, on préfère qu'il écrive en sortie sur une fenêtre terminal
 
 --------------------------------------------------
 ## Semaine 4 :
 
+L : Première implémentation des éléments, une classe abstraire représente les éléments en général, de cette classe héritent deux sous classes pour les éléments droits et courbes.
+Nous modifions par la suite notre conception des éléments afin d'éviter de la duplication de code, et par soucis de clarté. Premier fichier test pour la classe accélérateur, erroné 
 
+R : Conception de la classe accélérateur correction du fichier test
 
 --------------------------------------------------
 ## Semaine 5 :
