@@ -12,15 +12,12 @@ void Node::subdivide(void){
 
 void Node::reset(void){
 	if(type == INT){
-		for(auto &c : children){
-			c.reset();
-		}
+		/* children.fill(nullptr); */
 	}
 	type = EMPTY;
 }
 
 bool Node::insert(Particle* my_particle){
-	// TODO change this method from pointer to reference
 	if(not domain.contains(*my_particle)) return false;
 	switch(type){
 		case INT:{
@@ -58,7 +55,7 @@ void Node::apply_electromagnetic_force(Particle& P) const{
 	}
 	// else, type == INT
 
-	const double ratio(pow(domain.getVolume(),1.0/3) / Vector3D::distance(P, total_charge));
+	const double ratio(domain.getVolume_cube_root() / Vector3D::distance(P, total_charge));
 
 	if(ratio <= simcst::BARNES_HUT_THETA){
 		P.receive_electromagnetic_force(total_charge);

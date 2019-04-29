@@ -12,7 +12,7 @@ namespace phcst{ // physical constants
 	constexpr double MASS_PROTON_GEV_C2(0.938272);
 	constexpr double MASS_ELECTRON_GEV_C2(5.10999e-4);
 
-	constexpr double EPSILON_0_USI(8.85e-12);
+	constexpr double EPSILON_0_USI(8.854187e-12);
 	constexpr double K(0.25/(M_PI*EPSILON_0_USI)); // used for calculating electromagnetic interactions between particles
 }
 
@@ -39,10 +39,6 @@ namespace simcst{ // simulation constants
 
 	constexpr double COLLISION_ETA = 0.8;
 
-	/* constexpr double FIELD_LINE_SEGMENT_LENGTH(1e-1); */
-	/* constexpr double FIELD_LINE_LENGTH(10); */
-	/* constexpr double FIELD_LINE_SAMPLE_POINT_DENSITY(0.8); */
-
 	constexpr double QUAD_LENGTH(0.02);
 	constexpr double TUBE_HEIGHT(0.08);
 	constexpr double GAP_LENGTH(0.4);
@@ -53,6 +49,7 @@ namespace simcst{ // simulation constants
 
 	constexpr int CYLINDER_NUM_SIDES(20);
 
+	constexpr double REPRESENTED_RADIUS_DEFAULT(0.01);
 	constexpr double REPRESENTED_RADIUS_ELECTRON(0.01);
 	constexpr double REPRESENTED_RADIUS_PROTON(0.01);
 }

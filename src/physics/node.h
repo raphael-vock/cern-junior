@@ -5,8 +5,6 @@
 #include "../vector3d/vector3d.h"
 #include "box.h"
 
-class Node;// TODO is forward declaration necessary?
-
 class Node{
 	private:
 		// TODO use unique_ptr
@@ -21,10 +19,9 @@ class Node{
 						         // i.e. its charge is the total charge of the particles in the cell
 						         // and its position is their barycenter weighted by charge
 
-	public:
-		// TODO make private
 		void subdivide(void);
 
+	public:
 		void reset(void);
 
 		Box getBox(void) const{ return domain; }

@@ -14,7 +14,7 @@ class Box : public Drawable{
 		const Vector3D depth;
 		const Vector3D height;
 
-		const double volume;
+		const double volume_cube_root;
 
 		Box(Canvas* canvas, const Vector3D &my_center, const Vector3D &my_width, const Vector3D &my_depth, const Vector3D &my_height) :
 			Drawable(canvas),
@@ -22,7 +22,7 @@ class Box : public Drawable{
 			width(my_width),
 			depth(my_depth),
 			height(my_height),
-			volume(8.0*width.norm()*depth.norm()*height.norm())
+			volume_cube_root(pow(8.0*width.norm()*depth.norm()*height.norm(), 1.0/3.0))
 		{}
 
 	public:
@@ -32,12 +32,12 @@ class Box : public Drawable{
 			width(my_width),
 			depth(length*my_width.orthogonal()),
 			height(length*(width^depth).unitary()),
-			volume(8.0*width.norm()*depth.norm()*height.norm())
+			volume_cube_root(pow(8.0*width.norm()*depth.norm()*height.norm(), 1.0/3.0))
 		{}
 
 		std::array<Vector3D,8> getVertices(void) const;
 
-		double getVolume(void) const{ return volume; };
+		double getVolume_cube_root(void) const{ return volume_cube_root; };
 
 		bool contains(const Particle &x) const;
 		std::ostream& print(std::ostream& output) const;

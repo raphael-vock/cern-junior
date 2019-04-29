@@ -42,13 +42,13 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 		void addDipole(double radius, double curvature, double B_0, const Vector3D &end);
 		void addQuadrupole(double radius, double b, const Vector3D &end);
 		void addRadiofrequencyCavity(double radius, double E_0, double omega, double kappa, double phi, const Vector3D &end);
-		void addFodoStructure(double radius, double b, double L, const Vector3D &end);
+		void addFodoCell(double radius, double b, double L, const Vector3D &end);
 
 		void addStraightSection(double radius){ addStraightSection(radius, origin); }
 		void addDipole(double radius, double curvature, double B_0){ addDipole(radius, curvature, B_0, origin); }
 		void addQuadrupole(double radius, double b){ addQuadrupole(radius, b, origin); }
 		void addRadiofrequencyCavity(double radius, double E_0, double omega, double kappa, double phi){ addRadiofrequencyCavity(radius, E_0, omega, kappa, phi, origin); }
-		void addFodoStructure(double radius, double b, double L){ addFodoStructure(radius, b, L, origin); }
+		void addFodoCell(double radius, double b, double L){ addFodoCell(radius, b, L, origin); }
 
 		virtual void draw(void) override{ canvas->draw(*this); }
 

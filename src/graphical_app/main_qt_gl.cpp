@@ -3,6 +3,8 @@
 #include <vector>
 #include <cmath>
 
+#include <unistd.h> // temporary
+
 #include "glwidget.h"
 
 using namespace std;
@@ -22,17 +24,17 @@ int main(int argc, char* argv[]){
 	const double b(1.2);
 
 	//*******************
-	w.addFodoStructure(r, b, 1.0,  Vector3D(3,-2));
+	w.addFodoCell(r, b, 1.0,  Vector3D(3,-2));
 	w.addDipole(r,k,B, Vector3D(2,-3));
-	w.addFodoStructure(r, b, 1.0,  Vector3D(-2,-3));
+	w.addFodoCell(r, b, 1.0,  Vector3D(-2,-3));
 	w.addDipole(r,k,B, Vector3D(-3,-2));
-	w.addFodoStructure(r, b, 1.0,  Vector3D(-3,2));
+	w.addFodoCell(r, b, 1.0,  Vector3D(-3,2));
 	w.addDipole(r,k,B, Vector3D(-2,3));
-	w.addFodoStructure(r, b, 1.0,  Vector3D(2,3));
+	w.addFodoCell(r, b, 1.0,  Vector3D(2,3));
 	w.addDipole(r,k,B);
 	//*******************
 	
-	w.addCircularBeam(Proton(Vector3D(3,1.5), 2.0, Vector3D(1,1)), 3e3, 1.0);
+	w.addCircularBeam(Proton(Vector3D(3,1.5), 2.0, Vector3D(1,1)), 1e3, 1.0);
 
 	w.initialize();
 

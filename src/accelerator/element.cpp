@@ -21,9 +21,7 @@ Element::Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, d
 	curvature(my_curvature),
 	clock(my_clock),
 	dir((exit-entry).unitary()),
-	length(is_straight() ? direction().norm() : 2.0*asin(direction().norm()*curvature/2.0)/curvature),
-	entry_point_particle(std::unique_ptr<Particle>(new Particle(entry_point, vctr::ZERO_VECTOR, 0.0, 0.0))),// TODO get rid of
-	exit_point_particle(std::unique_ptr<Particle>(new Particle(entry_point, vctr::ZERO_VECTOR, 0.0, 0.0)))
+	length(is_straight() ? direction().norm() : 2.0*asin(direction().norm()*curvature/2.0)/curvature)
 {
 	// initializing (u,v,w)
 	try{

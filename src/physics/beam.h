@@ -7,21 +7,13 @@
 
 class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_ptr<Particle>>>{
 	protected:
-		const Particle &model_particle;
+		std::unique_ptr<Particle> model_particle;
 		const uint N; // number of particles that will effectively be created
 		const double lambda; // scaling factor between reference_particles and the macro-particles
 
 		Accelerator* habitat; // the accelerator that the beam lives in
 	public:
-		explicit Beam(Accelerator& machine, const Particle &p, uint number_of_particles, double my_lambda) :
-			Drawable(machine.getCanvas()),
-			model_particle(*p.copy()),
-			N(number_of_particles / my_lambda),
-			lambda(my_lambda),
-			habitat(&machine)
-		{ 
-			if(my_lambda <= simcst::ZERO_LAMBDA) throw excptn::ZERO_LAMBDA; 
-		}
+		explicit Beam(Accelerator& machine, const Particle &p, uint number_of_particles, double my_lambda);
 
 		virtual ~Beam(void) override{}
 

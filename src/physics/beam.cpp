@@ -1,6 +1,17 @@
 #include "../misc/exceptions.h"
 #include "beam.h"
 
+
+Beam::Beam(Accelerator& machine, const Particle &p, uint number_of_particles, double my_lambda) :
+	Drawable(machine.getCanvas()),
+	model_particle(p.copy()),
+	N(number_of_particles / my_lambda),
+	lambda(my_lambda),
+	habitat(&machine)
+{ 
+	if(my_lambda <= simcst::ZERO_LAMBDA) throw excptn::ZERO_LAMBDA; 
+}
+
 void Beam::update(void){
 	// TODO
 }
@@ -77,14 +88,14 @@ void CircularBeam::activate(){
 	double l(habitat->getLength());
 	double h(l / N);
 
-	const double v(model_particle.getVelocity().norm());
+	const double v(model_particle->getVelocity().norm());
 	for(size_t i(1); i <= N; ++i){
 		std::array<Vector3D,2> position_and_trajectory(habitat->position_and_trajectory(i*h));
 
-		std::unique_ptr<Particle> copy(model_particle.copy());
+		std::unique_ptr<Particle> copy(model_particle->copy());
 
 		copy->setPosition(position_and_trajectory[0]);
-		copy->setVelocity((model_particle.getCharge() >= 0 ? v : -v)*position_and_trajectory[1]);
+		copy->setVelocity((model_particle->getCharge() >= 0 ? v : -v)*position_and_trajectory[1]);
 		copy->scale(lambda);
 
 		habitat->addParticle(*copy);

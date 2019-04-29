@@ -65,7 +65,7 @@ void Accelerator::addQuadrupole(double radius, double b, const Vector3D &end){
 	length += back()->getLength();
 }
 
-void Accelerator::addFodoStructure(double radius, double b, double L, const Vector3D &end){
+void Accelerator::addFodoCell(double radius, double b, double L, const Vector3D &end){
 	Vector3D start(empty() ? origin : back()->getExit_point());
 	double l((end - start).norm()/2.0 - L);
 	if(l <= 0.0) throw excptn::ELEMENT_DEGENERATE_GEOMETRY;

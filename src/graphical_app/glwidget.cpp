@@ -3,6 +3,8 @@
 #include <QMatrix4x4>
 #include "glwidget.h"
 
+#include <unistd.h> // temporary
+
 void GLWidget::initializeGL(){
 	view.init();
 }

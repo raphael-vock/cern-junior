@@ -76,12 +76,12 @@ class Particle : public Drawable, public PointCharge{
 		virtual void draw(void) override{ canvas->draw(*this); }
 
 		double getMass(void) const{ return mass; }
-		virtual double getRadius(void) const{ return 0.0; };
+		virtual double getRadius(void) const{ return simcst::REPRESENTED_RADIUS_DEFAULT; };
 
 		Vector3D getVelocity(void) const{ return v; }
 		Vector3D getForce(void) const{ return F; }
 
-		void setPosition(const Vector3D &x){ (this)->Vector3D::operator=(x); }
+		void setPosition(const Vector3D &x){ Vector3D::operator=(x); }
 
 		void setVelocity(const Vector3D &x){ v = x; }
 

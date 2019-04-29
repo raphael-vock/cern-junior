@@ -11,7 +11,7 @@ using namespace phcst;
 
 Vector3D PointCharge::electromagnetic_force(const PointCharge &Q) const{
 	Vector3D F(*this - Q);
-	F *= phcst::K*charge*charge/((gamma*gamma)*(F.norm2() + simcst::SMOOTHING_CONSTANT));
+	F *= K*charge*Q.getCharge()/((gamma*Q.getGamma())*(pow(F.norm2() + simcst::SMOOTHING_CONSTANT, 1.5)));
 	return F;
 }
 
@@ -19,10 +19,10 @@ void PointCharge::incorporate(const PointCharge &P){
 	const double q(P.charge);
 
 	*this *= charge;
-	gamma *= charge;
+	/* gamma *= charge; */
 
 	*this += q*P;
-	gamma += q*P.gamma;
+	/* gamma += q*P.gamma; */
 
 	charge += q;
 
@@ -41,7 +41,7 @@ void Particle::receive_electromagnetic_force(const PointCharge &Q){
 	// TODO this must be for sufficiently large values of gamma 
 	if(this == &Q) return;
 
-	add_force(Q.electromagnetic_force(Q));
+	add_force(Q.electromagnetic_force(*this));
 }
 
 void Particle::add_magnetic_force(const Vector3D &B, double dt){
@@ -63,7 +63,7 @@ ostream& Particle::print(ostream& output) const{
 	output << "   " << particle_type() << ":\n";
 
 	output << setw(' ')
-	<< setw(indent) << "Position (m)  " <<  *this << "\n"
+	<< setw(indent) << "Position (m)  "; Vector3D::print(output) << "\n"
 	<< setw(indent) << "Velocity (m)  " << C_USI*v << "\n"
 	<< setw(indent) << "Gamma  " << gamma << "\n"
 	<< setw(indent) << "Energy (GeV)  " << 1e-9/E_USI*energy << "\n"
