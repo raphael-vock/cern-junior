@@ -2,11 +2,9 @@ QT += core gui opengl widgets
 
 CONFIG -= \
 	app_bundle \
-	console \
 
 CONFIG += \
 	c++11 \
-	debug \
 
 TARGET = graphical_app
 
