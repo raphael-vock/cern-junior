@@ -7,7 +7,14 @@
 using namespace std;
 using namespace excptn;
 
-Element::Element(Canvas* display, const Vector3D& entry, const Vector3D& exit, double my_radius, double my_curvature, std::shared_ptr<double> my_clock) :
+Element::Element(
+	Canvas* display,
+	const Vector3D& entry,
+	const Vector3D& exit,
+	double my_radius,
+	double my_curvature,
+	std::shared_ptr<double> my_clock
+) :
 	Drawable(display),
 	Node(Box(
 			canvas,
@@ -62,7 +69,7 @@ std::ostream& Element::print(std::ostream& output) const{
 		cout << "\n   Center of curvature: " << center();
 	}
 	return output;
-}	
+}
 
 std::ostream& operator<<(std::ostream& output, const Element &E){
 	return E.print(output);

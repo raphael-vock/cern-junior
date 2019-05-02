@@ -7,7 +7,7 @@ void Node::subdivide(void){
 	for(int i(0); i <= 1; ++i) for(int j(0); j <= 1; ++j) for(int k(0); k <= 1; ++k){
 		children[i + 2*j + 4*k] = std::unique_ptr<Node>(new Node(domain.octant(i,j,k)));
 	}
-}	 
+}
 
 void Node::reset(void){
 	if(type == INT){

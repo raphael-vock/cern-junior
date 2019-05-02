@@ -25,4 +25,3 @@ class RGB{
 		static const RGB ELECTRIC_BLUE;
 		static const RGB PURPLE;
 };
-
