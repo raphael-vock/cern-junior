@@ -34,10 +34,15 @@ class OpenGLView : public Canvas{
 		void init(void);
 		void initializePosition(void);
 
+		void set_third_person_view(const Particle &p);
+		void set_first_person_view(const Particle &p);
+
 		// setters
 		void setProjection(QMatrix4x4 const& projection){ prog.setUniformValue("projection", projection); }
 		void translate(double x, double y, double z);
+		void translate(const Vector3D &x){ translate(x[0], x[1], x[2]); }
 		void rotate(double angle, double dir_x, double dir_y, double dir_z);
+		void rotate(double angle, const Vector3D &axis){ rotate(angle, axis[0], axis[1], axis[2]); }
 
 		// runtime parameters
 		bool matrix_mode = false;

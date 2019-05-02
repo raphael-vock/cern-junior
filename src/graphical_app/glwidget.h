@@ -30,6 +30,13 @@ class GLWidget : public QOpenGLWidget, public Accelerator{
 
 		// viewpoint
 		OpenGLView view;
+		enum POV_TYPE{ FIRST_PERSON, THIRD_PERSON, FREE_POV };
+		POV_TYPE pov_mode = FREE_POV;
+
+		int pov_particle = 0;
+
+		void update_free_pov(QKeyEvent* event);
+		void update_pov_matrix(void);
 
 		// timer
 		int timerId;

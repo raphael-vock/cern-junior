@@ -7,11 +7,6 @@
 
 #include "glwidget.h"
 
-using namespace std;
-
-using namespace phcst;
-using namespace vctr;
-
 int main(int argc, char* argv[]){
 	QApplication a(argc, argv);
 

@@ -25,26 +25,41 @@ void GLWidget::resizeGL(int width, int height){
 	view.setProjection(matrix);
 }
 
-void GLWidget::paintGL(){
+void GLWidget::paintGL(void){
 	glClearColor(1.0, 1.0, 1.0, 1.0); // white background color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	update_pov_matrix();
 	draw();
 }
 
-void GLWidget::keyPressEvent(QKeyEvent* event){
+void GLWidget::update_pov_matrix(void){
+	if(pov_mode != FREE_POV){
+		if(particles.empty()){
+			view.initializePosition();
+			pov_mode = FREE_POV;
+			return;
+		}else{
+			pov_particle = pov_particle % particles.size();
+		}
+	}
+
+	switch(pov_mode){
+		case THIRD_PERSON:{
+			view.set_third_person_view(*particles[pov_particle]);
+			break;
+		}
+		case FIRST_PERSON:{
+			view.set_first_person_view(*particles[pov_particle]);
+			break;
+		}
+	}
+}
+
+void GLWidget::update_free_pov(QKeyEvent* event){
 	const double small_angle(event->modifiers() & Qt::ShiftModifier ? 5 : 2);
 	const double small_increment(event->modifiers() & Qt::ShiftModifier ? 0.5 : 0.2);
 
 	switch(event->key()){
-		case Qt::Key_Space:
-			pause();
-			break;
-		case Qt::Key_Plus:
-			increase_speed();
-			break;
-		case Qt::Key_Equal:
-			decrease_speed();
-			break;
 		case Qt::Key_Left:
 			view.rotate(small_angle, 0.0, -1.0, 0.0);
 			break;
@@ -59,8 +74,9 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 			break;
 		case Qt::Key_W:
 			// Close on Ctrl-W (Windows/Linux) or Cmd-W (Mac):
-			if(event->modifiers() & Qt::ControlModifier) close();
-			else view.translate(0.0, 0.0, small_increment);
+			if(not(event->modifiers() & Qt::ControlModifier)){
+				view.translate(0.0, 0.0, small_increment);
+			}
 			break;
 		case Qt::Key_S:
 			view.translate(0.0, 0.0, -small_increment);
@@ -71,31 +87,73 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 		case Qt::Key_D:
 			view.translate(-small_increment, 0.0, 0.0);
 			break;
-		case Qt::Key_R:
-			view.translate(0.0, -small_increment, 0.0);
-			break;
-		case Qt::Key_F:
-			view.translate(0.0, small_increment, 0.0);
-			break;
 		case Qt::Key_Q:
 			view.rotate(small_angle, 0.0, 0.0, -1.0);
 			break;
 		case Qt::Key_E:
 			view.rotate(small_angle, 0.0, 0.0, +1.0);
 			break;
+	}
+}
+
+void GLWidget::keyPressEvent(QKeyEvent* event){
+	if(pov_mode == FREE_POV){
+		update_free_pov(event);
+	}
+
+	switch(event->key()){
+		case Qt::Key_W:
+			if(event->modifiers() & Qt::ControlModifier){
+				close();
+			}else{
+				++ pov_particle;
+			}
+			break;
+		case Qt::Key_S:
+			-- pov_particle;
+			if(pov_particle < 0){
+				pov_particle += particles.size();
+			}
+			break;
+		case Qt::Key_Space:
+			pause();
+			break;
+		case Qt::Key_Plus:
+			increase_speed();
+			break;
+		case Qt::Key_Equal:
+			decrease_speed();
+			break;
 		case Qt::Key_M:
 			view.toggle_matrix_mode();
+			break;
+		case Qt::Key_1:
+			if(pov_mode == FIRST_PERSON) return;
+			pov_mode = FIRST_PERSON;
+			break;
+		case Qt::Key_2:
+			if(pov_mode == FREE_POV) return;
+			view.initializePosition();
+			pov_mode = FREE_POV;
+			break;
+		case Qt::Key_3:
+			if(pov_mode == THIRD_PERSON) return;
+			pov_mode = THIRD_PERSON;
 			break;
 	};
 	update();
 }
 
 void GLWidget::mousePressEvent(QMouseEvent* event){
+	if(pov_mode != FREE_POV) return;
+
 	lastMousePosition = event->pos();
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event){
-	if (event->buttons() & Qt::LeftButton) {
+	if(pov_mode != FREE_POV) return;
+
+	if(event->buttons() & Qt::LeftButton){
 		constexpr double angle(0.1); // in degrees
 
 		QPointF d = event->pos() - lastMousePosition;

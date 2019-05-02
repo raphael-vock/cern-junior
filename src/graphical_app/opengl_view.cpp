@@ -99,8 +99,26 @@ void OpenGLView::init(){
 void OpenGLView::initializePosition(){
 	pov_matrix.setToIdentity();
 	pov_matrix.translate(0.0, 0.0, -5.0);
-	/* pov_matrix.rotate(60.0, 0.0, 1.0, 0.0); */
-	/* pov_matrix.rotate(45.0, 0.0, 0.0, 1.0); */
+}
+
+void OpenGLView::set_first_person_view(const Particle &p){
+	pov_matrix.setToIdentity();
+
+	Vector3D center_point(p + p.getRadius()*p.getVelocity().unitary());
+	Vector3D focal_point(center_point + p.getVelocity());
+
+	QVector3D eye(center_point[0], center_point[1], center_point[2]);
+	QVector3D center(focal_point[0], focal_point[1], focal_point[2]);
+	QVector3D up(0,0,1);
+
+	pov_matrix.lookAt(eye, center, up);
+}
+
+void OpenGLView::set_third_person_view(const Particle &p){
+	initializePosition();
+
+	translate(p);
+	translate(0,0,4);
 }
 
 void OpenGLView::translate(double x, double y, double z){

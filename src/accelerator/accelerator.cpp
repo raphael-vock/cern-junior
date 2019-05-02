@@ -119,13 +119,15 @@ void Accelerator::evolve(double dt){
 		e->reset();
 	}
 
-	for(auto &p : particles){
-		if(p){
-			if(p->has_collided()){
-				p.reset();
-			}else{
-				p->insert_into_tree();
-			}
+	int particle_count(particles.size());
+	for(int i(0); i < particle_count;){
+		if(particles[i]->has_collided()){
+			std::swap(particles[i], particles.back());
+			particles.pop_back();
+			--particle_count;
+		}else{
+			particles[i]->insert_into_tree();
+			++i;
 		}
 	}
 
