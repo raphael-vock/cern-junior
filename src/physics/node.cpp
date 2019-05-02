@@ -1,5 +1,4 @@
 #include <cmath> // for pow
-#include <assert.h>
 
 #include "node.h"
 

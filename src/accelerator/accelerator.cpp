@@ -138,7 +138,6 @@ void Accelerator::evolve(double dt){
 
 std::array<Vector3D,2> Accelerator::position_and_trajectory(double s) const{
 	if(length <= simcst::ZERO_DISTANCE) throw excptn::ACCELERATOR_DEGENERATE_GEOMETRY;
-	assert(not empty());
 
 	// shift s so that 0 ≤ s < length
 	s = fmod(s, length);
