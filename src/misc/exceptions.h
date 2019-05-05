@@ -11,7 +11,7 @@ namespace excptn{
 
 	const std::invalid_argument ZERO_CURVATURE_CENTER("Center of circle with zero curvature is undefined");
 	const std::invalid_argument ZERO_CURVATURE_DIPOLE("Dipole must have nonzero curvature");
-	
+
 	const std::invalid_argument ELEMENT_DEGENERATE_GEOMETRY("Invalid element geometric parameters");
 	const std::invalid_argument ACCELERATOR_DEGENERATE_GEOMETRY("Invalid element geometric parameters");
 	const std::invalid_argument NON_MATCHING_LINK_POINTS("Consectuive elements must have matching link points");
