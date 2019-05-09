@@ -52,3 +52,5 @@ src/graphical_app/graphical_app
 src/tests/accelerator_test2/Makefile
 src/graphical_app/graphical_app
 *.tmp
+src/scatterplot/Makefile
+src/scatterplot/Makefile

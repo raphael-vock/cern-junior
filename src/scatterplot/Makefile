@@ -637,7 +637,9 @@ compiler_clean:
 
 ####### Compile
 
-scatterplot.o: scatterplot.cpp 
+scatterplot.o: scatterplot.cpp scatterplot.h \
+		../general/canvas.h \
+		../general/drawable.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o scatterplot.o scatterplot.cpp
 
 ####### Install
