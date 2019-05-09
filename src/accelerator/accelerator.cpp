@@ -6,11 +6,11 @@ void Accelerator::weld(void){
 	if(N <= 1) return;
 
 	for(size_t i(0); i <= N-2; ++i){
-		if(at(i)->getExit_point() != at(i+1)->getEntry_point()){
+		if((*this)[i]->getExit_point() != (*this)[i+1]->getEntry_point()){
 			throw excptn::NON_MATCHING_LINK_POINTS;
 		}
-		at(i)->setSuccessor(at(i+1).get());
-		at(i+1)->setPredecessor(at(i).get());
+		(*this)[i]->setSuccessor((*this)[i+1].get());
+		(*this)[i+1]->setPredecessor((*this)[i].get());
 	}
 	back()->setSuccessor(front().get());
 	front()->setPredecessor(back().get());
@@ -125,6 +125,7 @@ void Accelerator::evolve(double dt){
 			std::swap(particles[i], particles.back());
 			particles.pop_back();
 			--particle_count;
+			// note: this clause is O(1)
 		}else{
 			particles[i]->insert_into_tree();
 			++i;
@@ -144,12 +145,12 @@ std::array<Vector3D,2> Accelerator::position_and_trajectory(double s) const{
 	if(s < 0) s += length;
 
 	int i(0);
-	double l(at(i)->getLength());
+	double l((*this)[i]->getLength());
 	while(s > l){
 		s -= l;
 		++i;
-		l = at(i)->getLength();
+		l = (*this)[i]->getLength();
 	}
 
-	return {at(i)->inverse_curvilinear_coord(s), at(i)->local_trajectory(s)};
+	return {(*this)[i]->inverse_curvilinear_coord(s), (*this)[i]->local_trajectory(s)};
 }
