@@ -5,35 +5,52 @@
 #include "../vector3d/vector3d.h"
 #include "box.h"
 
-class Node{
-	private:
+class Node : public Box{
+	protected:
 		// TODO use unique_ptr
-		std::array<std::unique_ptr<Node>,8> children;
-		Box domain;
-		Particle* tenant;
-
-		enum node_type { INT, EXT, EMPTY };
-		node_type type;
-
-		PointCharge total_charge;        // the theoretical particle that represents the cell,
-						         // i.e. its charge is the total charge of the particles in the cell
-						         // and its position is their barycenter weighted by charge
-
 		void subdivide(void);
+		PointCharge total_charge;
+
 
 	public:
-		void reset(void);
+		virtual ~Node(void) = 0;
 
-		Box getBox(void) const{ return domain; }
+		/* void reset(void); */
 
-		void apply_electromagnetic_force(Particle& P) const; // recursively increments gravity on P according to Barnes-Hut approximation with parameter THETA
+		virtual void apply_electromagnetic_force(Particle& P) const = 0; // recursively increments gravity on P according to Barnes-Hut approximation with parameter THETA
 
-		Node(Box my_Box) : domain(my_Box), type(EMPTY), total_charge(vctr::ZERO_VECTOR, 0.0){}
+		/* Node(Box my_Box) : domain(my_Box), type(EMPTY), total_charge(vctr::ZERO_VECTOR, 0.0){} */
 
-		bool insert(Particle* my_Point);
+		virtual bool insert(Particle* my_Point) = 0;
 
-		void print_elements(void) const;
-		void print_type(void);
+		/* void print_elements(void) const; */
+		/* void print_type(void); */
 
-		void draw_tree(void) const;
+		/* void draw_tree(void) const; */
+};
+
+class InteriorNode : public Node{
+	private:
+		virtual ~InteriorNode(void) override{};
+		std::array<Node*, 8> children;
+
+	public:
+		virtual bool insert(Particle* my_Point) override;
+};
+
+class ExteriorNode : public Node{
+	private:
+		virtual ~ExteriorNode() override{};
+		Particle* tenant;
+
+	public:
+		virtual bool insert(Particle* my_Point) override;
+};
+
+class EmptyNode : public Node{
+	private:
+		virtual ~EmptyNode() override{};
+
+	public:
+		virtual bool insert(Particle* my_Point) override;
 };

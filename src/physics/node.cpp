@@ -9,12 +9,12 @@ void Node::subdivide(void){
 	}
 }
 
-void Node::reset(void){
-	if(type == INT){
-		/* children.fill(nullptr); */
-	}
-	type = EMPTY;
-}
+/* void Node::reset(void){ */
+/* 	if(type == INT){ */
+/* 		/1* children.fill(nullptr); *1/ */
+/* 	} */
+/* 	type = EMPTY; */
+/* } */
 
 bool Node::insert(Particle* my_particle){
 	if(not domain.contains(*my_particle)) return false;
@@ -44,6 +44,22 @@ bool Node::insert(Particle* my_particle){
 			return true;
 		}
 	}
+}
+
+bool InteriorNode::insert(Particle* my_particle){
+	if(not contains(*my_particle)) return false;
+
+	total_charge.incorporate(*my_particle);
+	for(const auto &child : children){
+		if(child->insert(my_particle)){
+			return true;
+		}
+	}
+	return false;
+}
+
+bool ExteriorNode::insert(Particle* my_particle){
+	if(not contains(*my_particle)) return false;
 }
 
 void Node::apply_electromagnetic_force(Particle& P) const{
