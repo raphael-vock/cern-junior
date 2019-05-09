@@ -71,14 +71,12 @@ std::array<double,3> Beam::vertical_ellipse_coefficients(void) const{
 } 
 
 void Beam::evolve(double dt){
-	for(const auto &p : *this){
-		if(*p) (**p).evolve(dt);
-	}
+	// TODO
 }
 
 std::ostream& Beam::print(std::ostream& output) const{
-	output << "Model particle:\n" << model_particle;
-	// TODO	
+	output << "Model particle:\n" << *model_particle;
+	// TODO
 	return output;
 }
 
