@@ -1,0 +1,141 @@
+\documentclass[12pt, letterpaper, twoside]{article}
+\usepackage[top=2cm, bottom=2cm, left=1.5cm, right=1.5cm]{geometry}
+\usepackage[francais]{babel}
+\usepackage{array}
+
+\usepackage[sf]{titlesec}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{enumitem,amssymb}
+\newlist{todolist}{itemize}{2}
+\setlist[todolist]{label=$\square$}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\done}{\rlap{$\square$}{\raisebox{2pt}{\large\hspace{1pt}\cmark}}%
+\hspace{-2.5pt}}
+\newcommand{\wontfix}{\rlap{$\square$}{\large\hspace{1pt}\xmark}}
+
+\begin{document}
+\section{Progression} 
+
+Format: [fait/à faire] TACHE	Durée (en minutes; remplacer les ??)
+
+Vous pouvez ajouter vos propres tâches si vous le jugez utile
+(p.ex. décomposition plus fine).
+
+\begin{itemize}
+\begin{todolist}
+	\item[\done] créer le JOURNAL
+	\item[\done] lire complètement le descriptif général 
+	\item[\done] s'inscrire en binôme 
+	\item[\done] Makefile  
+	\item[\done] Vecteur finie (pleinement opérationnelle et testée)
+	\item[\done] fichier REPONSES
+	\item[\done] Oscillateur
+	\item[\done] intégrateur d'Euler-Cromer
+	\item[\done] Pendule
+	\item[\done] Ressort
+	\item[\done] Systeme
+	\item[\done] exerciceP10
+	\item[\done] graphisme: cadre général 
+	\item[\done] graphisme: Pendule
+	\item[\done] OscillateurCouple 
+	\item[\done] PenduleDouble
+	\item[\done] espace des phases
+	\item[\done] integrateur Newmark
+	\item[\done] fichier CONCEPTION
+	\item[\done] fichier README
+	\item[\done] fichier NOMS
+\end{todolist}
+\end{itemize}
+
+
+\rule{\textwidth}{0.4pt}
+
+\section{Suivi:}
+
+\subsection{Semaine 1:}
+\begin{itemize}{$\bullet$}
+	\item Création du module Vector3D
+	\item Testé et quasiment finalisé
+	\item Mise en place du répertoire GitHub 
+\end{itemize}
+
+\rule{\textwidth}{0.4pt}
+
+\subsection{Semaine 2:}
+Décision d'utiliser Qt plutôt que SDL.
+
+*********
+Prise en main de l'environnement graphique, implémentation de plusieurs exemples simples (polygônes plans, cubes, sphères, sphères en mouvement).
+
+Création du répertoire qui sera, à terme, le répertoire du projet final.
+Résolution d'un bug très pénible dû à QMake sur Macintosh qui rendait la compilation de librairie impossible (ouf!).
+
+Création du module `physics' qui contenant la classe Particle.
+
+Conception d'une toute première (et fort rudimentaire) simulation physique en temps réel à sortie graphique: un simulateur de problème à $n$ corps (Calculs par somme direct, donc $\mathcal{O}(n^2)$. Devient très couteux à partir de $\sim$1000 particules.)
+
+Modification des opérateurs de calcul algébrique sur les vecteurs et surcharge des opérateurs d'affichage
+Ajout de la méthode rotate à la classe Vector3D
+Ajout de la méthode force magnétique à la classe Particule
+Création d'un fichier test pour la classe Particule, ce dernier écrit en sortie sur un fichier au format txt
+
+\rule{\textwidth}{0.4pt}
+
+\subsection{Semaine 3:}
+Cela sort un peu du cadre du projet mais je décide d'essayer d'implémenter l'algorithme de Barnes-Hut pour accélérer les calculs des interactions gravitationnelles des particules. Celui-ci est en  $\mathcal{O}(n\log{}n)$ donc très intéressant si on a un grand nombre de particules en jeu.
+
+R (quelques jours plus tard): Après avoir résolu un bug fort pénible, l'implémentation de Barnes-Hut est un succès. La simulation de problème à $n$ corps pour $10^4$ voire $10^5$ particules peut maintenant être exécutée aisément même sur un ordinateur peu puissant. Évidemment l'algorithme peut facilement être adapté pour le calcul de forces électromagnétique.
+
+Finalisation de la classe Particle et écriture d'un fichier test. Modification du fichier test des vecteurs, on préfère qu'il écrive en sortie sur une fenêtre terminal
+
+\rule{\textwidth}{0.4pt}
+
+\subsection{Semaine 4 :}
+
+Première implémentation des éléments, une classe abstraire représente les éléments en général, de cette classe héritent deux sous classes pour les éléments droits et courbes.
+Nous modifions par la suite notre conception des éléments afin d'éviter de la duplication de code, et par soucis de clarté. Premier fichier test pour la classe accélérateur, erroné
+
+Conception de la classe accélérateur correction du fichier test
+
+\rule{\textwidth}{0.4pt}
+
+\subsection{Semaine 5 :}
+
+\rule{\textwidth}{0.4pt}
+
+\subsection{Semaine 6 :}
+
+\rule{\textwidth}{0.4pt}
+
+\subsection{Semaine 7 :}
+
+\rule{\textwidth}{0.4pt}
+
+\subsection{Semaine 8 :}
+
+\rule{\textwidth}{0.4pt}
+
+\subsection{Semaine 9 :}
+
+\rule{\textwidth}{0.4pt}
+
+\subsection{Semaine 10 :}
+
+\rule{\textwidth}{0.4pt}
+
+\subsection{Semaine 11 :}
+
+\rule{\textwidth}{0.4pt}
+
+\subsection{Semaine 12 :}
+
+\rule{\textwidth}{0.4pt}
+
+\subsection{Semaine 13 :}
+
+\rule{\textwidth}{0.4pt}
+
+\end{document}

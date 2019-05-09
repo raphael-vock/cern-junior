@@ -8,3 +8,4 @@ SUBDIRS += \
 	textview \
 	tests \
 	graphical_app \
+	text_app \
