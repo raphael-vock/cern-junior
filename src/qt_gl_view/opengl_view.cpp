@@ -8,6 +8,7 @@
 
 #include "../accelerator/accelerator.h"
 #include "../physics/beam.h"
+#include "../scatterplot/scatterplot.h"
 
 using namespace simcst;
 
@@ -46,6 +47,13 @@ void OpenGLView::draw(const Box &to_draw){
 
 void OpenGLView::draw(const Beam &to_draw){
 	// TODO
+}
+
+void OpenGLView::draw(const ScatterPlot &to_draw){
+	setShaderColor(RGB::BLACK);
+	for(const auto &x : to_draw.getPoints()){
+		drawSphere(Vector3D(x[0], x[1], 0), 0.1);
+	}
 }
 
 void OpenGLView::draw(const Particle &to_draw){

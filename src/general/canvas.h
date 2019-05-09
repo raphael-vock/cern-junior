@@ -6,7 +6,7 @@ class Segment;
 class Box;
 class Particle;
 class Beam;
-/* class ScatterPlot; */
+class ScatterPlot;
 class Element;
 class Accelerator;
 
@@ -23,7 +23,7 @@ class Canvas{
 
 		virtual void draw(const Particle &) = 0;
 		virtual void draw(const Beam &) = 0;
-		/* virtual void draw(const ScatterPlot &) = 0; */
+		virtual void draw(const ScatterPlot &) = 0;
 
 		virtual void draw(const Element &) = 0;
 

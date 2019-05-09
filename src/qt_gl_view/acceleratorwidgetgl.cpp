@@ -6,12 +6,14 @@
 
 void AcceleratorWidgetGL::initializeGL(void){
 	view.init();
+	test.initializeGL();
+	test.show();
 	setWindowTitle("CERN Junior");
-	wdg->show();
 }
 
 void AcceleratorWidgetGL::quit(void){
-	quit();
+	close();
+	// TODO
 }
 
 void AcceleratorWidgetGL::timerEvent(QTimerEvent* event){
@@ -35,6 +37,7 @@ void AcceleratorWidgetGL::paintGL(void){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	update_pov_matrix();
 	draw();
+	test.paintGL();
 }
 
 void AcceleratorWidgetGL::update_pov_matrix(void){

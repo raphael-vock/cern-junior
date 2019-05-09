@@ -14,6 +14,8 @@ void TextView::draw(const Particle &to_draw){ to_draw.print(stream); }
 
 void TextView::draw(const Beam &to_draw){ to_draw.print(stream); }
 
+void TextView::draw(const ScatterPlot &to_draw){ to_draw.print(stream); }
+
 void TextView::draw(const Element &to_draw){ to_draw.print(stream); }
 
 void TextView::draw(const Accelerator &to_draw){ to_draw.print(stream, false); }

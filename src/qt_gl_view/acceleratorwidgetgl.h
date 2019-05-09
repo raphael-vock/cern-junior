@@ -4,6 +4,7 @@
 #include <QTime>
 
 #include "opengl_view.h"
+#include "scatterplotwidgetgl.h"
 #include "../general/drawable.h"
 #include "../accelerator/accelerator.h"
 
@@ -30,8 +31,6 @@ class AcceleratorWidgetGL : public QOpenGLWidget, public Accelerator{
 		void increase_speed(void){ timestep *= sqrt(2); }
 		void decrease_speed(void){ timestep /= sqrt(2); }
 
-		QWidget* wdg = new QWidget;
-
 		// viewpoint
 		OpenGLView view;
 		enum POV_TYPE{ FIRST_PERSON, THIRD_PERSON, FREE_POV };
@@ -42,10 +41,13 @@ class AcceleratorWidgetGL : public QOpenGLWidget, public Accelerator{
 		void update_free_pov(QKeyEvent* event);
 		void update_pov_matrix(void);
 
+		// other windows
+		ScatterPlotWidgetGL test;
+
 		// timer
 		int timerId;
 		QTime stopwatch;
 	public:
-		AcceleratorWidgetGL(QWidget* parent, Vector3D origin) : QOpenGLWidget(parent), Accelerator(&view, origin){ setMouseTracking(true); }
+		AcceleratorWidgetGL(QWidget* parent, Vector3D origin) : QOpenGLWidget(parent), Accelerator(&view, origin), test(parent){ test.initializeGL(); setMouseTracking(true); }
 		virtual ~AcceleratorWidgetGL(){}
 };

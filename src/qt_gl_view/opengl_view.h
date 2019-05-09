@@ -26,6 +26,7 @@ class OpenGLView : public Canvas{
 		virtual void draw(const Segment &to_draw) override;
 		virtual void draw(const Box &to_draw) override;
 		virtual void draw(const Particle &to_draw) override;
+		virtual void draw(const ScatterPlot &to_draw) override;
 		virtual void draw(const Beam &to_draw) override;
 		virtual void draw(const Element &to_draw) override;
 		virtual void draw(const Accelerator &to_draw) override;

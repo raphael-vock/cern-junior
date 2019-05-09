@@ -40,7 +40,7 @@ DISTNAME      = qt_gl_view1.0.0
 DISTDIR = /Users/Raphael/Documents/GitHub/cern-junior/src/qt_gl_view/.tmp/qt_gl_view1.0.0
 LINK          = /Library/Developer/CommandLineTools/usr/bin/clang++
 LFLAGS        = -stdlib=libc++ -headerpad_max_install_names $(EXPORT_ARCH_ARGS) -Wl,-syslibroot,/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -mmacosx-version-min=10.12 -Wl,-rpath,@executable_path/../Frameworks
-LIBS          = $(SUBLIBS) -F/usr/local/Cellar/qt/5.12.2/lib -L../color -lcolor -L../vector3d -lvector3d -L../accelerator -laccelerator -L../physics -lphysics -framework QtOpenGL -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework OpenGL -framework AGL   
+LIBS          = $(SUBLIBS) -F/usr/local/Cellar/qt/5.12.2/lib -L../color -lcolor -L../vector3d -lvector3d -L../scatterplot -lscatterplot -L../accelerator -laccelerator -L../physics -lphysics -framework QtOpenGL -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework OpenGL -framework AGL   
 AR            = /Library/Developer/CommandLineTools/usr/bin/ar cq
 RANLIB        = /Library/Developer/CommandLineTools/usr/bin/ranlib -s
 SED           = sed
@@ -54,10 +54,12 @@ OBJECTS_DIR   = ./
 
 SOURCES       = main_qt_gl.cpp \
 		acceleratorwidgetgl.cpp \
+		scatterplotwidgetgl.cpp \
 		glsphere.cpp \
 		opengl_view.cpp qrc_resource.cpp
 OBJECTS       = main_qt_gl.o \
 		acceleratorwidgetgl.o \
+		scatterplotwidgetgl.o \
 		glsphere.o \
 		opengl_view.o \
 		qrc_resource.o
@@ -253,10 +255,12 @@ DIST          = /usr/local/Cellar/qt/5.12.2/mkspecs/features/spec_pre.prf \
 		/usr/local/Cellar/qt/5.12.2/mkspecs/features/yacc.prf \
 		/usr/local/Cellar/qt/5.12.2/mkspecs/features/lex.prf \
 		qt_gl_view.pro acceleratorwidgetgl.h \
+		scatterplotwidgetgl.h \
 		vertex_shader.h \
 		opengl_view.h \
 		glsphere.h main_qt_gl.cpp \
 		acceleratorwidgetgl.cpp \
+		scatterplotwidgetgl.cpp \
 		glsphere.cpp \
 		opengl_view.cpp
 QMAKE_TARGET  = qt_gl_view
@@ -277,7 +281,7 @@ include /usr/local/Cellar/qt/5.12.2/mkspecs/features/mac/sdk.mk
 first: all
 ####### Build rules
 
-qt_gl_view: ../color/libcolor.a ../vector3d/libvector3d.a ../accelerator/libaccelerator.a ../physics/libphysics.a $(OBJECTS)  
+qt_gl_view: ../color/libcolor.a ../vector3d/libvector3d.a ../scatterplot/libscatterplot.a ../accelerator/libaccelerator.a ../physics/libphysics.a $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: qt_gl_view.pro /usr/local/Cellar/qt/5.12.2/mkspecs/macx-clang/qmake.conf /usr/local/Cellar/qt/5.12.2/mkspecs/features/spec_pre.prf \
@@ -691,8 +695,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resource.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/local/Cellar/qt/5.12.2/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents acceleratorwidgetgl.h vertex_shader.h opengl_view.h glsphere.h $(DISTDIR)/
-	$(COPY_FILE) --parents main_qt_gl.cpp acceleratorwidgetgl.cpp glsphere.cpp opengl_view.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents acceleratorwidgetgl.h scatterplotwidgetgl.h vertex_shader.h opengl_view.h glsphere.h $(DISTDIR)/
+	$(COPY_FILE) --parents main_qt_gl.cpp acceleratorwidgetgl.cpp scatterplotwidgetgl.cpp glsphere.cpp opengl_view.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -774,6 +778,8 @@ main_qt_gl.o: main_qt_gl.cpp /usr/local/Cellar/qt/5.12.2/lib/QtWidgets.framework
 		glsphere.h \
 		/usr/local/Cellar/qt/5.12.2/lib/QtOpenGL.framework/Headers/QGLBuffer \
 		/usr/local/Cellar/qt/5.12.2/lib/QtOpenGL.framework/Headers/qglbuffer.h \
+		scatterplotwidgetgl.h \
+		../scatterplot/scatterplot.h \
 		../accelerator/accelerator.h \
 		../accelerator/element.h \
 		../misc/exceptions.h \
@@ -804,6 +810,8 @@ acceleratorwidgetgl.o: acceleratorwidgetgl.cpp /usr/local/Cellar/qt/5.12.2/lib/Q
 		glsphere.h \
 		/usr/local/Cellar/qt/5.12.2/lib/QtOpenGL.framework/Headers/QGLBuffer \
 		/usr/local/Cellar/qt/5.12.2/lib/QtOpenGL.framework/Headers/qglbuffer.h \
+		scatterplotwidgetgl.h \
+		../scatterplot/scatterplot.h \
 		../accelerator/accelerator.h \
 		../accelerator/element.h \
 		../misc/exceptions.h \
@@ -812,6 +820,24 @@ acceleratorwidgetgl.o: acceleratorwidgetgl.cpp /usr/local/Cellar/qt/5.12.2/lib/Q
 		../physics/node.h \
 		../physics/box.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o acceleratorwidgetgl.o acceleratorwidgetgl.cpp
+
+scatterplotwidgetgl.o: scatterplotwidgetgl.cpp scatterplotwidgetgl.h \
+		/usr/local/Cellar/qt/5.12.2/lib/QtWidgets.framework/Headers/QOpenGLWidget \
+		/usr/local/Cellar/qt/5.12.2/lib/QtWidgets.framework/Headers/qopenglwidget.h \
+		opengl_view.h \
+		/usr/local/Cellar/qt/5.12.2/lib/QtGui.framework/Headers/QOpenGLShaderProgram \
+		/usr/local/Cellar/qt/5.12.2/lib/QtGui.framework/Headers/qopenglshaderprogram.h \
+		/usr/local/Cellar/qt/5.12.2/lib/QtGui.framework/Headers/QMatrix4x4 \
+		/usr/local/Cellar/qt/5.12.2/lib/QtGui.framework/Headers/qmatrix4x4.h \
+		../color/rgb.h \
+		../vector3d/vector3d.h \
+		../general/drawable.h \
+		../general/canvas.h \
+		glsphere.h \
+		/usr/local/Cellar/qt/5.12.2/lib/QtOpenGL.framework/Headers/QGLBuffer \
+		/usr/local/Cellar/qt/5.12.2/lib/QtOpenGL.framework/Headers/qglbuffer.h \
+		../scatterplot/scatterplot.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o scatterplotwidgetgl.o scatterplotwidgetgl.cpp
 
 glsphere.o: glsphere.cpp glsphere.h \
 		/usr/local/Cellar/qt/5.12.2/lib/QtOpenGL.framework/Headers/QGLBuffer \
@@ -840,7 +866,8 @@ opengl_view.o: opengl_view.cpp opengl_view.h \
 		../physics/particle.h \
 		../physics/node.h \
 		../physics/box.h \
-		../physics/beam.h
+		../physics/beam.h \
+		../scatterplot/scatterplot.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o opengl_view.o opengl_view.cpp
 
 qrc_resource.o: qrc_resource.cpp 
