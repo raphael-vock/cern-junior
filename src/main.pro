@@ -3,8 +3,9 @@ TEMPLATE = subdirs
 SUBDIRS += \
 	color \
 	vector3d \
-	physics \
+	scatterplot \
 	accelerator \
+	physics \
 	textview \
 	tests \
-	graphical_app \
+	qt_gl_view \

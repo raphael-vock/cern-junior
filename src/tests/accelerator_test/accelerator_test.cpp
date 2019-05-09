@@ -1,13 +1,13 @@
 #include <iostream>
 #include <initializer_list>
 
-#include "../../textview/consolewidget.h"
+#include "../../textview/acceleratorwidgetconsole.h"
 
 using namespace std;
 using namespace phcst;
 
 int main(){
-	ConsoleWidget w(Vector3D(3,2,0)); 
+	AcceleratorWidgetConsole w(Vector3D(3,2,0));
 
 	const double r(0.1);
 	const double k(1.0);

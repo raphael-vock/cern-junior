@@ -7,7 +7,7 @@
 #include "../general/drawable.h"
 #include "../accelerator/accelerator.h"
 
-class GLWidget : public QOpenGLWidget, public Accelerator{
+class AcceleratorWidgetGL : public QOpenGLWidget, public Accelerator{
 	private:
 		virtual void initializeGL(void) override;
 		virtual void resizeGL(int width, int height) override;
@@ -18,7 +18,9 @@ class GLWidget : public QOpenGLWidget, public Accelerator{
 		virtual void mousePressEvent(QMouseEvent* event) override;
 		virtual void mouseMoveEvent(QMouseEvent* event)  override;
 		virtual void timerEvent(QTimerEvent*) override;
+
 		void pause(void);
+		void quit(void);
 
 		QPoint lastMousePosition; // for remembering mouse position
 
@@ -27,6 +29,8 @@ class GLWidget : public QOpenGLWidget, public Accelerator{
 
 		void increase_speed(void){ timestep *= sqrt(2); }
 		void decrease_speed(void){ timestep /= sqrt(2); }
+
+		QWidget* wdg = new QWidget;
 
 		// viewpoint
 		OpenGLView view;
@@ -42,6 +46,6 @@ class GLWidget : public QOpenGLWidget, public Accelerator{
 		int timerId;
 		QTime stopwatch;
 	public:
-		GLWidget(QWidget* parent, Vector3D origin) : QOpenGLWidget(parent), Accelerator(&view, origin){ setMouseTracking(true); }
-		virtual ~GLWidget(){}
+		AcceleratorWidgetGL(QWidget* parent, Vector3D origin) : QOpenGLWidget(parent), Accelerator(&view, origin){ setMouseTracking(true); }
+		virtual ~AcceleratorWidgetGL(){}
 };

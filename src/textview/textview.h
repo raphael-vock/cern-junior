@@ -4,6 +4,7 @@
 
 #include "../accelerator/accelerator.h"
 #include "../physics/beam.h"
+#include "../scatterplot/scatterplot.h"
 
 class TextView : public Canvas{
 	private:
@@ -16,6 +17,7 @@ class TextView : public Canvas{
 		virtual void draw(const Box &to_draw) override;
 		virtual void draw(const Particle &to_draw) override;
 		virtual void draw(const Beam &to_draw) override;
+		/* virtual void draw(const ScatterPlot &to_draw) override; */
 		virtual void draw(const Element &to_draw) override;
 		virtual void draw(const Accelerator &to_draw) override;
 };

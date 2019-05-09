@@ -6,7 +6,7 @@ CONFIG -= \
 CONFIG += \
 	c++11 \
 
-TARGET = graphical_app
+TARGET = qt_gl_view
 
 INCLUDEPATH += \
 	../general \
@@ -26,12 +26,12 @@ PRE_TARGETDEPS +=\
 
 SOURCES += \
 	main_qt_gl.cpp \
-	glwidget.cpp \
+	acceleratorwidgetgl.cpp \
 	glsphere.cpp \
 	opengl_view.cpp
 
 HEADERS += \
-	glwidget.h \
+	acceleratorwidgetgl.h \
 	vertex_shader.h \
 	opengl_view.h \
 	glsphere.h \

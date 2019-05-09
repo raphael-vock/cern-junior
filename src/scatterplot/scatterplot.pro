@@ -4,11 +4,9 @@ CONFIG = staticlib c++11
 
 INCLUDEPATH += \
 	../general \
-	../accelerator \
 
 SOURCES += \
-	textview.cpp \
+	scatterplot.cpp \
 
 HEADERS += \
-	textview.h \
-	acceleratorwidgetconsole.h \
+	scatterplot.h \

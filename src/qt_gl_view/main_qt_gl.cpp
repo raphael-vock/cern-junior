@@ -5,12 +5,12 @@
 
 #include <unistd.h> // temporary
 
-#include "glwidget.h"
+#include "acceleratorwidgetgl.h"
 
 int main(int argc, char* argv[]){
 	QApplication a(argc, argv);
 
-	GLWidget w(nullptr, Vector3D(3,2,0));
+	AcceleratorWidgetGL w(nullptr, Vector3D(3,2,0));
 
 	const double r(0.5);
 	const double k(1.0);

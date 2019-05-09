@@ -1,15 +1,20 @@
 #include <QKeyEvent>
 #include <QTimerEvent>
 #include <QMatrix4x4>
-#include "glwidget.h"
 
-#include <unistd.h> // temporary
+#include "acceleratorwidgetgl.h"
 
-void GLWidget::initializeGL(){
+void AcceleratorWidgetGL::initializeGL(void){
 	view.init();
+	setWindowTitle("CERN Junior");
+	wdg->show();
 }
 
-void GLWidget::timerEvent(QTimerEvent* event){
+void AcceleratorWidgetGL::quit(void){
+	quit();
+}
+
+void AcceleratorWidgetGL::timerEvent(QTimerEvent* event){
 	/* Q_UNUSED(event); */
 	/* double dt(time_factor * stopwatch.restart() / 1000.0); */
 	double dt(timestep/simcst::DEPTH_FACTOR);
@@ -17,7 +22,7 @@ void GLWidget::timerEvent(QTimerEvent* event){
 	update();
 }
 
-void GLWidget::resizeGL(int width, int height){
+void AcceleratorWidgetGL::resizeGL(int width, int height){
 	glViewport(0.0, 0.0, width, height);// draw on entire screen
 
 	QMatrix4x4 matrix;
@@ -25,14 +30,14 @@ void GLWidget::resizeGL(int width, int height){
 	view.setProjection(matrix);
 }
 
-void GLWidget::paintGL(void){
+void AcceleratorWidgetGL::paintGL(void){
 	glClearColor(1.0, 1.0, 1.0, 1.0); // white background color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	update_pov_matrix();
 	draw();
 }
 
-void GLWidget::update_pov_matrix(void){
+void AcceleratorWidgetGL::update_pov_matrix(void){
 	if(pov_mode != FREE_POV){
 		if(particles.empty()){
 			view.initializePosition();
@@ -55,7 +60,7 @@ void GLWidget::update_pov_matrix(void){
 	}
 }
 
-void GLWidget::update_free_pov(QKeyEvent* event){
+void AcceleratorWidgetGL::update_free_pov(QKeyEvent* event){
 	const double small_angle(event->modifiers() & Qt::ShiftModifier ? 5 : 2);
 	const double small_increment(event->modifiers() & Qt::ShiftModifier ? 0.5 : 0.2);
 
@@ -73,7 +78,6 @@ void GLWidget::update_free_pov(QKeyEvent* event){
 			view.rotate(small_angle, +1.0, 0.0, 0.0);
 			break;
 		case Qt::Key_W:
-			// Close on Ctrl-W (Windows/Linux) or Cmd-W (Mac):
 			if(not(event->modifiers() & Qt::ControlModifier)){
 				view.translate(0.0, 0.0, small_increment);
 			}
@@ -96,7 +100,7 @@ void GLWidget::update_free_pov(QKeyEvent* event){
 	}
 }
 
-void GLWidget::keyPressEvent(QKeyEvent* event){
+void AcceleratorWidgetGL::keyPressEvent(QKeyEvent* event){
 	if(pov_mode == FREE_POV){
 		update_free_pov(event);
 	}
@@ -104,6 +108,7 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 	switch(event->key()){
 		case Qt::Key_W:
 			if(event->modifiers() & Qt::ControlModifier){
+				// Close on Ctrl-W (Windows/Linux) or Cmd-W (Mac):
 				close();
 			}else{
 				++ pov_particle;
@@ -144,13 +149,13 @@ void GLWidget::keyPressEvent(QKeyEvent* event){
 	update();
 }
 
-void GLWidget::mousePressEvent(QMouseEvent* event){
+void AcceleratorWidgetGL::mousePressEvent(QMouseEvent* event){
 	if(pov_mode != FREE_POV) return;
 
 	lastMousePosition = event->pos();
 }
 
-void GLWidget::mouseMoveEvent(QMouseEvent* event){
+void AcceleratorWidgetGL::mouseMoveEvent(QMouseEvent* event){
 	if(pov_mode != FREE_POV) return;
 
 	if(event->buttons() & Qt::LeftButton){
@@ -165,7 +170,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event){
 	}
 }
 
-void GLWidget::pause(void){
+void AcceleratorWidgetGL::pause(void){
 	if(timerId == 0){
 		timerId = startTimer(20);
 		stopwatch.restart();
