@@ -54,3 +54,4 @@ src/graphical_app/graphical_app
 *.tmp
 src/scatterplot/Makefile
 src/scatterplot/Makefile
+src/scatterplot/Makefile
