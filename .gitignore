@@ -55,3 +55,4 @@ src/graphical_app/graphical_app
 src/scatterplot/Makefile
 src/scatterplot/Makefile
 src/scatterplot/Makefile
+src/qt_gl_view/Makefile
