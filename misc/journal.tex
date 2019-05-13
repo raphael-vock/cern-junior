@@ -2,6 +2,7 @@
 \usepackage[top=2cm, bottom=2cm, left=1.5cm, right=1.5cm]{geometry}
 \usepackage[francais]{babel}
 \usepackage{array}
+\usepackage[T1]{fontenc}
 
 \usepackage[sf]{titlesec}
 \renewcommand{\familydefault}{\sfdefault}
@@ -19,44 +20,39 @@
 \begin{document}
 \section{Progression} 
 
-Format: [fait/à faire] TACHE	Durée (en minutes; remplacer les ??)
-
-Vous pouvez ajouter vos propres tâches si vous le jugez utile
-(p.ex. décomposition plus fine).
-
 \begin{itemize}
+\item Tâches à effectuer: 
 \begin{todolist}
-	\item[\done] créer le JOURNAL
-	\item[\done] lire complètement le descriptif général 
-	\item[\done] s'inscrire en binôme 
+	\item[\done] Créer le JOURNAL
+	\item[\done] Lire complètement le descriptif général 
+	\item[\done] S'inscrire en binôme 
 	\item[\done] Makefile  
 	\item[\done] Vecteur finie (pleinement opérationnelle et testée)
-	\item[\done] fichier REPONSES
+	\item[\done] Fichier REPONSES
 	\item[\done] Oscillateur
-	\item[\done] intégrateur d'Euler-Cromer
+	\item[\done] Intégrateur d'Euler-Cromer
 	\item[\done] Pendule
 	\item[\done] Ressort
 	\item[\done] Systeme
-	\item[\done] exerciceP10
-	\item[\done] graphisme: cadre général 
-	\item[\done] graphisme: Pendule
+	\item[\done] ExerciceP10
+	\item[\done] Graphisme: cadre général 
+	\item[\done] Graphisme: Pendule
 	\item[\done] OscillateurCouple 
 	\item[\done] PenduleDouble
-	\item[\done] espace des phases
-	\item[\done] integrateur Newmark
-	\item[\done] fichier CONCEPTION
-	\item[\done] fichier README
-	\item[\done] fichier NOMS
+	\item[\done] Espace des phases
+	\item[\done] Integrateur Newmark
+	\item[\done] Fichier CONCEPTION
+	\item[\done] Fichier README
+	\item[\done] Fichier NOMS
 \end{todolist}
 \end{itemize}
-
 
 \rule{\textwidth}{0.4pt}
 
 \section{Suivi:}
 
 \subsection{Semaine 1:}
-\begin{itemize}{$\bullet$}
+\begin{itemize}
 	\item Création du module Vector3D
 	\item Testé et quasiment finalisé
 	\item Mise en place du répertoire GitHub 
@@ -65,56 +61,89 @@ Vous pouvez ajouter vos propres tâches si vous le jugez utile
 \rule{\textwidth}{0.4pt}
 
 \subsection{Semaine 2:}
-Décision d'utiliser Qt plutôt que SDL.
+\begin{itemize}
+\item Mise en place de l'environnement QT et réalisation du tutoriel graphisme P12 
 
-*********
-Prise en main de l'environnement graphique, implémentation de plusieurs exemples simples (polygônes plans, cubes, sphères, sphères en mouvement).
+\item Prise en main plus poussée de l'environnement graphique, implémentation de plusieurs exemples simples (polygônes plans, cubes, sphères, sphères en mouvement).
 
-Création du répertoire qui sera, à terme, le répertoire du projet final.
-Résolution d'un bug très pénible dû à QMake sur Macintosh qui rendait la compilation de librairie impossible (ouf!).
+\item Création du répertoire Github qui sera, à terme, le répertoire du projet final.
 
-Création du module `physics' qui contenant la classe Particle.
+\item Résolution d'un bug très pénible dû à QMake sur Macintosh qui rendait la compilation de librairie impossible (ouf!).
 
-Conception d'une toute première (et fort rudimentaire) simulation physique en temps réel à sortie graphique: un simulateur de problème à $n$ corps (Calculs par somme direct, donc $\mathcal{O}(n^2)$. Devient très couteux à partir de $\sim$1000 particules.)
+\item Création du module `physics' qui contenant la classe Particle.
 
-Modification des opérateurs de calcul algébrique sur les vecteurs et surcharge des opérateurs d'affichage
-Ajout de la méthode rotate à la classe Vector3D
-Ajout de la méthode force magnétique à la classe Particule
-Création d'un fichier test pour la classe Particule, ce dernier écrit en sortie sur un fichier au format txt
+\item Conception d'une toute première (et fort rudimentaire) simulation physique en temps réel à sortie graphique: un simulateur de problème à $n$ corps (Calculs par somme direct, donc $\mathcal{O}(n^2)$. Devient très couteux à partir de $\sim$1000 particules.)
+
+\item Modification des opérateurs de calcul algébrique sur les vecteurs et surcharge des opérateurs d'affichage
+
+\item Ajout de la méthode rotate à la classe Vector3D
+\item Ajout de la méthode force magnétique à la classe Particule
+\item Création d'un fichier test pour la classe Particule, ce dernier écrit en sortie sur un fichier au format txt
+\end{itemize}
 
 \rule{\textwidth}{0.4pt}
 
 \subsection{Semaine 3:}
-Cela sort un peu du cadre du projet mais je décide d'essayer d'implémenter l'algorithme de Barnes-Hut pour accélérer les calculs des interactions gravitationnelles des particules. Celui-ci est en  $\mathcal{O}(n\log{}n)$ donc très intéressant si on a un grand nombre de particules en jeu.
+\begin{itemize}
+\item Cela sort un peu du cadre du projet mais je décide d'essayer d'implémenter l'algorithme de Barnes-Hut pour accélérer les calculs des interactions gravitationnelles des particules. Celui-ci est en  $\mathcal{O}(n\log{}n)$ donc très intéressant si on a un grand nombre de particules en jeu.
 
-R (quelques jours plus tard): Après avoir résolu un bug fort pénible, l'implémentation de Barnes-Hut est un succès. La simulation de problème à $n$ corps pour $10^4$ voire $10^5$ particules peut maintenant être exécutée aisément même sur un ordinateur peu puissant. Évidemment l'algorithme peut facilement être adapté pour le calcul de forces électromagnétique.
+\item Après avoir résolu un bug fort pénible, l'implémentation de Barnes-Hut est un succès. La simulation de problème à $n$ corps pour $10^4$ voire $10^5$ particules peut maintenant être exécutée aisément même sur un ordinateur peu puissant. Évidemment l'algorithme peut facilement être adapté pour le calcul de forces électromagnétique.
 
-Finalisation de la classe Particle et écriture d'un fichier test. Modification du fichier test des vecteurs, on préfère qu'il écrive en sortie sur une fenêtre terminal
+\item Finalisation de la classe Particle et écriture d'un fichier test. Modification du fichier test des vecteurs, on préfère qu'il écrive en sortie sur une fenêtre terminal
+\end{itemize}
 
 \rule{\textwidth}{0.4pt}
 
 \subsection{Semaine 4 :}
 
-Première implémentation des éléments, une classe abstraire représente les éléments en général, de cette classe héritent deux sous classes pour les éléments droits et courbes.
-Nous modifions par la suite notre conception des éléments afin d'éviter de la duplication de code, et par soucis de clarté. Premier fichier test pour la classe accélérateur, erroné
+\begin{itemize}
+\item Première implémentation des éléments, une classe abstraire représente les éléments en général, de cette classe héritent deux sous classes pour les éléments droits et courbes.
 
-Conception de la classe accélérateur correction du fichier test
+\item Nous modifions par la suite notre conception des éléments afin d'éviter une duplication de code. 
+
+\item Conception de la classe accélérateur et premier fichier test, erroné
+
+\item Correction du fichier test
+\end{itemize}
 
 \rule{\textwidth}{0.4pt}
 
 \subsection{Semaine 5 :}
 
+\begin{itemize}
+\item Complétion de la classe élément
+\item Premiers dessins de cylindres et sections de tore sur l'environnement QT
+\item Ajout d'un classe pour la gestion des couleurs afin d'alléger le code
+\end{itemize}
+
 \rule{\textwidth}{0.4pt}
 
 \subsection{Semaine 6 :}
+\begin{itemize}
+\item Finalisation des dessins de cylindres et sections de tore, adaptation des méthodes au cas de notre projet
+\item Affichage des premiers éléments
+\item Révision de la conception des méthodes afin de rendre plus naturelle et pratique la construction graphique des éléments.
+\item Gestion des exceptions
+\item Ajout de namespace pour une meilleure gestion des exceptions ainsi que des constantes physiques.
+\end{itemize}
 
 \rule{\textwidth}{0.4pt}
 
 \subsection{Semaine 7 :}
+\begin{itemize}
+\item Gestion des déplacements à la souris
+\item Ajout de la classe Faisceau
+\item Révision complète des anciennes classes pour implémenter les faisceaux 
+\end{itemize}
 
 \rule{\textwidth}{0.4pt}
 
 \subsection{Semaine 8 :}
+\begin{itemize}
+\item Révision de la classe Particule, ajout d'une classe Point Charge pour rendre le code plus léger et intuitif
+\item Ajout de la coordonnée curviligne de l'accélérateur (ainsi que propre à chaque élément)
+\item Utilisation de cette dernière pour la conception des faisceaux circulaires
+\end{itemize}
 
 \rule{\textwidth}{0.4pt}
 
@@ -123,10 +152,19 @@ Conception de la classe accélérateur correction du fichier test
 \rule{\textwidth}{0.4pt}
 
 \subsection{Semaine 10 :}
+\begin{itemize}
+\item Dernière révision de l'affichage graphique, rendu plus épuré
+\item Ajout de différents points de vue afin de mieux suivre l'évolution des particules, révision complète de la gestion des évènements clavier.
+\end{itemize}
 
 \rule{\textwidth}{0.4pt}
 
 \subsection{Semaine 11 :}
+
+\begin{itemize}
+\item Début de l'implémentation des interractions interparticulaires à l'aide de l'algorithme de Barnes-Hut implémenté en semaine 3. Test avec $7500$ particules. 
+\item Ajout du mode matrice affichant les boites de l'algotithme (touche `m')
+\end{itemize}
 
 \rule{\textwidth}{0.4pt}
 
