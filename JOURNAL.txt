@@ -6,10 +6,10 @@ Vous pouvez ajouter vos propres tâches si vous le jugez utile
 (p.ex. décomposition plus fine).
 
 [X] créer le JOURNAL                                    	 1
-[X] lire complètement le descriptif général                 	20 
+[X] lire complètement le descriptif général                 	20
 [X] s'inscrire en binôme                                      	1
 [ ] Makefile                                               	??
-[X] Vecteur finie (pleinement opérationnelle et testée) 	100	
+[X] Vecteur finie (pleinement opérationnelle et testée) 	100
 [ ] fichier REPONSES                                         	??
 [ ] Oscillateur                                            	??
 [ ] intégrateur d'Euler-Cromer                            	??

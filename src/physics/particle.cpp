@@ -1,4 +1,4 @@
-#include <iostream> // for cout 
+#include <iostream> // for cout
 #include <iomanip> // for setw
 #include <cmath> // for pow, asin
 
@@ -38,7 +38,7 @@ void Particle::scale(double lambda){
 }
 
 void Particle::receive_electromagnetic_force(const PointCharge &Q){
-	// TODO this must be for sufficiently large values of gamma 
+	// TODO this must be for sufficiently large values of gamma
 	if(this == &Q) return;
 
 	add_force(Q.electromagnetic_force(*this));
