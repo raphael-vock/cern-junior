@@ -76,7 +76,6 @@ L'implémentation du facteur gamma et de l'énergie dans la classe \T{Particle} 
 \subitem $\oplus$ Leur valeur serait calculée une et une seule fois, donc une même valeur ne serait jamais calculée deux fois inutilement.
 \subitem $\ominus$ Leur valeur devrait être calculée systématiquement à chaque mise-à-jour de l'instance. Donc eventuellement même si elle ne servira jamais.
 \subitem $\ominus$ Rajouter des attributs, c'est augmenter le poids des instances.
-\subitem $\ominus$ Conceptuellement c'est un non sens ; voir ci-dessous.
 
 \item \textbf{Sous forme de méthode:}
 \subitem $\oplus$ La masse et la vitesse sont des grandeurs \textit{essentielles} d'une particule tandis que le gamma et l'énergie en découlent via des fonctions mathématiques. Conceptuellement, les attributs d'une classe devraient être reservées aux variables \textit{libres} et les méthodes aux variables \textit{liées}.
@@ -86,7 +85,7 @@ L'implémentation du facteur gamma et de l'énergie dans la classe \T{Particle} 
 \subitem $\ominus$ \ldots quitte à éventuellement effectuer plusieurs fois le même calcul.
 \end{itemize}
 \bigskip
-Certes, il s'agit de calculs simples avec des \double\ donc les arguments de complexité et de poids seront probablement négligeables à l'échelle de l'executable final. Moyennant le pour et le contre, et en se focalisant surtout sur la clarté conceptuelle, \textbf{nous avons opté pour des méthodes.}
+\textit{A priori} ses grandeurs seront accédés plusieurs fois par mise à jour de l'accélérateur. C'est pourquoi nous avons décidé de les implémenter sous forme d'attribut.
 
 \section{Premiers éléments}
 
@@ -94,84 +93,40 @@ Certes, il s'agit de calculs simples avec des \double\ donc les arguments de com
 \noindent \textbf{(P6.1)} Dans la hiérarchie des classes représentant les divers éléments de l'accélérateur, nous avons mis comme nœud une classe abstraite nommée \T{Element} dont les attributs représentent les paramètres purement géométriques (points d'entrée et de sortie, rayon, paramètre de courbure) et relationnels (l'addresse de l'élément suivant, une liste des addresses des \T{Particle} contenues dans l'instance) des éléments. Nous considérons les éléments comme \textit{a priori} courbes, en sachant qu'on peut prendre une courbure nulle et l'instance dégénère en un élément droit. Nous définissons entre autres une méthode virtuelle pure \T{apply\_lorentz\_force(Particle \&p, double dt)} pour mettre en œuvre les intéractions élément-particule ; son comportement est délégué aux sous-classes suivantes:
 
 \begin{itemize}
-\item \T{Electric\_element} est une sous-classe d'\T{Element} avec un attribut supplémentaire, un champ de électrique \T{E} (dont nous discuterons de la représentation au passage suivant). Ainsi nous spécalisons la méthode \T{apply\_lorentz\_force(Particle \&p)} en évaluant le champ vectoriel \T{E} au point où se trouve $\T{p}$ et en incrémentant la force résultante de \T{p} via la relation $\boldsymbol{\mathrm{F}}=q\boldsymbol{\mathrm{E}}$.
+\item \T{Electric\_element} est une sous-classe d'\T{Element} avec un attribut supplémentaire, un champ de électrique \T{E} (dont nous discuterons de la représentation au passage suivant). Ainsi nous spécialisons la méthode \T{apply\_lorentz\_force(Particle \&p)} en évaluant le champ vectoriel \T{E} au point où se trouve $\T{p}$ et en incrémentant la force résultante de \T{p} via la relation $\boldsymbol{\mathrm{F}}=q\boldsymbol{\mathrm{E}}$.
 
-\item \T{Magnetic\_element}, quant à elle, a comme attribut supplémentaire un champ magnétique \T{B}. Dans ce cas nous spécalisons \T{add\_lorentz\_force(Particle \&p)} en évaluant $\T{B}$ en $\T{p}$ puis en appliquant la méthode relativiste $$\T{Particle::add\_magnetic\_force(const Vector3D \&B, double dt)}$$ déclarée auparavant dans \T{particle.h}.
+\item \T{Magnetic\_element}, quant à elle, a comme attribut supplémentaire un champ magnétique \T{B}. Dans ce cas nous spécialisons \T{add\_lorentz\_force(Particle \&p)} en évaluant $\T{B}$ en $\T{p}$ puis en appliquant la méthode relativiste $$\T{Particle::add\_magnetic\_force(const Vector3D \&B, double dt)}$$ déclarée auparavant dans \T{particle.h}.
 
 \end{itemize}
 
 \ \linebreak
-\textbf{(P6.2)} \begin{comment} Comment représenter les champs électiques/magnétiques \T{B} et \T{E} ?
+\textbf{(P6.2)} Comment représenter les champs magnétiques ?
 
-La solution évidente est par des méthodes virtuelles pures, que l'on spécialise pour chaque sous-classe concrète d'\T{Element} en fonction de leur nature. Mais supposons que nous ayions envie de représenter les champs dans la sortie graphique, par exemple avec des lignes de champ. On rajouterait alors aux méthodes dessin des sous-classes d'\T{Element} le code nécessaire au traçage des lignes de champs en faisant référence aux méthodes \T{B} ou \T{E}.
-
-Cette approche \textit{ad hoc} et très peu généralisable. Si l'on souhaite en plus visualiser d'autres champs, pas nécessairement liés aux éléments, par exemple le champ magnétique généré par une particule, on serait alors contraint à copier-coller le code lié à la représentation des lignes de champs. Ce qu'on a envie de faire, c'est déléguer la partie liée au dessin des champs de force à une fonction externe qui prend en argument un champ vectoriel et se charge de le dessiner. Mais dans le scénario que nous décrivons, les champs vectoriels sont des méthodes, donc ne peuvent pas être passés en argument !
-
-Force est de constater que les champs vectoriels \T{B} et \T{E}, bien qu'ils aient la vocation de se comporter comme des fonctions, apparaissent conceptuellement comme des attributs : ils contiennent \textit{de l'information qui caractérise l'instance}. Par ailleurs ce sont des \textit{objets fonctionnels purs} : en les évaluant en un point on ne modifie pas l'instance. On a donc très envie de les représenter comme des \textit{attributs de type fonctionnel} et non comme des méthodes.
-
-Ceci est possible grâce au paradigme fonctionnel que propose la norme C++11, notamment avec \T{std::function} et la notation lambda. Pour rappel :
-
-\begin{itemize}
-\item Le template \T{std::function} (fourni par l'en-tête \T{<functional>}) permet de définir des variables fonctionnelles dites ``de première classe'', c'est-à-dire qu'on peut manier comme des variables quelconques.
-
-\item La notation lambda permet d'instancier des fonctions de première classe génériques, \textit{inline}, et avec la possibilité ``d'attraper'' des variables dans la portée.
-\end{itemize}
-
-Ensemble, ils nous procurent un puissant moyen de représenter des fonctions pures de type $\T{Vector3D} \mapsto \T{Vector3D}$ :
-\begin{align*}
-	&\T{\#include <functional>}\\
-	&\T{// déclare une classe pour représenter les fonctions vectorielles : }\\
-	&\T{typedef std::function<Vector3D(const Vector3D \&)> vector\_function;}\\
-	&\T{const Vector3D X\_0(1.0, 2.0, 0.0);}\\
-	&\T{// initialise une fonction vectorielle constante via un lambda : }\\
-	&\T{vector\_function X = [](Vector3D \&)\{ return X\_0; \}}
-\end{align*}
-
-\noindent Pour représenter l'\textit{objet} correspondant au champ vectoriel nous voulons en plus qu'il ait une méthode permettant de le dessiner. On va donc encapsuler un \T{vector\_function} dans une sous-classe de la class abstraite \T{Drawable}. Puisque le C++ donne la possibilité de surcharger l'opérateur d'appel, on peut conserver son interface ``fonctionnelle'' malgré l'encapsulation :
-\begin{align*}
-	&\T{class VectorField : public Drawable \{}\\
-	&\indent \T{private:}\\
-	& \indent \indent \T{vector\_function F;}\\
-	&\indent \T{public:}\\
-	& \indent \indent \T{VectorField(vector\_function f) : F(f)\{\}}\\
-	& \indent \indent \T{// surcharge de l'opérateur d'appel :}\\
-	& \indent \indent \T{Vector3D operator()(const Vector3D \&v)\ const\{ return F(v); \} }\\
-	& \indent \indent \T{// prototype de la méthode pour dessiner les lignes de champ :}\\
-	& \indent \indent \T{virtual void draw(void) override;}\\
-	& \T{\};}
-\end{align*}
-
-\indent On peut enfin définir les sous-classes \T{Electric\_field} et \T{Magnetic\_field} en rajoutant un attribut de type \T{VectorField} correspondant au champ électrique et magnétique respectivement. Munis de cette représentation, l'implémentation des sous-classes spécifiques d'\T{Element} devient très concise. À l'encontre de la première approche, nous n'avons pas à redéfinir de méthode virtuelle ; il suffit d'ajouter en attribut les éventuels paramètres spécifiques de l'élément puis d'écrire le calcul du champ électrique (resp. magnétique) dans le corps d'un lambda représentant le champ vectoriel que l'on passe en argument (parmi d'autres) au constructeur de \T{Electric\_element} (resp. \T{Magnetic\_element}).\\ \indent Illustrons ceci par la définition simplifiée de la classe représentant les dipôles (qui, rappelons-le, ont un champ magnétique vertical constant, d'amplitude donnée par un paramètre) :
-\begin{align*}
-	&\T{class Dipole : public Magnetic\_field \{}\\
-	&\indent \T{private:}\\
-	& \indent \indent \T{double B\_0; // amplitude (signée) du champ constant}\\
-	&\indent \T{public:}\\
-	& \indent \indent \T{Dipole(parametres\_generiques, double amplitude)} :\\
-	& \indent \indent \T{Magnetic\_element( // constructeur de la super-classe}\\
-	& \indent \indent \indent \T{attributs\_generiques(parametres\_generiques),}\\
-	& \indent \indent \indent \T{// affectation du champ via un lambda :}\\
-	& \indent \indent \indent \T{B([](Vector3D \&)\{ return Vector3D(0.0, 0.0, amplitude); \} }\\
-	& \indent \indent \T{),}\\
-	& \indent \indent \T{B\_0(amplitude)\{\}}\\
-	& \T{\};}
-\end{align*}
-\end{comment}
-Nous représentons les champs magnétiques des éléments par une méthode virtuelle pure qui leur est propre \T{apply\_lorentz\_force()}, cette méthode permet de rendre la classe \T{Element} abstraite d'une part, d'autre part cette représentation est plus pratique qu'un attribut. 
+Comme expliqué ci-dessus, les champs magnétiques sont des méthodes virtuelles pures qui prennent en argument un point de l'espace, et retournent la valeur du champ vectoriel en se point.
 
 \ \linebreak
 \ \linebreak
-\textbf{(P6.3)} Afin d'alléger par la suite le corps de certaines méthodes, \textbf{nous avons implémenté le calcul du centre de courbure} avec la méthode \T{Element::center(void)}. Celui-ci n'a de sens que si la courbure est non nulle (i.e.'\ ' l'élément est courbe) donc une exception est lancée dans le cas contraire.
+\textbf{(P6.3)} Afin d'alléger par la suite le corps de certaines méthodes, \textbf{nous avons implémenté le calcul du centre de courbure} avec la méthode \T{Element::center(void)}. Celui-ci n'a de sens que si la courbure est non nulle (i.e. l'élément est courbe) donc une exception est lancée dans le cas contraire.
+
+\ \linebreak
+\textbf{(P6.4)} La relation d'appartenance entre une particule et l'élément dans lequel elle se trouve se manifeste par un attribut \T{Element* current\_element}. Ceci implique directement qu'une particule ne peut appartenir qu'à un et un seul élément.
 
 \section{La classe \T{Accelerator}}
 
-\subsection{Conception}
+\subsection{Généralités}
+\noindent \textbf{(P7.1)} Un accélérateur \textit{est} une collection d'éléments donc nous faisons hériter la classe \T{Accelerator} de \T{std::vector<std::unique\_ptr<Element>>}. Nous passons par des \T{unique\_ptr} pour obtenir un comportement polymorphe des éléments. Par ailleurs, cette héritage est \T{private} pour rester en accord avec la norme C++.
+
+Énumérons les principaux attributs et méthodes de cette classe :
+\begin{itemize}
+	\item L'attribut \T{std::vector<std::unique\_ptr<Particle>> particles} stockera les particules contenues dans l'accélérateur. Nous utilisons à nouveau des \T{unique\_ptr} pour pouvoir avoir un comportement polymorphe si le besoin se présente.
+	\item L'attribut \T{const Vector3D origin} définit un point de repère sur l'accélérateur et servira à faciliter la construction de l'accélérateur.
+	\item L'attribut \T{double length} décrit la longueur géométrique de l'accélérateur. Celui-ci aidera à définir un système de coordonnées curviligne global sur la longeur de l'accélérateur.
+	\item La méthode \T{void addParticle(const \&Particle)} permet d'insérer une particule dans l'accélérateur \textit{tout en conservant la nature de l'instance s'il s'agit d'une sous-classe.}
+	\item Pour chaque sous-classe concrète \T{E} de \T{Element} nous avons une méthode \T{addE} permettant d'ajouter une instance de cette sous-classe à l'accélérateur. Cette méthode prend en arguments un point de l'espace ainsi que les divers paramètres géométriques et physiques de l'élément en question. L'unique point correspond au point de sortie de l'élément ; le point d'entrée est déduit comme étant le point de sortie du précédent (ou sinon \T{origin} s'il n'y en a pas).
+\end{itemize}
 
 \ \linebreak
-\noindent \textbf{(P7.1)} La classe \T{Accelerator} \emph{est} par héritage \T{private} une collection de pointeurs sur des \T{Element}, c'est d'ailleurs ce schéma que nous adoptons pour la conception de la majorité de nos classes. Un accélérateur contient un \T{shared\_ptr} sur un timer, faisant office de chronomètre commun à tous les éléments composant l'accélérateur, ce qui se revèle utile pour les éléments dont le champ dépend du temps comme la \T{RadiofrequencyCavity}. Enfin pour sa construction un accélérateur contient une origne, vue comme un \T{Vector3D}, ainsi qu'une longueur (0 par défaut). Concrètement les différents éléments de l'accélérateur sont `soudés' par la méthode \T{weld()} qui lie chaque élément à son succésseur et prédecesseur.
-
-\ \linebreak
-\noindent \textbf{(P7.2)} Nous avons supprimé le constructeur de copie par défaut ainsi que l'opérateur d'afféctation \T{=} de la classe \T{Accelerator} pour garantir l'intégrité des ses données. Cette classe contient en effet une liste de pointeurs intelligents sur des éléments \T{vector<unique\_ptr><Element> >}. Bien que nous puissions effectuer une telle copie en faisant une copie profonde des éléments de la liste, nous considérons que cette solution a peu de sens et nous n'en aurions quand bien même pas l'utilité. 
+\noindent \textbf{(P7.2)} Nous avons supprimé le constructeur de copie par défaut ainsi que l'opérateur d'afféctation \T{=} de la classe \T{Accelerator} pour garantir l'intégrité des ses données. Cette classe contient en effet une liste de pointeurs intelligents sur des éléments \T{vector<unique\_ptr><Element> >}. Bien que nous puissions effectuer une telle copie en faisant une copie profonde des éléments de la liste, nous considérons que cette solution a peu de sens et nous n'en aurions quand bien même pas l'utilité.
 
 \subsection{Révision des éléments}
 

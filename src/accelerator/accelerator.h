@@ -52,8 +52,6 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 
 		virtual void draw(void) override{ canvas->draw(*this); }
 
-		void stitch(void);
-
 		std::ostream& print(std::ostream& output, bool print_elements = false) const;
 
 		void evolve(double dt);
