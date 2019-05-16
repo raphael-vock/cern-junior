@@ -8,8 +8,8 @@ Beam::Beam(Accelerator& machine, const Particle &p, uint number_of_particles, do
 	N(number_of_particles / my_lambda),
 	lambda(my_lambda),
 	habitat(&machine)
-{ 
-	if(my_lambda <= simcst::ZERO_LAMBDA) throw excptn::ZERO_LAMBDA; 
+{
+	if(my_lambda <= simcst::ZERO_LAMBDA) throw excptn::ZERO_LAMBDA;
 }
 
 void Beam::update(void){
@@ -64,11 +64,11 @@ double Beam::radial_emittance(void) const{
 
 std::array<double,3> Beam::radial_ellipse_coefficients(void) const{
 	// TODO
-} 
+}
 
 std::array<double,3> Beam::vertical_ellipse_coefficients(void) const{
 	// TODO
-} 
+}
 
 void Beam::evolve(double dt){
 	// TODO

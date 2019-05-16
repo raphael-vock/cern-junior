@@ -76,7 +76,7 @@ ostream& Particle::print(ostream& output) const{
 
 ostream& operator<<(ostream& output, const Particle &particle){
 	return particle.print(output);
-}      
+}
 
 void Particle::move(double dt){
 	v += dt/(gamma*mass*phcst::C_USI) * F;
