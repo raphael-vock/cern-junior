@@ -38,10 +38,10 @@ class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_
 		void evolve(double dt);
 
 		std::ostream& print(std::ostream& output) const;
-}; 
+};
 
 class CircularBeam : public Beam{
 	public:
 		using Beam::Beam;
 		virtual void activate(void) override;
-}; 
+};

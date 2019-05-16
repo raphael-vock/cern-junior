@@ -11,7 +11,7 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 		std::vector<std::unique_ptr<Particle>> particles;
 		std::vector<Beam*> beams;
 
-		const Vector3D origin;
+		Vector3D origin;
 
 		double length = 0.0; // geometric length of the accelerator, i.e. length of the ideal orbit
 	public:
@@ -49,6 +49,8 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 		void addQuadrupole(double radius, double b){ addQuadrupole(radius, b, origin); }
 		void addRadiofrequencyCavity(double radius, double E_0, double omega, double kappa, double phi){ addRadiofrequencyCavity(radius, E_0, omega, kappa, phi, origin); }
 		void addFodoCell(double radius, double b, double L){ addFodoCell(radius, b, L, origin); }
+
+		void buildPolygon(Vector3D center, uint n, double major_radius, double minor_radius, double b, double B_0);
 
 		virtual void draw(void) override{ canvas->draw(*this); }
 

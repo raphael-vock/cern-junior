@@ -7,7 +7,6 @@
 void AcceleratorWidgetGL::initializeGL(void){
 	view.init();
 	setWindowTitle("CERN Junior");
-	wdg->show();
 }
 
 void AcceleratorWidgetGL::quit(void){

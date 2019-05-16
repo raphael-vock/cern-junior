@@ -16,7 +16,7 @@ class AcceleratorWidgetGL : public QOpenGLWidget, public Accelerator{
 		// Event handling
 		virtual void keyPressEvent(QKeyEvent* event) override;
 		virtual void mousePressEvent(QMouseEvent* event) override;
-		virtual void mouseMoveEvent(QMouseEvent* event)  override;
+		virtual void mouseMoveEvent(QMouseEvent* event) override;
 		virtual void timerEvent(QTimerEvent*) override;
 
 		void pause(void);
@@ -29,8 +29,6 @@ class AcceleratorWidgetGL : public QOpenGLWidget, public Accelerator{
 
 		void increase_speed(void){ timestep *= sqrt(2); }
 		void decrease_speed(void){ timestep /= sqrt(2); }
-
-		QWidget* wdg = new QWidget;
 
 		// viewpoint
 		OpenGLView view;

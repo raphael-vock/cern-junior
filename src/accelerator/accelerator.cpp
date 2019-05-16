@@ -85,6 +85,21 @@ void Accelerator::addFodoCell(double radius, double b, double L, const Vector3D 
 	catch(std::exception){ throw excptn::ELEMENT_DEGENERATE_GEOMETRY; }
 }
 
+void Accelerator::buildPolygon(Vector3D center, uint n, double major_radius, double minor_radius, double b, double B_0){
+	const double theta(2*M_PI/n);
+	const double alpha(theta / 6.0);
+
+	const double L(major_radius * 2.0 * sin(theta/2.0));
+
+	origin = center + major_radius*Vector3D(cos(alpha), sin(alpha), 0);
+
+	for(int k(1); k <= n; ++k){
+		addFodoCell(minor_radius, b, L/4.0, center + major_radius * Vector3D(cos(theta*k - alpha), sin(theta*k - alpha), 0));
+
+		addDipole(minor_radius, -1.0/major_radius, B_0, center + major_radius * Vector3D(cos(theta*k + alpha), sin(theta*k + alpha), 0));
+	}
+}
+
 void Accelerator::addRadiofrequencyCavity(double radius, double E_0, double omega, double kappa, double phi, const Vector3D &end){
 	push_back(std::unique_ptr<Element>(new RadiofrequencyCavity(canvas, empty() ? origin : back()->getExit_point(), end, radius, time, E_0, omega, kappa, phi)));
 	length += back()->getLength();

@@ -12,12 +12,23 @@
 \usepackage[french]{babel}
 
 \title{Projet: fichier réponses}
-\author{Raphaël Vock, Lomàn Vezin}
+\author{Lomàn Vezin \\ Raphaël Vock}
 
 \newcommand{\T}[1]{\texttt{#1}}
 \newcommand{\V}[0]{\texttt{Vector3D}}
 \newcommand{\double}{\texttt{double}}
 
+\usepackage{hyperref}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\DisableLigatures[>]{encoding = T1}
+
+\def\O{\mathcal{O}}
+\def\epsilon{\varepsilon}
+
+\renewcommand{\familydefault}{\sfdefault}
 \begin{document}
 \maketitle
 \section{La classe \T{Vector3D}}
@@ -26,7 +37,7 @@
 
 \begin{itemize}
 
-\item \T{getCoords()}  est une méthode qui retourne les coordonnées d'une instance via un \T{std::array<double,3>}.
+\item \T{getCoords()} est une méthode qui retourne les coordonnées d'une instance via un \T{std::array<double,3>}.
 
 \item \T{norm()} et \T{norm2()} retournent la norme euclidienne (resp. norme euclidienne au carré).
 
@@ -123,40 +134,102 @@ Comme expliqué ci-dessus, les champs magnétiques sont des méthodes virtuelles
 	\item L'attribut \T{double length} décrit la longueur géométrique de l'accélérateur. Celui-ci aidera à définir un système de coordonnées curviligne global sur la longeur de l'accélérateur.
 	\item La méthode \T{void addParticle(const \&Particle)} permet d'insérer une particule dans l'accélérateur \textit{tout en conservant la nature de l'instance s'il s'agit d'une sous-classe.}
 	\item Pour chaque sous-classe concrète \T{E} de \T{Element} nous avons une méthode \T{addE} permettant d'ajouter une instance de cette sous-classe à l'accélérateur. Cette méthode prend en arguments un point de l'espace ainsi que les divers paramètres géométriques et physiques de l'élément en question. L'unique point correspond au point de sortie de l'élément ; le point d'entrée est déduit comme étant le point de sortie du précédent (ou sinon \T{origin} s'il n'y en a pas).
+	\item La méthode \T{weld} permet de ``souder'' les éléments de l'accélérateur entre eux, i.e. d'affecter les valeurs de \T{next\_element} et \T{previous\_element}.
+
+	\item La méthode \T{void evolve(double dt)} provoque la mise à jour de l'accélérateur en appelant la mise à jour de ses composante.
 \end{itemize}
 
 \ \linebreak
-\noindent \textbf{(P7.2)} Nous avons supprimé le constructeur de copie par défaut ainsi que l'opérateur d'afféctation \T{=} de la classe \T{Accelerator} pour garantir l'intégrité des ses données. Cette classe contient en effet une liste de pointeurs intelligents sur des éléments \T{vector<unique\_ptr><Element> >}. Bien que nous puissions effectuer une telle copie en faisant une copie profonde des éléments de la liste, nous considérons que cette solution a peu de sens et nous n'en aurions quand bien même pas l'utilité.
+\noindent \textbf{(P7.2)} Nous supprimons le constructeur de copie par défaut ainsi que l'opérateur d'affectation \T{=} de la classe \T{Accelerator} afin de garantir l'intégrité des ses données. Ils seraient de toute façon implicitement supprimés du fait de l'existence d'attributs de type \T{unique\_ptr}, mais nous souhaitons affirmer leur suppression indépendamment des choix d'implémentation.
 
 \subsection{Révision des éléments}
 
-\ \linebreak
-\noindent \textbf{(P8.1)} La méthode \T{has\_collided()} de la classe \T{Element} doit se comporter de façon différente si elle est appelée sur un élément courbe ou sur un élément droit. Dans une première approche il s'agirait donc en terme de programation orientée objet d'une méthode virtuelle. Toutefois afin d'éviter une duplication inutile du code et par soucis de conception, nous avons fais le choix de représenter les éléments droits comme des éléments courbe de courbure nulle, en remarquant que toutes les méthodes appliquées à ces éléments sont les mêmes que celles appliquées aux élements courbes lorsque la courbure tend vers 0.
+\noindent \textbf{(P8.1)} La méthode \T{has\_collided()} de la classe \T{Element} doit se comporter de façon différente si elle est appelée sur un élément courbe ou sur un élément droit. Dans une première approche il s'agirait donc en terme de programmation orientée objet d'une méthode virtuelle. Toutefois pour l'unité mathématique et conceptuelle nous regroupons ces deux cas en un seul.
 
 \ \linebreak
-\noindent \textbf{(P8.2)} Si la méthode \T{has\_collided()} était virtuelle, on s'attendrait à ce qu'ell soit virtuelle pure puisqu'on ne saurait la définir dans le cas d'un élément qui ne soit ni courbe si droit, faisant de la classe \T{Element} une classe abstraite. Ce n'est cependant pas le cas dans notre conception des éléments puisque nous voyons les éléments droits comme des élements de courbure nulle. La classe \T{Element} n'a pas besoin d'être abstraite.
+\noindent \textbf{(P8.2)} On s'attendrait ainsi que la classe \T{Element} soit abstraite.
 
 \section{Conception du système}
 
 \subsection{Objets dessinables}
 
 \ \linebreak
-\noindent \textbf{(P9.1)} La méthode \T{draw()} a un comportement différent selon le \T{Canvas} qu'elle doit dessiner, il s'agit donc d'une méthode virtuelle.
+\noindent \textbf{(P9.1)} La méthode \T{draw()} a un comportement différent selon la nature de l'instance. De plus, on ne saurait la définir dans le cas général. Il s'agit donc d'une méthode virtuelle pure.
 
 \ \linebreak
-\noindent \textbf{(P9.2)} La classe \T{Accelerator} est, par héritage privé, une collection d'éléments et possède une collection de \T{Particle} plus tard remplacées par des \T{Beam}, les faisceaux. On souhaite que la méthode \T{draw()} s'applique à chacun des éléments et chacune des particules selon les caractéristiques propres à l'instance. Nous avons donc besoin, dans un cadre de programation orientée objet, de \emph{polymorphisme} et plus précisément de résolution dynamique des liens. La classe \T{Accelerator} doit donc être une collection de pointeurs sur des \T{Element} et contenir une collection de pointeurs sur des \T{Beam}. 
+\noindent \textbf{(P9.2)} Pour obtenir dans les deux cas un comportement polymorphes, nous utilisons des listes hétérogènes à la fois de particules et d'éléments. Plus particulièrement, nous utilisons des \T{std::vector} de \T{std::vector}.
 
 \ \linebreak
-\noindent \textbf{(P9.3)} Nous devons à présent être vigilants vis à vis de la copie puisque notre classe contient des pointeurs. Une solution serait de redéfinir le constructeur de copie ainsi que l'opérateur d'affectation \T{=} en implémentant une copie \emph{profonde} et non de surface afin de garantir l'intégrité des données. Toutefois nous ne souhaitons pas copier d'accélerateur, ce qui aurait d'ailleurs peu d'utilité et de sens, nous supprimons simplement ce constructeur et l'opérateur \T{=} avec le mot réservé \T{delete}. L'utilisation de pointeurs nous force de plus à faire attention au destructeur de la classe. Puisque nous utilisons des pointeurs intelligents nous n'avons pas besoin de nous préocupper de la gestion de mémoire (\T{delete}) car celle ci s'effectue automatiquement. 
+\noindent \textbf{(P9.3)} Nous devons à présent être vigilants vis-à-vis du constructeur de copie et l'opérateur d'affectation, du fait que cette classe contient des pointeurs. Une solution serait de définir une copie profonde et non de surface. Toutefois la copie d'accélérateur n'est pas une fonctionnalité qu'on envisage dans le cadre du projet, donc nous contentons de supprimer ces derniers.
 
 \section{La classe \T{Beam}}
+\noindent \textbf{(P11.1)} Les attributs de \T{Beam} (faisceau) sont les suivants :
+\begin{itemize}
+	\item Un tableau dynamique de \T{unique\_ptr<unique\_ptr<Particle>>}. En effet, nous voyons les faisceaux non comme des listes particules, mais des listes de références vers des particules (et donc, par souci de polymorphisme, une liste de références vers des références de particules).
+	\item Un attribut \T{std::unique\_ptr<Particle>} correspondant à la \textit{particule modèle} du faisceau. De nouveau, nous utilisons un pointeur par souci de polymorphisme.
+	\item L'attribut \T{double lambda} correspondant au facteur de proportionnalité entre la particule modèle et les particules qui seront effectivement construites.
+	\item L'attribut \T{uint N} correspondant au nombre de particules qui seront construites dans l'accélérateur.
+	\item L'attribut \T{Accelerator* habitat} correspond à l'accélérateur dans lequel le faisceau évolue. Cet attribut est nécessaire car certaines méthodes dépendent intimement de la géométrie de l'accélérateur en question.
+	\item Les divers renseignements physiques (énergie, coefficients elliptiques) sont donnés sous forme de méthodes.
+\end{itemize}
 
-\subsection{Conception}
+\section{Interactions inter-particules}
+\subsection{Première approche}
+\noindent \textbf{(P13.1)} Étant donnée une collection de $n$ il y a $1+2+\cdots+n = n(n+1)/2$ interactions qui ont lieu. Ceci donne lieu donc à un un algorithme en $\O(n^2)$ dans les deux cas.
 
-\ \linebreak
-\noindent \textbf{(P11.1)} Un \T{Beam}, ou faisceau, est par héritage \T{private}, une collection de \T{Particle}. Ses attributs, constants, sont une référence sur la particule modèle du faisceau, le nombre de macroparticules crées \T{N}, le facteur $\lambda$ de ces macroparticules ainsi qu'un pointeur sur l'accélérateur dans lequel l'instance évolue. Puisque l'émittance, radiale et verticale, ainsi que les six coefficients des ellipses de phases et l'énergie moyenne du faisceau seront recalculés fréquemment nous avons décidé de les implementer comme méthodes. 
+\subsection{Meilleure voisins}
+\noindent \textbf{(P14.1)} Notons à nouveau $n$ le nombre de particules, et $k$ le nombre de cases. Si l'on suppose que les particules sont équi-réparties dans les cases, alors chaque case contient $n/k$ particules. Avec un même raisonnement que ci-dessus, la complexité temporelle du calcul d'évolution de chaque case est donc $\O((n/k)^2)$, soit $\O(n^2)$ si on considère $k$ comme fixé. En sommant donc sur les cases on obtient donc une complexité globale qui est de nouveau en $\O(n^2)$ (bien que la constante est \textit{a priori} sensiblement plus faible qu'avec l'algorithme naïf).
+
+Il y a trois inconvénients à cet algorithme: 
+\begin{itemize}
+	\item \textit{Une perte de précision.} les interactions ne tiennent compte que d'un petit voisinage autour de la particule, correspondant à la taille de la case.
+	\item \textit{Une complexité peu intéressante.} Elle croit quadratiquement avec le nombre de particules.
+	\item \textit{Un algorithme qui ne tient pas compte de la répartition des particules.} Si, admettons, les particules ne sont pas équi-réparties dans l'accélérateur, l'échantillonnage de l'espace ne s'adapte pas pour tenir compte de leur déséquilibre.
+\end{itemize}
+
+\noindent \textbf{(P14.2)} Au vu des inconvénients présentés ci-dessus, l'algorithme proposer n'est pas celui qui figure dans le programme. En implémentant une version modifiée de l'algorithme de Barnes-Hut, nous sommes arrivé à une précision supérieure tout en ayant une complexité temporelle moyenne en $\O(n \log n)$ Nous détaillons son implémentation dans l'annexe.
 
 \newpage
+
+\part*{Annexe}
+\section{Algorithme de Barnes--Hut}
+\subsection*{Cadre et motivation}
+L'algorithme de Barnes--Hut\footnote{\url{https://en.wikipedia.org/wiki/Barnes-Hut_simulation}} est conçu pour simuler de façon efficace le problème à $n$ corps gravitationnel, non relativiste. En toute généralité, on peut l'adapter dans le cadre plus général d'un système de champs de force centrale (qui décroit rapidement avec la distance) engendrés par $n$ particules qui interagissent toutes entre elles.
+
+Donnons l'idée avec un exemple : supposons que l'on dispose de trois particules A, B et C qui interagissent entre elles. (Pour fixer les idées dans le cadre du projet, disons que cette interaction est de nature électromagnétique). Supposons que A et B sont proches l'une de l'autre, mais que C est loin de ces dernières. Pour calculer l'influence de A et B sur C, on imagine qu'à une bonne approximation on puisse se contenter de ``moyenner'' A et B en une particule ``virtuelle'' P, puis de calculer l'influence de P sur A. Concrètement, pour effectuer cette moyenne, on choisit la grandeur inertielle pertinente selon la nature de la force (donc dans ce cas-là la charge, mais pour la gravité on utiliserait la masse) et on calcule le barycentre de A et B, pondéré par cette grandeur.
+
+Ainsi on arrive à réduire le nombre de calculs de force via un processus de moyennage. L'idée est de cumuler ces moyennages afin d'obtenir une complexité globalement plus faible via un algorithme de recherche transverse dans un arbre.
+
+\subsection*{La structure de donnée pertinente}
+On va considérer une structure de données correspondant à un découpage récursif de l'espace en pavés. On part d'un pavé peuplé d'un certain nombre de particules. S'il contient au moins deux, on le découpe en $2^3 = 8$ sous-pavés égaux. Sur chaque sous-pavé contenant au moins une particule on répète ce processus, et ainsi de suite jusqu'à que chaque particule occupe son propre pavé.
+
+En pratique, on procédera plutôt dans l'autre sens : en partant d'un arbre vide, on insère les particules une à une en en suivant le même algorithme. (Dans la littérature anglo-saxonne on utilise le terme le terme \textit{octree}. Dans le code, il s'agit de la classe \T{Node}.) À chaque insertion d'une particule dans un pavé on met à jour la ``particule barycentrique'', qui permettra par la suite les calculs de force.
+
+\subsection*{Description du calcul de force}
+Lorsqu'il s'agit de calculer l'interaction totale d'un ensemble de particules stockées sous la forme d'un arbre A sur une particule donnée C, on traverse l'arbre selon l'algorithme suivant :
+
+\begin{enumerate}
+	\item Si le pavé ne contient pas de particule, il n'y a rien à faire.
+	\item S'il contient 1 particule, on fait agir cette unique particule sur A.
+	\item Sinon, on calcule le rapport du volume du pavé correspondant à C par le cube de la distance séparant A de la particule barycentrique de A.
+\begin{itemize}
+	\item Si ce rapport est suffisamment petit (disons plus petit qu'un paramètre adimensionné $\theta$ correspondant à la précision de la simulation) alors on fait agir la particule barycentrique sur A.
+	\item Sinon, on répète le processus sur chaque sous-pavé.
+\end{itemize}
+\end{enumerate}
+En d'autre termes, en partant de sa racine, on va descendre dans l'arbre jusqu'à que les distances soit suffisamment grandes qu'on puisse appliquer l'approximation barycentrique.
+\subsection*{Complexité temporelle}
+Si on note $\epsilon$ la distance minimale entre deux particules, alors la création de l'arbre avec $n$ particules est en $\O(n \log(1/\epsilon))$. Si les particules sont assez bien réparties on peut supposer que $\epsilon \propto 1/n$, donc on obtient finalement une complexité en $\O(n \log n)$.
+
+Dans le cas général, lors du calcul de l'action de l'arbre sur une particule, la profondeur typique sera en $\O(\log n)$. Si les calculs algébriques sur les vecteurs sont $\O(1)$, le calcul de la force de l'arbre sur une particule donnée sera donc $\O(\log n)$. Le calcul total de toutes les interactions sera donc $\O(n \log n)$.
+
+Ainsi, avec un tel algorithme, la méthode \T{evolve} sera $\O(n \log n) + \O(n \log n)$ soit $\O(n \log n)$.
+
+Par la pratique, on constate qu'on est désormais capable d'augmenter le nombre de particules d'un facteur 10 à 20 par rapport à l'algorithme naïf (quadratique).
+
+\subsection*{Précision et choix de $\theta$}
+Le facteur $\theta$ quantifie la précision de l'approximation : plus il est grand, plus l'approximation est agressive mais moins elle est précise. Quand $\theta = 0$ l'algorithme dégénère en l'algorithme naïf. En mettant $\theta = 0.5$ nous avons obtenu une précision indistinguable de l'algorithme naïf sur des périodes de temps raisonnables, tout en ayant une complexité temporelle beaucoup plus intéressante.
+
 \section{Hiérarchie des classes}\noindent
 Ci-dessous deux schémas représentant les hiérarchies relationnelles des classes.
 
