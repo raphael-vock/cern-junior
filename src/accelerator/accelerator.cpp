@@ -87,7 +87,8 @@ void Accelerator::addFodoCell(double radius, double b, double L, const Vector3D 
 
 void Accelerator::buildPolygon(Vector3D center, uint n, double major_radius, double minor_radius, double b, double B_0){
 	const double theta(2*M_PI/n);
-	const double alpha(theta / 6.0);
+	const double d(2.0*sin(theta/2));
+	const double alpha(asin(d/(2*major_radius)));
 
 	const double L(major_radius * 2.0 * sin(theta/2.0));
 
@@ -96,7 +97,7 @@ void Accelerator::buildPolygon(Vector3D center, uint n, double major_radius, dou
 	for(int k(1); k <= n; ++k){
 		addFodoCell(minor_radius, b, L/4.0, center + major_radius * Vector3D(cos(theta*k - alpha), sin(theta*k - alpha), 0));
 
-		addDipole(minor_radius, -1.0/major_radius, B_0, center + major_radius * Vector3D(cos(theta*k + alpha), sin(theta*k + alpha), 0));
+		addDipole(minor_radius, 1.0/major_radius, B_0, center + major_radius * Vector3D(cos(theta*k + alpha), sin(theta*k + alpha), 0));
 	}
 }
 

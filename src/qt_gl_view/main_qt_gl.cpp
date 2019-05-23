@@ -38,10 +38,8 @@ int main(int argc, char* argv[]){
 		1.0
 	);
 
-	/* w.addCircularBeam(Proton(Vector3D(3,1.5), 2.0, Vector3D(1,1)), 1e3, 1.0); */
-	/* w.initialize(); */
-
-	/* void Accelerator::buildPolygon(Vector3D center, uint n, double major_radius, double minor_radius, double b, double B_0){ */
+	w.addCircularBeam(Proton(Vector3D(3,1.5), 2.0, Vector3D(1,1)), 1e3, 1.0);
+	w.initialize();
 
 	w.show();
 
