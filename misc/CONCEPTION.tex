@@ -11,7 +11,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
 
-\title{Projet: conception}
+\title{Projet : conception}
 \author{Lomàn Vezin \\ Raphaël Vock}
 
 \newcommand{\T}[1]{\texttt{#1}}
@@ -31,6 +31,21 @@
 \renewcommand{\familydefault}{\sfdefault}
 \begin{document}
 \maketitle
+\section{Lexique}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Langue de Shakespeare & Langue de Molière \\ [0.5ex]
+\hline
+\textit{Drawable} & Dessinable\\
+
+\textit{Canvas} & Support à dessin\\
+
+\textit{Beam} & Faisceau\\
+\hline
+\end{tabular}
+\end{center}
+
 \section{Représentation schématique des hiérarchies}
 Ci-dessous deux schémas représentant les hiérarchies relationnelles des classes.
 
@@ -63,67 +78,85 @@ Ci-dessous deux schémas représentant les hiérarchies relationnelles des class
 \subsection{Des classes liées aux objets de la simulation}
 \begin{tikzpicture}[transform shape,mylabel/.style={thin, draw=black, align=center, minimum width=0.5cm, minimum height=0.5cm,fill=white,font=\normalsize}]
 
-\node (P0) at (2,0) {\T{Vector3D}};
-\node (P1) at (2,-3) {\T{PointCharge}}; 
-\node (P9) at (2, -6) {\T{Particle}};
-\node (P3) at (12, -10.5) {\T{Beam}};
-\node (P4) at (12, 0) {\T{Accelerator}};
-\node (P6) at (12, -4) {\T{Element}};
-\node (P7) at (12, -7.32) {\T{Node}};
-\node (P8) at (7.5, -7.32) {\T{Box}};
+\node (Vector3D) at (2,0) {\T{Vector3D}};
+\node (PointCharge) at (2,-3) {\T{PointCharge}};
+\node (Particle) at (2, -6) {\T{Particle}};
+\node (Beam) at (12, -10.5) {\T{Beam}};
+\node (Accelerator) at (12, 0) {\T{Accelerator}};
+\node (Element) at (12, -4) {\T{Element}};
+\node (Node) at (12, -7.32) {\T{Node}};
+\node (Box) at (7.5, -7.32) {\T{Box}};
+\node (Electron) at (2,-8) {\T{Electron}};
+\node (Proton) at (0,-7.5) {\T{Proton}};
 
 \draw
-(P4) edge [->] node[mylabel] {\T{vector<unique\_ptr<>\,>}} (P6)
-(P3) edge [-> , bend left = 20] node[mylabel] {\T{std::vector<unique\_ptr<unique\_ptr<>\,>\,>}} (P9.south)
-
-(P7) edge [-> , loop right, dashed, red] (P7.south)
-(P6) edge [-> , loop right, dashed, red] (P6.south)
-(P4) edge [-> , red] (P0)
-(P1) edge [->] (P0)
-(P9) edge [->] (P1)
-(P6) edge [->] (P7)
-(P7) edge [-> , red] (P8)
-(P4) edge [-> , dashed, red] (P9)
-(P6.west) edge [-> , red] (P0)
-(P7) edge [-> , red] (P1.south east)
-(P8) edge [-> , red] (P0)
-(P9) edge [-> , bend left = 60, red] (P0)
-(P4.south east) edge [-> , bend left = 60, dashed, red] (P3.north)
-(P3) edge [-> , bend left = -60, dashed, red] (P4.east);
+(Accelerator) edge [->] node[mylabel] {\T{vector<unique\_ptr<>\,>}} (Element)
+(Beam) edge [-> , bend left = 20] node[mylabel] {\T{std::vector<unique\_ptr<unique\_ptr<>\,>\,>}} (Particle.south east)
+(Electron) edge [->] (Particle)
+(Proton) edge [->] (Particle)
+(Node) edge [-> , loop right, dashed, red] (Node.south)
+(Element) edge [-> , loop right, dashed, red] (Element.south)
+(Accelerator) edge [-> , red] (Vector3D)
+(PointCharge) edge [->] (Vector3D)
+(Particle) edge [->] (PointCharge)
+(Element) edge [->] (Node)
+(Node) edge [-> , red] (Box)
+(Accelerator) edge [-> , dashed, red] (Particle)
+(Element.west) edge [-> , red] (Vector3D)
+(Node) edge [-> , red] (PointCharge.south east)
+(Box) edge [-> , red] (Vector3D)
+(Particle) edge [-> , bend left = 60, red] (Vector3D)
+(Accelerator.south east) edge [-> , bend left = 60, dashed, red] (Beam.north)
+(Beam) edge [-> , bend left = -60, dashed, red] (Accelerator.east);
 
 \end{tikzpicture}
 
 \subsection{Des classes liées à la représentation de la simulation}
 
 \begin{tikzpicture}
-\node (P0) at (4.5,0) {\T{Drawable}};
-\node (P1) at (13.5,0) {\T{Canvas}};
-\node (P2) at (9,-2) {\T{Element}};
-\node (P3) at (12, -2) {\T{TextView}};
-\node (P4) at (15, -2) {\T{OpenGLView}};
-\node (P5) at (6,-2) {\T{Accelerator}};
-\node (P6) at (3,-2) {\T{Particle}};
-\node (P7) at (0,-2) {\T{Box}};
-\node (P8) at (10.5,-7) {\T{AcceleratorWidgetConsole}};
-\node (P9) at (10.5,-4.5) {\T{AcceleratorWidgetGL}};
+\node (Drawable) at (4.5,0) {\T{Drawable}};
+\node (Canvas) at (13.5,0) {\T{Canvas}};
+\node (Element) at (9,-2) {\T{Element}};
+\node (TextView) at (12, -2) {\T{TextView}};
+\node (OpenGLView) at (15, -2) {\T{OpenGLView}};
+\node (Accelerator) at (6,-2) {\T{Accelerator}};
+\node (Particle) at (3,-2) {\T{Particle}};
+\node (Box) at (0,-2) {\T{Box}};
+\node (AcceleratorWidgetConsole) at (10.5,-7) {\T{AcceleratorWidgetConsole}};
+\node (AcceleratorWidgetGL) at (10.5,-4.5) {\T{AcceleratorWidgetGL}};
 
 \path [->]
-(P0) edge [dashed, red] (P1)
-(P2) edge (P0)
-(P5) edge (P0)
-(P6) edge (P0)
-(P7) edge (P0)
-(P3) edge (P1)
-(P4) edge (P1)
-(P8) edge (P4)
-(P9) edge (P3)
-(P8) edge (P5)
-(P9) edge (P5.south east);
+(Drawable) edge [dashed, red] (Canvas)
+(Element) edge (Drawable)
+(Accelerator) edge (Drawable)
+(Particle) edge (Drawable)
+(Box) edge (Drawable)
+(TextView) edge (Canvas)
+(OpenGLView) edge (Canvas)
+(AcceleratorWidgetConsole) edge (OpenGLView)
+(AcceleratorWidgetGL) edge (TextView)
+(AcceleratorWidgetConsole) edge (Accelerator)
+(AcceleratorWidgetGL) edge (Accelerator.south east);
 \end{tikzpicture}
 
 \ \linebreak
 \ \linebreak
 \section{Quelques éclaircissements}
+\noindent En grande partie, les classes et les héritages suivent directement dans la lignée des instructions du projet. Nous proposons ici de tenter d'éclaircir les points de divergence.
 
+\ \linebreak
+\begin{enumerate}
+	\item La classe \T{PointCharge} est une ``généralisation'' d'une particule ; c'est la formalisation de la notion de \textit{charge ponctuelle relativiste} dont l'utilité est primordiale dans le fonctionnement de l'algorithme de Barnes--Hut (cf. fichier réponses \S 8) dans laquelle les instances de \T{PointCharge} représentent les ``charges ponctuelles moyennes.'' En effet, la classe \T{Particle} contient plusieurs attributs qui ne sont pas pertinentes. Dans l'optique d'affiner la conception et de réduire l'empreinte mémoire (la performance de cet algorithme est clé) nous avons donc introduit cette super-classe dont les attributs sont la position, la charge et le facteur gamma.
+
+	\item La décision de faire hériter \T{PointCharge} (et donc \T{Particle}) de \T{Vector3D} permet de voir les particules comme des points de l'espace munis de structure supplémentaire, et de ce fait d'obtenir un polymorphisme avec les diverses méthodes ``géométriques'' des éléments. Par exemple, les méthodes liées au système de coordonnées locales d'un élément devraient, en toute généralité, pouvoir être appelés sur des points quelconques de l'espace et non que des particules. En revanche, c'est très contraignant de devoir faire recours à un getter à chaque fois que nous voulons l'appeler sur (la position d') une particule. Dès lors, en faisant hériter la classe \T{Particle} de \T{Vector3D}, nous contournons ce problème.
+
+	\item Les sous-classes \T{Electron}, \T{Proton} permettent tout simplement de s'abstraire des grandeurs physiques qui les définissent et de définir une affichage caractéristique à chaque type de particule. À l'avenir on ajoutera des sous-classes correspondant à d'autres types de particules subatomiques.
+
+	\item La classe \T{Node} est l'implémentation de l'arbre décrit dans \S 8.
+
+	\item La classe \T{Box} permet de représenter des pavés de l'espace et leur utilité se trouve dans l'algorithme de Barnes--Hut. Elles s'accompagnent de méthodes servant à les subdiviser, à décider si un point y appartient, etc.
+
+	\item Les classes \T{AcceleratorWidgetX} doivent être comprises comme ``des instances d'\T{Accelerator} qui vivent dans un \T{X}'' (où \T{X} est une sous-classe de \T{Canvas}). Concrètement, c'est pour pouvoir interagir directement avec à la fois le support à dessin et son contenu depuis le \T{main}, d'où l'héritage double.
+\end{enumerate}
 
 \end{document}

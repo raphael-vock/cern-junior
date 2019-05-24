@@ -1,6 +1,6 @@
 \documentclass[12pt, letterpaper, twoside]{article}
 \usepackage[top=2cm, bottom=2cm, left=1.5cm, right=1.5cm]{geometry}
-\usepackage[francais]{babel}
+\usepackage[french]{babel}
 \usepackage{array}
 \usepackage[T1]{fontenc}
 
@@ -17,16 +17,20 @@
 \hspace{-2.5pt}}
 \newcommand{\wontfix}{\rlap{$\square$}{\large\hspace{1pt}\xmark}}
 
+\title{Projet : journal}
+\author{Lomàn Vezin \\ Raphaël Vock}
+
 \begin{document}
-\section{Progression} 
+\maketitle
+\section{Progression}
 
 \begin{itemize}
-\item Tâches à effectuer: 
+\item Tâches à effectuer:
 \begin{todolist}
 	\item[\done] Créer le JOURNAL
-	\item[\done] Lire complètement le descriptif général 
-	\item[\done] S'inscrire en binôme 
-	\item[\done] Makefile  
+	\item[\done] Lire complètement le descriptif général
+	\item[\done] S'inscrire en binôme
+	\item[\done] Makefile
 	\item[\done] Vecteur finie (pleinement opérationnelle et testée)
 	\item[\done] Fichier REPONSES
 	\item[\done] Oscillateur
@@ -35,9 +39,9 @@
 	\item[\done] Ressort
 	\item[\done] Systeme
 	\item[\done] ExerciceP10
-	\item[\done] Graphisme: cadre général 
+	\item[\done] Graphisme: cadre général
 	\item[\done] Graphisme: Pendule
-	\item[\done] OscillateurCouple 
+	\item[\done] OscillateurCouple
 	\item[\done] PenduleDouble
 	\item[\done] Espace des phases
 	\item[\done] Integrateur Newmark
@@ -47,11 +51,9 @@
 \end{todolist}
 \end{itemize}
 
-\rule{\textwidth}{0.4pt}
+\section{Suivi}
 
-\section{Suivi:}
-
-\subsection{Semaine 1:}
+\subsection{Semaine 1}
 \begin{itemize}
 	\item Création du module Vector3D
 	\item Testé et quasiment finalisé
@@ -60,7 +62,7 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 2:}
+\subsection{Semaine 2}
 \begin{itemize}
 \item Mise en place de l'environnement QT et réalisation du tutoriel graphisme P12 
 
@@ -83,7 +85,7 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 3:}
+\subsection{Semaine 3}
 \begin{itemize}
 \item Cela sort un peu du cadre du projet mais je décide d'essayer d'implémenter l'algorithme de Barnes-Hut pour accélérer les calculs des interactions gravitationnelles des particules. Celui-ci est en  $\mathcal{O}(n\log{}n)$ donc très intéressant si on a un grand nombre de particules en jeu.
 
@@ -94,7 +96,7 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 4 :}
+\subsection{Semaine 4 }
 
 \begin{itemize}
 \item Première implémentation des éléments, une classe abstraire représente les éléments en général, de cette classe héritent deux sous classes pour les éléments droits et courbes.
@@ -108,7 +110,7 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 5 :}
+\subsection{Semaine 5 }
 
 \begin{itemize}
 \item Complétion de la classe élément
@@ -118,7 +120,7 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 6 :}
+\subsection{Semaine 6 }
 \begin{itemize}
 \item Finalisation des dessins de cylindres et sections de tore, adaptation des méthodes au cas de notre projet
 \item Affichage des premiers éléments
@@ -129,7 +131,7 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 7 :}
+\subsection{Semaine 7 }
 \begin{itemize}
 \item Gestion des déplacements à la souris
 \item Ajout de la classe Faisceau
@@ -138,7 +140,7 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 8 :}
+\subsection{Semaine 8 }
 \begin{itemize}
 \item Révision de la classe Particule, ajout d'une classe Point Charge pour rendre le code plus léger et intuitif
 \item Ajout de la coordonnée curviligne de l'accélérateur (ainsi que propre à chaque élément)
@@ -147,11 +149,11 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 9 :}
+\subsection{Semaine 9 }
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 10 :}
+\subsection{Semaine 10 }
 \begin{itemize}
 \item Dernière révision de l'affichage graphique, rendu plus épuré
 \item Ajout de différents points de vue afin de mieux suivre l'évolution des particules, révision complète de la gestion des évènements clavier.
@@ -159,20 +161,20 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 11 :}
+\subsection{Semaine 11 }
 
 \begin{itemize}
-\item Début de l'implémentation des interractions interparticulaires à l'aide de l'algorithme de Barnes-Hut implémenté en semaine 3. Test avec $7500$ particules. 
+\item Début de l'implémentation des interractions interparticulaires à l'aide de l'algorithme de Barnes-Hut implémenté en semaine 3. Test avec 7500 particules. 
 \item Ajout du mode matrice affichant les boites de l'algotithme (touche `m')
 \end{itemize}
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 12 :}
+\subsection{Semaine 12 }
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 13 :}
+\subsection{Semaine 13 }
 
 \rule{\textwidth}{0.4pt}
 
