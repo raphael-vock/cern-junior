@@ -24,50 +24,133 @@ double Beam::mean_energy(void) const{
 	return N ? (lambda/N) * mean : 0.0;
 }
 
-Vector3D Beam::mean_position(void) const{
-	double radial(0.0);
-	double vertical(0.0);
-	int n(0);
-	for(const auto &p : *this){
-		if(*p){
-			radial += (**p)[0]; // TODO project on local trajectory
-			vertical += (**p)[1];
-			++n;
-		}
-	}
-	Vector3D mean(radial, vertical);
-	return n ? n*mean : mean;
-}
-
-Vector3D Beam::mean_velocity(void) const{
-	double radial(0.0);
-	double vertical(0.0);
-	int n(0);
-	for(const auto &p : *this){
-		if(*p){
-			radial += (**p).getVelocity()[0]; // TODO project on local trajectory
-			vertical += (**p).getVelocity()[1];
-			++n;
-		}
-	}
-	Vector3D mean(radial, vertical);
-	return n ? n*mean : mean;
-}
-
 double Beam::vertical_emittance(void) const{
-	// TODO
+	unsigned int n(0); // denotes the number of particles for mean calculation
+	double r(0.0); // denotes the sum over position coordinate square 
+	double vr(0.0); // denotes the sum over velocity coordinate squared
+	double rvr(0.0); // denotes the sum over the product of velocity and position coordinate
+
+	for (auto const& p : *this) {
+		double position = (*p)->vertical_position();
+		r += position*position;
+		double velocity = (*p)->vertical_velocity();
+		vr += velocity*velocity;
+		rvr += position*velocity;
+		++n;
+	}
+	r /= n;
+	vr /= n;
+	rvr /= n;
+	return r + vr + rvr;
 }
 
 double Beam::radial_emittance(void) const{
-	// TODO
+	unsigned int n(0); 
+	double r(0.0); 
+	double vr(0.0); 
+	double rvr(0.0); 
+
+	for (auto const& p : *this) {
+		double position = (*p)->radial_position();
+		r += position*position;
+		double velocity = (*p)->radial_velocity();
+		vr += velocity*velocity;
+		rvr += position*velocity;
+		++n;
+	}
+	r /= n;
+	vr /= n;
+	rvr /= n;
+	return r + vr + rvr;
+}
+
+double Beam::mean_radial_position_squared(void) const {
+	unsigned int n(0); 
+	double r(0.0); 
+
+	for (auto const& p : *this) {
+		double position = (*p)->radial_position();
+		r += position*position;
+		++n;
+	}
+	return r /= n;
+}
+double Beam::mean_vertical_position_squared(void) const {
+	unsigned int n(0); 
+	double r(0.0); 
+
+	for (auto const& p : *this) {
+		double position = (*p)->vertical_position();
+		r += position*position;
+		++n;
+	}
+	return r /= n;
+}
+
+double Beam::mean_radial_velocity_squared(void) const {
+	unsigned int n(0); 
+	double r(0.0); 
+
+	for (auto const& p : *this) {
+		double position = (*p)->radial_velocity();
+		r += position*position;
+		++n;
+	}
+	return r /= n;
+}
+double Beam::mean_vertical_velocity_squared(void) const {
+	unsigned int n(0); 
+	double r(0.0); 
+
+	for (auto const& p : *this) {
+		double position = (*p)->vertical_velocity();
+		r += position*position;
+		++n;
+	}
+	return r /= n;
+}
+
+double Beam::mean_radial_product(void) const {
+	unsigned int n(0); 
+	double r(0.0); 
+
+	for (auto const& p : *this) {
+		double position = (*p)->radial_position();
+		double velocity = (*p)->radial_velocity();
+		r += position*velocity;
+		++n;
+	}
+	return r /= n;
+}
+double Beam::mean_vertical_product(void) const {
+	unsigned int n(0); 
+	double r(0.0); 
+
+	for (auto const& p : *this) {
+		double position = (*p)->vertical_position();
+		double velocity = (*p)->vertical_velocity();
+		r += position*velocity;
+		++n;
+	}
+	return r /= n;
 }
 
 std::array<double,3> Beam::radial_ellipse_coefficients(void) const{
-	// TODO
+	double emittance = radial_emittance();
+	return std::array<double,3> {
+		mean_radial_velocity_squared()/emittance, // A11
+		mean_radial_product()/(-emittance), // A12
+		mean_radial_position_squared()/emittance // A22
+	};
 }
 
 std::array<double,3> Beam::vertical_ellipse_coefficients(void) const{
-	// TODO
+	double emittance = vertical_emittance();
+	return std::array<double,3> {
+		mean_vertical_velocity_squared()/emittance, // A11
+		mean_vertical_product()/(-emittance), // A12
+		mean_vertical_position_squared()/emittance // A22
+	};
 }
 
 void Beam::evolve(double dt){

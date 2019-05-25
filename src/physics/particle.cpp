@@ -105,3 +105,24 @@ void Particle::evolve(double dt){
 bool Particle::has_collided(void) const{
 	return current_element->has_collided(*this);
 }
+
+Vector3D Particle::radial_vector_calculation(void) const {
+	if (current_element->is_straight()) {return vctr::Z_VECTOR^current_element->direction();}
+	else {Vector3D u = (*this - current_element->center()).unitary(); u -= (vctr::Z_VECTOR|u)*u; return u;}
+}
+
+double Particle::radial_position(void) const {
+	return *this|radial_vector_calculation();
+}
+
+double Particle::vertical_position(void) const {
+	return (*this)[2];
+}
+
+double Particle::radial_velocity(void) const {
+	return v|radial_vector_calculation();
+}
+
+double Particle::vertical_velocity(void) const {
+	return v[2];
+}

@@ -24,9 +24,16 @@ class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_
 
 		virtual void activate(void) = 0;
 
-		Vector3D mean_position(void) const;
-		Vector3D mean_velocity(void) const;
+		double mean_radial_position_squared(void) const;
+		double mean_vertical_position_squared(void) const;
 
+		double mean_radial_velocity_squared(void) const;
+		double mean_vertical_velocity_squared(void) const;
+
+		double mean_radial_product(void) const;
+		double mean_vertical_product(void) const;
+
+		// note that the above functions are not used to compute emittance for complexity matters
 		double vertical_emittance(void) const;
 		double radial_emittance(void) const;
 

@@ -111,6 +111,12 @@ class Particle : public Drawable, public PointCharge{
 		void evolve(double dt);
 
 		bool has_collided(void) const;
+
+		Vector3D radial_vector_calculation(void) const; // returns the vector used to calculate radial position and velocity 
+		double radial_position(void) const;
+		double vertical_position(void) const;
+		double radial_velocity(void) const;
+		double vertical_velocity(void) const;
 };
 
 class Electron : public Particle{
