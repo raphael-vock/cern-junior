@@ -19,13 +19,14 @@ namespace phcst{ // physical constants
 namespace simcst{ // simulation constants
 	constexpr double DEFAULT_TIMESTEP(1e-11);
 	constexpr int DEPTH_FACTOR(3); // number of intermediate updates between each timestep
-	
+
 	constexpr double ZERO_CHARGE(1.6e-19);
 
 	constexpr double ZERO_TIME(1e-30);
 	constexpr double ZERO_DISTANCE(1e-10);
 	constexpr double ZERO_VECTOR_NORM2(1e-50);
 	constexpr double ZERO_ENERGY_GEV(1e-10);
+	constexpr double ZERO_FORCE(1e-10);
 	constexpr double ZERO_CURVATURE(1e-5);
 	constexpr double ZERO_LAMBDA(1e-3);
 

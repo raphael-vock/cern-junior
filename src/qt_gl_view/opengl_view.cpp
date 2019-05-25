@@ -49,7 +49,7 @@ void OpenGLView::draw(const Beam &to_draw){
 }
 
 void OpenGLView::draw(const Particle &to_draw){
-	setShaderColor(*to_draw.getColor());
+	setShaderColor(to_draw.getColor());
 	drawSphere(to_draw, to_draw.getRadius());
 }
 

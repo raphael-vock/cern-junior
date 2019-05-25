@@ -6,7 +6,7 @@ CONFIG -= \
 CONFIG += \
 	c++11 \
 
-TARGET = qt_gl_view
+TARGET = cern-junior
 
 INCLUDEPATH += \
 	../general \
