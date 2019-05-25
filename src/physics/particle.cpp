@@ -31,6 +31,10 @@ void PointCharge::incorporate(const PointCharge &P){
 	// TODO what if charge is zero? would a geometric mean be more suitable?
 }
 
+const RGB Particle::getColor(void) const{
+	// modulates color based on force
+	return getDefaultColor()->modulate(F.norm(), current_element->maxForce(*this));
+}
 
 void Particle::scale(double lambda){
 	mass *= lambda;

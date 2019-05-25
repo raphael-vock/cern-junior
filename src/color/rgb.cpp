@@ -1,5 +1,6 @@
 #include "rgb.h"
 #include "../misc/exceptions.h"
+#include "../misc/constants.h"
 
 double RGB::operator[](int i) const{
 	switch(i){
@@ -11,8 +12,13 @@ double RGB::operator[](int i) const{
 }
 
 RGB RGB::modulate(double arg, double arg_max) const{
+	if(arg_max <= simcst::ZERO_FORCE){
+		return *this;
+	}
+
 	const double p(arg/arg_max);
-	return RGB((1-p)*R + p, (1-p)*G + p, (1-p)*B + p);
+	std::cout << p << " ";
+	return RGB(p + (1-p)*R, (1-p)*G, (1-p)*B);
 }
 
 const RGB RGB::WHITE(1,1,1);

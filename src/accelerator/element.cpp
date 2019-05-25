@@ -201,3 +201,21 @@ Vector3D Element::local_trajectory(double s) const{
 	double beta(s*curvature);
 	return -sin(beta)*u + cos(beta)*v;
 }
+
+// MAX FORCES
+
+double StraightSection::maxForce(const Particle &p) const{
+	return 0.0;
+}
+
+double Dipole::maxForce(const Particle &p) const{
+	return abs(p.getCharge() * B_0);
+}
+
+double Quadrupole::maxForce(const Particle &p) const{
+	return abs(p.getCharge() * b * sqrt(length*length + radius*radius)* phcst::C_USI);
+}
+
+double RadiofrequencyCavity::maxForce(const Particle &p) const{
+	return abs(p.getCharge() * E_0);
+}

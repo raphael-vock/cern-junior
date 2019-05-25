@@ -87,7 +87,9 @@ class Particle : public Drawable, public PointCharge{
 
 		void setElement(Element* e){ current_element = e; }
 
-		virtual const RGB* getColor(void) const{ return &RGB::BLACK; }
+		virtual const RGB* getDefaultColor(void) const{ return &RGB::BLACK; }
+
+		const RGB getColor(void) const;
 
 		void setCanvas(Canvas* c){ canvas = c; }
 
@@ -129,7 +131,7 @@ class Electron : public Particle{
 
 		virtual std::string particle_type(void) const override{ return "Electron"; }
 
-		virtual const RGB* getColor(void) const override{ return &RGB::GREEN; }
+		virtual const RGB* getDefaultColor(void) const override{ return &RGB::GREEN; }
 
 		virtual std::unique_ptr<Particle> copy(void) const override{ return std::unique_ptr<Electron>(new Electron(*this)); }; // polymorphic copy method
 };
@@ -144,7 +146,7 @@ class Proton : public Particle{
 
 		virtual std::string particle_type(void) const override{ return "Proton"; }
 
-		virtual const RGB* getColor(void) const override{ return &RGB::BLUE; }
+		virtual const RGB* getDefaultColor(void) const override{ return &RGB::BLUE; }
 
 		virtual std::unique_ptr<Particle> copy(void) const override{ return std::unique_ptr<Proton>(new Proton(*this)); }; // polymorphic copy method
 };

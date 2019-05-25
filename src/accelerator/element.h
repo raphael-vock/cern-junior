@@ -43,7 +43,10 @@ class Element : public Drawable, public Node{
 		Vector3D getExit_point(void) const{ return exit_point; }
 		double getRadius(void) const{ return radius; }
 		double getCurvature(void) const{ return curvature; }
+
 		virtual const RGB* getColor(void) const = 0;
+
+		virtual double maxForce(const Particle &p) const = 0;
 
 		Vector3D getBasis_vector_u(void) const{ return u; }
 		Vector3D getBasis_vector_v(void) const{ return v; }
@@ -90,7 +93,7 @@ class Element : public Drawable, public Node{
 
 		virtual void apply_lorentz_force(Particle &, double) const = 0;
 		void evolve(double dt);
-}; 
+};
 
 std::ostream& operator<<(std::ostream& output, const Element &E);
 
@@ -105,6 +108,8 @@ class StraightSection : public Element{
 		virtual void draw(void) override{ canvas->draw(*this); }
 
 		virtual const RGB* getColor(void) const override{ return &RGB::SKY_BLUE; }
+
+		virtual double maxForce(const Particle &p) const override;
 
 		virtual void apply_lorentz_force(Particle& p, double dt) const override{ return; } // no electromagnetic interaction
 };
@@ -143,6 +148,7 @@ class Dipole : public MagneticElement{
 		virtual void draw(void) override{ canvas->draw(*this); }
 
 		virtual Vector3D B(const Vector3D &x, double dt) const override final;
+		virtual double maxForce(const Particle &p) const override;
 };
 
 class Quadrupole : public MagneticElement{
@@ -154,6 +160,8 @@ class Quadrupole : public MagneticElement{
 		{}
 
 		virtual Vector3D B(const Vector3D &x, double dt) const override final;
+		virtual double maxForce(const Particle &p) const override;
+
 		virtual std::ostream& print(std::ostream& output) const override;
 
 		virtual void draw(void) override{ canvas->draw(*this); }
@@ -175,6 +183,8 @@ class RadiofrequencyCavity : public ElectricElement{
 		{}
 
 		virtual Vector3D E(const Vector3D &x, double dt) const override final;
+		virtual double maxForce(const Particle &p) const override;
+
 		virtual std::ostream& print(std::ostream& output) const override;
 
 		virtual void draw(void) override{ canvas->draw(*this); }
