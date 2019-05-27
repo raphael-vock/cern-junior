@@ -1,8 +1,5 @@
 #include "../misc/exceptions.h"
-
-#include "../misc/exceptions.h"
 #include "element.h"
-#include <algorithm>
 
 using namespace std;
 using namespace excptn;

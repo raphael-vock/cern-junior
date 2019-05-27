@@ -7,5 +7,4 @@ SUBDIRS += \
 	physics \
 	textview \
 	tests \
-	cern-junior-text \
 	exerciceP12 \

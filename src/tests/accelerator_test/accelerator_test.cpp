@@ -48,6 +48,7 @@ int main(){
 
 	// *********************
 	w.addParticle(Proton(Vector3D(3.01, 0), 2.0, Vector3D(0, -2.64754e+08)));
+	w.addParticle(Proton(Vector3D(2.99, 0), 2.0, Vector3D(0, -2.64754e+08)));
 	w.initialize();
 
 	for(int i(1); i <= 5e3; ++i){

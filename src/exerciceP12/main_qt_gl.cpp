@@ -4,11 +4,10 @@
 #include <vector>
 #include <cmath>
 
-using namespace std;
-
 #include "acceleratorwidgetgl.h"
-
 #include "../accelerator/accelerator_cli.h"
+
+using namespace std;
 
 int main(int argc, char* argv[]){
 	QApplication a(argc, argv);
