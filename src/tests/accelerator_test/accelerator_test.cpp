@@ -6,7 +6,7 @@
 using namespace std;
 using namespace phcst;
 
-int main(){
+int main(void){
 	AcceleratorWidgetConsole w(Vector3D(3,2,0));
 
 	const double r(0.1);

@@ -6,5 +6,6 @@ SUBDIRS += \
 	accelerator \
 	physics \
 	textview \
+	cern-junior-text \
 	tests \
 	exerciceP12 \

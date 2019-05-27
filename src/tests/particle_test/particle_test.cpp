@@ -6,7 +6,7 @@
 using namespace std;
 using namespace phcst;
 
-int main(){
+int main(void){
 	const double dt(1e-11);
 
 	/* Particle p1(Vector3D(3.00984, -0.391837), 2.0, Vector3D(-210200, -2.64754e+08), 0.938272, 1.0); */
@@ -37,5 +37,6 @@ int main(){
 	cout << "\nParticle 2:\n";
 	cout << p2;
 	cout << endl;
+
 	return 0;
 }
