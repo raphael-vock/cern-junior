@@ -27,11 +27,13 @@ PRE_TARGETDEPS +=\
 SOURCES += \
 	main_qt_gl.cpp \
 	acceleratorwidgetgl.cpp \
+	graphwidget.cpp \
 	glsphere.cpp \
 	opengl_view.cpp
 
 HEADERS += \
 	acceleratorwidgetgl.h \
+	graphwidget.h \
 	vertex_shader.h \
 	opengl_view.h \
 	glsphere.h \

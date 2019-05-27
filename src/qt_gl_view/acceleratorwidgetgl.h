@@ -2,6 +2,7 @@
 
 #include <QOpenGLWidget>
 #include <QTime>
+#include <vector>
 
 #include "opengl_view.h"
 #include "../general/drawable.h"
@@ -46,4 +47,7 @@ class AcceleratorWidgetGL : public QOpenGLWidget, public Accelerator{
 	public:
 		AcceleratorWidgetGL(QWidget* parent, Vector3D origin) : QOpenGLWidget(parent), Accelerator(&view, origin){ setMouseTracking(true); }
 		virtual ~AcceleratorWidgetGL(){}
+
+		std::vector<Beam*> getBeams(void) const; 
+		QTime* getTime(void) {return &stopwatch;}
 };

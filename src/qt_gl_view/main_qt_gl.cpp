@@ -7,6 +7,7 @@
 using namespace std;
 
 #include "acceleratorwidgetgl.h"
+#include "graphwidget.h"
 
 // Some functions for parsing console input:
 string tolower(string str){
@@ -78,6 +79,8 @@ int main(int argc, char* argv[]){
 
 	w.initialize();
 
+	GraphWidget x(w.getBeams(), w.getTime());
+	x.show();
 	w.show();
 
 	return a.exec();

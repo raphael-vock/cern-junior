@@ -178,3 +178,7 @@ void AcceleratorWidgetGL::pause(void){
 		timerId = 0;
 	}
 }
+
+std::vector<Beam*> AcceleratorWidgetGL::getBeams(void) const {
+	return beams;
+}
