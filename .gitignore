@@ -56,3 +56,5 @@ src/scatterplot/Makefile
 src/scatterplot/Makefile
 src/scatterplot/Makefile
 src/qt_gl_view/Makefile
+src/exerciceP12/Makefile
+src/cern-junior-text/Makefile
