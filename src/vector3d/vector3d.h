@@ -2,6 +2,7 @@
 
 #include <array> // for Vector3D::getCoords()
 #include <random> // for distributions
+#include <functional>
 
 #include "../color/rgb.h"
 #include "../general/drawable.h"
