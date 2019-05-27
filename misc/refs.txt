@@ -1,4 +1,0 @@
-Choice of units:
-	Particle Accelerator Physics: Basic Principles and Linear Beam Dynamics
-	By Helmut Wiedemann
-	(p. 10)

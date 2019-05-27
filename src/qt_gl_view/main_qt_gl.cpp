@@ -8,8 +8,28 @@ using namespace std;
 
 #include "acceleratorwidgetgl.h"
 
-string make_lowercase(string &str){ // for parsing input
+// Some functions for parsing console input:
+string tolower(string str){
 	for(char &c : str) c = tolower(c);
+	return str;
+}
+
+void clear_cin(void){
+	if(not cin.fail()) return;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(),'\n');
+	cout << "Come again?\n ";
+}
+
+template <typename T>
+T getInput(string message){
+	cout << message;
+	T input;
+	do{
+		clear_cin();
+		cin >> input;
+	}while(cin.fail());
+	return input;
 }
 
 int main(int argc, char* argv[]){
@@ -36,46 +56,23 @@ int main(int argc, char* argv[]){
 	w.addDipole(r,k,B);
 	//*******************
 
-	/* w.addCircularBeam(Proton(Vector3D(3,1.5), 2.0, Vector3D(1,1)), 1e3, 1.0); */
 	while(true){
-		cout << "Enter beam? (y/n)\n";
-		string answer;
-		cin >> answer;
-		make_lowercase(answer);
-
-		if(answer == "y" or answer == "yes"){
-			cout << "Type of particle? (E = Electron; P = Proton): ";
-			char type;
-			cin >> type;
-			type = tolower(type);
-
-			cout << "Enter number of particles:\n N = ";
-			int n;
-			cin >> n;
-
-			cout << "Enter median energy: (GeV)\n E = ";
-			int E;
-			cin >> E;
-
-			cout << "Enter macroparticle scaling factor\n λ = ";
-			double lambda;
-			cin >> lambda;
-
-			switch(type){
-				case 'e':{
-					w.addCircularBeam(Electron(Vector3D(), E, Vector3D()), n, lambda);
-					break;
-				}
-				case 'p':{
-					w.addCircularBeam(Proton(Vector3D(), E, Vector3D()), n, lambda);
-					break;
-				}
-				default:{
-					cout << "Unrecognized particle type '".append(type) + "'\n";
-				}
-			}
-		}else{
+		if(tolower(getInput<string>("Add a beam? (y/n)\n ") == "n")){
 			break;
+		}
+
+		/* cout << "Type of particle? [p]roton / [e]lectron:\n "; */
+		string type(tolower(getInput<string>("Type of particle? [p]roton / [e]lectron:\n ")));
+		int N(getInput<int>("Enter number of particles:\n N = "));
+		double E(getInput<double>("Enter median energy: (GeV) (recommended: 2.0)\n E = "));
+		double lambda(getInput<double>("Enter macroparticle scaling factor\n λ = "));
+
+		if(type == "p" or type == "proton"){
+			w.addCircularBeam(Proton(Vector3D(), E, Vector3D(1,0,0)), N, lambda);
+		}else if(type == "e" or type == "electron"){
+			w.addCircularBeam(Electron(Vector3D(), E, Vector3D(1,0,0)), N, lambda);
+		}else{
+			cout << "Unrecognized particle type '" + type + "'\n";
 		}
 	}
 
