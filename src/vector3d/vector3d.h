@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array> // for Vector3D::getCoords()
+#include <random> // for distributions
 
 #include "../color/rgb.h"
 #include "../general/drawable.h"
@@ -55,7 +56,41 @@ class Vector3D{
 		std::ostream& print(std::ostream& output) const;
 };
 
-Vector3D operator*(const double &, const Vector3D&); // scalar multiplication, but here the scalar is written before   
+class RandomVector3D{
+	// this class allows the creation of Vector3D-type random distributions around the origin using real distributions from the standard library
+	private:
+		std::function<double(std::random_device&)> distr;
+	public:
+		RandomVector3D(const std::function<double(std::random_device&)> &my_distr) :
+			distr(my_distr)
+		{}
+
+		Vector3D operator()(std::random_device &gen); // overloaded call operator
+};
+
+class GaussianVector3D : public RandomVector3D{
+	// Gaussian-distributed Vector3D along 3 axes
+	private:
+		const double sigma; // standard deviation
+	public:
+		explicit GaussianVector3D(double my_sigma) :
+			RandomVector3D(std::normal_distribution<double>(0.0, my_sigma)),
+			sigma(my_sigma)
+		{}
+};
+
+class UniformVector3D : public RandomVector3D{
+	// Uniformly-distributed Vector3D along 3 axes
+	private:
+		const double r; // radius of distribution
+	public:
+		explicit UniformVector3D(double my_r) :
+			RandomVector3D(std::uniform_real_distribution<double>(-my_r, my_r)),
+			r(my_r)
+		{}
+};
+
+Vector3D operator*(const double &, const Vector3D&); // scalar multiplication, but here the scalar is written before
 std::ostream& operator<<(std::ostream& output, Vector3D const& v); // prints to output (e.g. std::cout or std::ofstream)
 
 namespace vctr{
@@ -65,22 +100,3 @@ namespace vctr{
 	const Vector3D Y_VECTOR(0,1,0);
 	const Vector3D Z_VECTOR(0,0,1);
 }
-
-class Segment : public Drawable{
-	// An Segment is a line segment in 3D space with a starting point A and an ending point B
-	private:
-		Vector3D A;
-		Vector3D B;
-		RGB color;
-	public:
-		Vector3D getA(void) const{ return A; }
-		Vector3D getB(void) const{ return B; }
-		RGB getColor(void) const{ return color; }
-
-		Segment(Canvas* c, Vector3D a = vctr::ZERO_VECTOR, Vector3D b = vctr::ZERO_VECTOR, RGB my_color = RGB::WHITE) : Drawable(c), A(a), B(b), color(my_color){}
-
-		Vector3D direction(void) const; // returns the Vector3D B-A
-
-		std::ostream& print(std::ostream& stream) const;
-		virtual void draw(void) override{ canvas->draw(*this); }
-};

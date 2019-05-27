@@ -66,7 +66,7 @@ Vector3D Vector3D::operator^(const Vector3D &v) const{
 		y*v.z - z*v.y,
 		v.x*z - v.z*x,
 		x*v.y - y*v.x
-	); 
+	);
 }
 
 double Vector3D::norm2(void) const{
@@ -146,11 +146,6 @@ std::ostream& operator<<(std::ostream& output, const Vector3D &v){
 	return v.print(output);
 }
 
-std::ostream& Segment::print(std::ostream& stream) const{
-	stream << '[' << A << ", " << B << ']';
-	return stream;
-}
-
-Vector3D Segment::direction(void) const{
-	return B - A;
+Vector3D RandomVector3D::operator()(std::random_device &gen){
+	return (1.0/sqrt(3)) * Vector3D(distr(gen), distr(gen), distr(gen));
 }

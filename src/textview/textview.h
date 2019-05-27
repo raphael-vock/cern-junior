@@ -13,7 +13,6 @@ class TextView : public Canvas{
 		TextView(std::ostream& my_stream) : Canvas(), stream(my_stream){}
 		virtual ~TextView(void){}
 
-		virtual void draw(const Segment &to_draw) override;
 		virtual void draw(const Box &to_draw) override;
 		virtual void draw(const Particle &to_draw) override;
 		virtual void draw(const Beam &to_draw) override;

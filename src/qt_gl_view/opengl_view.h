@@ -23,7 +23,6 @@ class OpenGLView : public Canvas{
 		void setShaderPoint(const Vector3D &point);// TODO do we need this?
 
 		// drawing methods, inherited from Canvas
-		virtual void draw(const Segment &to_draw) override;
 		virtual void draw(const Box &to_draw) override;
 		virtual void draw(const Particle &to_draw) override;
 		virtual void draw(const Beam &to_draw) override;

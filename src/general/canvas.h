@@ -2,7 +2,6 @@
 
 #include "drawable.h"
 
-class Segment;
 class Box;
 class Particle;
 class Beam;
@@ -18,7 +17,6 @@ class Canvas{
 		Canvas(void){}
 		virtual ~Canvas(void){}
 
-		virtual void draw(const Segment &) = 0;
 		virtual void draw(const Box &) = 0;
 
 		virtual void draw(const Particle &) = 0;

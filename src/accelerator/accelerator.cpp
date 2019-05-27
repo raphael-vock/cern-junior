@@ -46,8 +46,12 @@ void Accelerator::addParticle(const Particle &to_copy){
 	}
 }
 
-void Accelerator::addCircularBeam(const Particle &model, uint N, double lambda){
-	beams.push_back(new CircularBeam(*this, model, N, lambda));
+void Accelerator::addGaussianCircularBeam(const Particle &model, uint N, double lambda, double sigma_x, double sigma_v){
+	beams.push_back(new GaussianCircularBeam(*this, model, N, lambda, sigma_x, sigma_v));
+}
+
+void Accelerator::addUniformCircularBeam(const Particle &model, uint N, double lambda, double sigma_x, double sigma_v){
+	beams.push_back(new UniformCircularBeam(*this, model, N, lambda, sigma_x, sigma_v));
 }
 
 void Accelerator::addStraightSection(double radius, const Vector3D &end){

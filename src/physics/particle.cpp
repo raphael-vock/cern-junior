@@ -130,3 +130,11 @@ double Particle::radial_velocity(void) const {
 double Particle::vertical_velocity(void) const {
 	return v[2];
 }
+
+std::unique_ptr<Particle> concrete_particle(const Vector3D &x_0, double E, const Vector3D &dir, char particle_code){
+	switch(particle_code){
+		case 'p': return std::unique_ptr<Particle>(new Proton(x_0, E, dir));
+		case 'e': return std::unique_ptr<Particle>(new Electron(x_0, E, dir));
+		default: throw excptn::UNRECOGNIZED_PARTICLE_CODE;
+	}
+}

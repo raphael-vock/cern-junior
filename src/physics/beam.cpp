@@ -174,8 +174,9 @@ void CircularBeam::activate(){
 
 		std::unique_ptr<Particle> copy(model_particle->copy());
 
-		copy->setPosition(position_and_trajectory[0]);
-		copy->setVelocity((model_particle->getCharge() >= 0 ? v : -v)*position_and_trajectory[1]);
+		copy->setPosition(position_and_trajectory[0] + position_offset(gen));
+		/* std::cout << velocity_offset(gen) << std::endl; */
+		copy->setVelocity((model_particle->getCharge() >= 0 ? v : -v)*position_and_trajectory[1] + velocity_offset(gen));
 		copy->scale(lambda);
 
 		habitat->addParticle(*copy);

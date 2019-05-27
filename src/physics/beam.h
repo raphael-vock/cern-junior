@@ -1,5 +1,6 @@
 #include <vector>
 #include <memory>
+#include <random>
 
 #include "../misc/exceptions.h"
 
@@ -46,7 +47,44 @@ class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_
 };
 
 class CircularBeam : public Beam{
+	// generates a circular beam according to some distribution
+	private:
+		std::random_device gen; // seed generator
+		RandomVector3D position_offset; // random 3D-offset around ideal positions
+		RandomVector3D velocity_offset; // random 3D-offset around ideal velocities
 	public:
-		using Beam::Beam;
+		explicit CircularBeam(Accelerator& machine, const Particle &p, uint number_of_particles, double my_lambda, const RandomVector3D &my_distr_x, const RandomVector3D &my_distr_v) :
+			Beam(machine, p, number_of_particles, my_lambda),
+			position_offset(my_distr_x),
+			velocity_offset(my_distr_v)
+		{}
 		virtual void activate(void) override;
+};
+
+class GaussianCircularBeam : public CircularBeam{
+	// A circular beam with a random Gaussian offset in three dimensions
+	private:
+		double sigma_x; // standard deviation on position
+		double sigma_v; // standard deviation on velocity
+
+	public:
+		explicit GaussianCircularBeam(Accelerator& machine, const Particle &p, uint number_of_particles, double my_lambda, double my_sigma_x, double my_sigma_v) :
+			CircularBeam(machine, p, number_of_particles, my_lambda, GaussianVector3D(my_sigma_x), GaussianVector3D(my_sigma_v)),
+			sigma_x(my_sigma_x),
+			sigma_v(my_sigma_v)
+		{}
+};
+
+class UniformCircularBeam : public CircularBeam{
+	// A circular beam with a random uniform offset in three dimensions
+	private:
+		double delta_x; // variance in position
+		double delta_v; // variance in velocity
+
+	public:
+		explicit UniformCircularBeam(Accelerator& machine, const Particle &p, uint number_of_particles, double my_lambda, double my_delta_x, double my_delta_v) :
+			CircularBeam(machine, p, number_of_particles, my_lambda, UniformVector3D(my_delta_x), UniformVector3D(my_delta_v)),
+			delta_x(my_delta_x),
+			delta_v(my_delta_v)
+		{}
 };

@@ -8,33 +8,9 @@ using namespace std;
 
 #include "acceleratorwidgetgl.h"
 
-// Some functions for parsing console input:
-string tolower(string str){
-	for(char &c : str) c = tolower(c);
-	return str;
-}
-
-void clear_cin(void){
-	if(not cin.fail()) return;
-	cin.clear();
-	cin.ignore(numeric_limits<streamsize>::max(),'\n');
-	cout << "Come again?\n ";
-}
-
-template <typename T>
-T getInput(string message){
-	cout << message;
-	T input;
-	do{
-		clear_cin();
-		cin >> input;
-	}while(cin.fail());
-	return input;
-}
+#include "../misc/commandline.h"
 
 int main(int argc, char* argv[]){
-	// get paramters of beams at runtime:
-
 	QApplication a(argc, argv);
 
 	AcceleratorWidgetGL w(nullptr, Vector3D(3,2,0));
@@ -56,28 +32,56 @@ int main(int argc, char* argv[]){
 	w.addDipole(r,k,B);
 	//*******************
 
-	while(true){
-		if(tolower(getInput<string>("Add a beam? (y/n)\n ") == "n")){
-			break;
-		}
+	if(tolower(getInput<char>("(D)efault configuration or (c)ustom?\n") == 'c')){
+		do{
+			char type(tolower(getInput<char>("Type of particle? (p)roton / (e)lectron:\n")));
 
-		/* cout << "Type of particle? [p]roton / [e]lectron:\n "; */
-		string type(tolower(getInput<string>("Type of particle? [p]roton / [e]lectron:\n ")));
-		int N(getInput<int>("Enter number of particles:\n N = "));
-		double E(getInput<double>("Enter median energy: (GeV) (recommended: 2.0)\n E = "));
-		double lambda(getInput<double>("Enter macroparticle scaling factor\n λ = "));
+			char distr(tolower(getInput<char>("Distribution type? (n)one / (u)niform / (g)aussian:\n")));
+			std::array<double,3> distribution_parameters;
+			switch(distr){
+				case 'g':{
+					distribution_parameters[0] = getInput<double>("Standard deviation on position? (m) (recommended: 0.1)\nσ = ");
+					distribution_parameters[1] = getInput<double>("Standard deviation on velocity? (c) (recommended: 0.01)\nσ = ");
+					break;
+				}
+				case 'n':{
+					distribution_parameters = {0.0,0.0};
+					break;
+				}
+				case 'u':{
+					distribution_parameters[0] = getInput<double>("Maximum variance on position? (m) (recommended: 0.1)\nΔ = ");
+					distribution_parameters[1] = getInput<double>("Maximum variance on velocity? (c) (recommended: 0.01)\nΔ = ");
+					break;
+				}
+			}
 
-		if(type == "p" or type == "proton"){
-			w.addCircularBeam(Proton(Vector3D(), E, Vector3D(1,0,0)), N, lambda);
-		}else if(type == "e" or type == "electron"){
-			w.addCircularBeam(Electron(Vector3D(), E, Vector3D(1,0,0)), N, lambda);
-		}else{
-			cout << "Unrecognized particle type '" + type + "'\n";
-		}
+			int N(getInput<int>("Enter number of particles:\nN = "));
+			if(N < 0) N = 0;
+
+			double E(getInput<double>("Enter median energy: (GeV) (recommended: 2.0)\nE = "));
+
+			double lambda(getInput<double>("Enter macroparticle scaling factor\nλ = "));
+			if(lambda < simcst::ZERO_LAMBDA) lambda = 1.0;
+
+			switch(distr){
+				case 'g':
+				case 'n':{
+					w.addGaussianCircularBeam(*concrete_particle(Vector3D(), E, Vector3D(1,0,0), type), N, lambda, distribution_parameters[0], distribution_parameters[1]);
+					break;
+				}case 'u':{
+					w.addUniformCircularBeam(*concrete_particle(Vector3D(), E, Vector3D(1,0,0), type), N, lambda, distribution_parameters[0], distribution_parameters[1]);
+					break;
+				}default:{
+					cout << string("Unrecognized particle type '") + type + "'\n";
+					continue;
+				}
+			}
+		}while(tolower(getInput<char>("Add another beam? (y/n)\n") == 'y'));
+	}else{ // default configuration
+		w.addGaussianCircularBeam(Proton(Vector3D(), 2, Vector3D(1,0,0)), 1000, 2.0, 0.1, 0.01);
 	}
 
 	w.initialize();
-
 	w.show();
 
 	return a.exec();

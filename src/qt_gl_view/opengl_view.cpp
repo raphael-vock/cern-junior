@@ -19,18 +19,6 @@ void OpenGLView::setShaderPoint(const Vector3D &point){
 	prog.setAttributeValue(VertexId, point[0], point[1], point[2]);
 }
 
-void OpenGLView::draw(const Segment &to_draw){
-	prog.setUniformValue("view", pov_matrix);
-
-	glBegin(GL_LINES);
-
-	setShaderColor(to_draw.getColor());
-	setShaderPoint(to_draw.getA());
-	setShaderPoint(to_draw.getB());
-
-	glEnd();
-}
-
 void OpenGLView::draw(const Box &to_draw){
 	std::array<Vector3D,8> points(to_draw.getVertices());
 

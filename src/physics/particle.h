@@ -8,6 +8,7 @@
 #include "../general/canvas.h"
 
 #include "../color/rgb.h"
+#include "../misc/exceptions.h"
 
 #include "../vector3d/vector3d.h"
 #include "../misc/constants.h"
@@ -104,7 +105,7 @@ class Particle : public Drawable, public PointCharge{
 
 		inline void update_attributes(void){
 			gamma = 1.0/(sqrt(1.0 - v.norm2()));
-			energy = gamma*mass*phcst::C2_USI; 
+			energy = gamma*mass*phcst::C2_USI;
 		}
 
 		void move(double dt);
@@ -114,7 +115,7 @@ class Particle : public Drawable, public PointCharge{
 
 		bool has_collided(void) const;
 
-		Vector3D radial_vector_calculation(void) const; // returns the vector used to calculate radial position and velocity 
+		Vector3D radial_vector_calculation(void) const; // returns the vector used to calculate radial position and velocity
 		double radial_position(void) const;
 		double vertical_position(void) const;
 		double radial_velocity(void) const;
@@ -150,5 +151,8 @@ class Proton : public Particle{
 
 		virtual std::unique_ptr<Particle> copy(void) const override{ return std::unique_ptr<Proton>(new Proton(*this)); }; // polymorphic copy method
 };
+
+// instanciate an instance of a concrete subclasses using a character code ('e' for electron, 'p' for proton etc.)
+std::unique_ptr<Particle> concrete_particle(const Vector3D &x_0, double E, const Vector3D &dir, char particle_code);
 
 std::ostream& operator<<(std::ostream& output, Particle const& particle);
