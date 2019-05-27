@@ -4,7 +4,6 @@
 
 #include "../accelerator/accelerator.h"
 #include "../physics/beam.h"
-#include "../scatterplot/scatterplot.h"
 
 class TextView : public Canvas{
 	private:

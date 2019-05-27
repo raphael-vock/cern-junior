@@ -3,9 +3,9 @@ TEMPLATE = subdirs
 SUBDIRS += \
 	color \
 	vector3d \
-	scatterplot \
 	accelerator \
 	physics \
 	textview \
 	tests \
+	cern-junior-text \
 	exerciceP12 \

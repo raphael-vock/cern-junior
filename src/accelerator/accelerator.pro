@@ -11,7 +11,9 @@ INCLUDEPATH += \
 SOURCES += \
 	element.cpp \
 	accelerator.cpp \
+	accelerator_cli.cpp \
 
 HEADERS += \
 	element.h \
 	accelerator.h \
+	accelerator_cli.h \

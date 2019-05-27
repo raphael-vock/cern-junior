@@ -33,6 +33,8 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 		void draw_elements(void) const;
 		void draw_particles(void) const;
 
+		bool is_empty(void) const{ return empty(); }
+
 		double getLength(void) const{ return length; }
 		Vector3D getOrigin(void) const{ return origin; }
 
@@ -64,3 +66,7 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 };
 
 std::ostream& operator<<(std::ostream& output, const Accelerator &A);
+
+namespace cernjunior{
+	void build_default_accelerator(Accelerator &w);
+};

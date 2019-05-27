@@ -3,7 +3,7 @@ CONFIG += \
 
 CONFIG -= app_bundle
 
-TARGET = text_app.out 
+TARGET = cern-junior-text
 
 INCLUDEPATH += \
 	../general \

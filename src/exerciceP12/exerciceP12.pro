@@ -6,7 +6,7 @@ CONFIG -= \
 CONFIG += \
 	c++11 \
 
-TARGET = cern-junior
+TARGET = cern-junior-graphical
 
 INCLUDEPATH += \
 	../general \
