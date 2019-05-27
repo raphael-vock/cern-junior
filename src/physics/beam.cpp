@@ -26,7 +26,7 @@ double Beam::mean_energy(void) const{
 
 double Beam::vertical_emittance(void) const{
 	unsigned int n(0); // denotes the number of particles for mean calculation
-	double r(0.0); // denotes the sum over position coordinate square 
+	double r(0.0); // denotes the sum over position coordinate square
 	double vr(0.0); // denotes the sum over velocity coordinate squared
 	double rvr(0.0); // denotes the sum over the product of velocity and position coordinate
 
@@ -45,10 +45,10 @@ double Beam::vertical_emittance(void) const{
 }
 
 double Beam::radial_emittance(void) const{
-	unsigned int n(0); 
-	double r(0.0); 
-	double vr(0.0); 
-	double rvr(0.0); 
+	unsigned int n(0);
+	double r(0.0);
+	double vr(0.0);
+	double rvr(0.0);
 
 	for (auto const& p : *this) {
 		double position = (*p)->radial_position();
@@ -58,6 +58,8 @@ double Beam::radial_emittance(void) const{
 		rvr += position*velocity;
 		++n;
 	}
+	if(n == 0) return 0;
+
 	r /= n;
 	vr /= n;
 	rvr /= n;
@@ -65,54 +67,54 @@ double Beam::radial_emittance(void) const{
 }
 
 double Beam::mean_radial_position_squared(void) const {
-	unsigned int n(0); 
-	double r(0.0); 
+	unsigned int n(0);
+	double r(0.0);
 
 	for (auto const& p : *this) {
 		double position = (*p)->radial_position();
 		r += position*position;
 		++n;
 	}
-	return r /= n;
+	return n ? r/n : 0.0;
 }
 double Beam::mean_vertical_position_squared(void) const {
-	unsigned int n(0); 
-	double r(0.0); 
+	unsigned int n(0);
+	double r(0.0);
 
 	for (auto const& p : *this) {
 		double position = (*p)->vertical_position();
 		r += position*position;
 		++n;
 	}
-	return r /= n;
+	return n ? r/n : 0.0;
 }
 
 double Beam::mean_radial_velocity_squared(void) const {
-	unsigned int n(0); 
-	double r(0.0); 
+	unsigned int n(0);
+	double r(0.0);
 
 	for (auto const& p : *this) {
 		double position = (*p)->radial_velocity();
 		r += position*position;
 		++n;
 	}
-	return r /= n;
+	return n ? r/n : 0.0;
 }
 double Beam::mean_vertical_velocity_squared(void) const {
-	unsigned int n(0); 
-	double r(0.0); 
+	unsigned int n(0);
+	double r(0.0);
 
 	for (auto const& p : *this) {
 		double position = (*p)->vertical_velocity();
 		r += position*position;
 		++n;
 	}
-	return r /= n;
+	return n ? r/n : 0.0;
 }
 
 double Beam::mean_radial_product(void) const {
-	unsigned int n(0); 
-	double r(0.0); 
+	unsigned int n(0);
+	double r(0.0);
 
 	for (auto const& p : *this) {
 		double position = (*p)->radial_position();
@@ -120,11 +122,12 @@ double Beam::mean_radial_product(void) const {
 		r += position*velocity;
 		++n;
 	}
-	return r /= n;
+	return n ? r/n : 0.0;
 }
+
 double Beam::mean_vertical_product(void) const {
-	unsigned int n(0); 
-	double r(0.0); 
+	unsigned int n(0);
+	double r(0.0);
 
 	for (auto const& p : *this) {
 		double position = (*p)->vertical_position();
@@ -132,7 +135,7 @@ double Beam::mean_vertical_product(void) const {
 		r += position*velocity;
 		++n;
 	}
-	return r /= n;
+	return n ? r/n : 0.0;
 }
 
 std::array<double,3> Beam::radial_ellipse_coefficients(void) const{
@@ -151,10 +154,6 @@ std::array<double,3> Beam::vertical_ellipse_coefficients(void) const{
 		mean_vertical_product()/(-emittance), // A12
 		mean_vertical_position_squared()/emittance // A22
 	};
-}
-
-void Beam::evolve(double dt){
-	// TODO
 }
 
 std::ostream& Beam::print(std::ostream& output) const{
@@ -181,5 +180,5 @@ void CircularBeam::activate(){
 
 		habitat->addParticle(*copy);
 	}
-	shrink_to_fit();
+	shrink_to_fit(); // deallocate redundant memory
 }

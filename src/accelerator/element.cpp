@@ -45,7 +45,7 @@ Element::Element(
 			catch(std::exception){
 				v = (u^vctr::Z_VECTOR).unitary();
 			}
-		} 
+		}
 		w = u^v;
 	}
 	catch(std::exception){ throw excptn::ELEMENT_DEGENERATE_GEOMETRY; }
@@ -106,19 +106,24 @@ double Element::curvilinear_coord(const Vector3D &x) const{
 	return is_straight() ? l : asin(l*curvature) / curvature;
 }
 
-bool Element::has_collided(const Vector3D &r) const{
+double Element::orthogonal_offset(const Vector3D &r) const{
 	if(is_straight()){
-		return local_coords(r).norm() >= radius;
+		return local_coords(r).norm();
 	}else{
 		const Vector3D X(r - center());
-		try{
-			const Vector3D u((X - r[2]*vctr::Z_VECTOR).unitary());
-			return (X - (1.0/abs(curvature))*u).norm() >= radius;
-		}
-		catch(std::exception){
+		const Vector3D u((X - r[2]*vctr::Z_VECTOR).unitary());
+		return (X - (1.0/abs(curvature))*u).norm();
+	}
+}
+
+bool Element::has_collided(const Vector3D &r) const{
+	try{
+		return orthogonal_offset(r) >= radius;
+	}
+
+	catch(std::exception){
 			// means that the point is directly over the center
 			return true;
-		}
 	}
 }
 
@@ -200,22 +205,4 @@ Vector3D Element::local_trajectory(double s) const{
 
 	double beta(s*curvature);
 	return -sin(beta)*u + cos(beta)*v;
-}
-
-// MAX FORCES
-
-double StraightSection::maxForce(const Particle &p) const{
-	return 0.0;
-}
-
-double Dipole::maxForce(const Particle &p) const{
-	return abs(p.getCharge() * B_0);
-}
-
-double Quadrupole::maxForce(const Particle &p) const{
-	return abs(p.getCharge() * b * sqrt(length*length + radius*radius)* phcst::C_USI);
-}
-
-double RadiofrequencyCavity::maxForce(const Particle &p) const{
-	return abs(p.getCharge() * E_0);
 }

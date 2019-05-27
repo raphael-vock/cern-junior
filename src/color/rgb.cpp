@@ -17,8 +17,7 @@ RGB RGB::modulate(double arg, double arg_max) const{
 	}
 
 	const double p(arg/arg_max);
-	std::cout << p << " ";
-	return RGB(p + (1-p)*R, (1-p)*G, (1-p)*B);
+	return RGB((1-p)*R, (1-p)*G, (1-p)*B);
 }
 
 const RGB RGB::WHITE(1,1,1);

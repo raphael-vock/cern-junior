@@ -104,7 +104,7 @@ void OpenGLView::initializePosition(){
 void OpenGLView::set_first_person_view(const Particle &p){
 	pov_matrix.setToIdentity();
 
-	Vector3D center_point(p + p.getRadius()*p.getVelocity().unitary());
+	Vector3D center_point(p + p.getRadius()*(p.getVelocity().unitary() + vctr::Z_VECTOR));
 	Vector3D focal_point(center_point + p.getVelocity());
 
 	QVector3D eye(center_point[0], center_point[1], center_point[2]);

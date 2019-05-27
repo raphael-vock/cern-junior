@@ -33,7 +33,7 @@ void PointCharge::incorporate(const PointCharge &P){
 
 const RGB Particle::getColor(void) const{
 	// modulates color based on force
-	return getDefaultColor()->modulate(F.norm(), current_element->maxForce(*this));
+	return getDefaultColor()->modulate(current_element->orthogonal_offset(*this), current_element->getRadius());
 }
 
 void Particle::scale(double lambda){
@@ -75,7 +75,7 @@ ostream& Particle::print(ostream& output) const{
 	<< setw(indent) << "Charge (C)  " << charge << "\n"
 	<< setw(indent) << "Force (N)  " << F  << "\n"
 	<< "\n";
-	return output; 
+	return output;
 }
 
 ostream& operator<<(ostream& output, const Particle &particle){

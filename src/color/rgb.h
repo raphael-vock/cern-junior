@@ -11,7 +11,7 @@ class RGB{
 		RGB(double r, double g, double b) : R(r), G(g), B(b){}
 		double operator[](int i) const;
 
-		RGB modulate(double arg, double arg_max) const; // modulates the color from the base color (arg == 0) to red (arg == arg_max)
+		RGB modulate(double arg, double arg_max) const; // modulates the color from the base color (when arg == 0) to black (when arg == arg_max)
 
 		static const RGB WHITE;
 		static const RGB BLACK;

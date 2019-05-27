@@ -37,12 +37,10 @@ class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_
 		double vertical_emittance(void) const;
 		double radial_emittance(void) const;
 
-		std::array<double,3> radial_ellipse_coefficients(void) const; // A11, A12, A22 in this order 
-		std::array<double,3> vertical_ellipse_coefficients(void) const; // A11, A12, A22 in this order 
+		std::array<double,3> radial_ellipse_coefficients(void) const; // A11, A12, A22 in this order
+		std::array<double,3> vertical_ellipse_coefficients(void) const; // A11, A12, A22 in this order
 
 		double mean_energy(void) const;
-
-		void evolve(double dt);
 
 		std::ostream& print(std::ostream& output) const;
 };
