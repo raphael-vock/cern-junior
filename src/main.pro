@@ -8,4 +8,4 @@ SUBDIRS += \
 	physics \
 	textview \
 	tests \
-	qt_gl_view \
+	exerciceP12 \

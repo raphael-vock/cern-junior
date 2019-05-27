@@ -147,5 +147,5 @@ std::ostream& operator<<(std::ostream& output, const Vector3D &v){
 }
 
 Vector3D RandomVector3D::operator()(std::random_device &gen){
-	return (1.0/sqrt(3)) * Vector3D(distr(gen), distr(gen), distr(gen));
+	return Vector3D(distr(gen), distr(gen), distr(gen));
 }

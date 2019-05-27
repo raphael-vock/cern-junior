@@ -79,9 +79,13 @@ Si l'on choisit la première option, l'unique avantage des sphériques serait pe
 
 \item L'opérateur de comparaison \T{==} est défini à partir de la méthode \T{is\_zero()} (cf. \S1.1). L'opérateur \T{!=} retourne la négation logique de \T{==}.
 
-\item L'opérateur d'indexage \T{[]} est surchargé pour permettre un accès direct (mais protégé) à chaque coordonnée sans devoir passer par \T{getCoords()} (cf. \S 1.1). Ainsi \T{u[0]}, \T{u[1]}, \T{u[2]} retourne une \textit{copie} de \T{x}, \T{y}, \T{z} respectivement. Une exception est bien-sûr lancée si l'indice n'est pas \T{0}, \T{1} ou \T{2}.
+\item L'opérateur d'indexage \T{[]} est surchargé pour permettre un accès direct (mais protégé) à chaque coordonnée sans devoir passer par \T{getCoords()} (cf. \S1.1). Ainsi \T{u[0]}, \T{u[1]}, \T{u[2]} retourne une \textit{copie} de \T{x}, \T{y}, \T{z} respectivement. Une exception est bien-sûr lancée si l'indice n'est pas \T{0}, \T{1} ou \T{2}.
 \end{itemize}
 
+\subsection{Vecteurs aléatoires}
+\noindent Pour pouvoir générer facilement des faisceaux de nature aléatoire dont la distribution suit une fonction connue au préalable, nous avons implémenté la classe \T{RandomVector} qui génère, en partant d'une distribution réelle $\mathcal{N}$ centrée en l'origine, construit une distribution vectorielle telle que chaque coordonnée est distribuée selon $\mathcal{N}$.
+
+À l'aide des distributions fournies par la bibliothèque \T{<random>} (depuis C++11), nous avons créé les sous-classes concrètes \T{UniformVector3D} défini par un paramètre \T{r} correspondant au rayon de la distribution uniforme sphérique (centrée en l'origine), et \T{GaussianVector3D} défini par un paramètre \T{sigma} correspondant à l'écart-type de la distribution gaussienne.
 \section{La classe \T{Particle}}
 
 \subsection{Facteur gamma, énergie}
@@ -170,6 +174,7 @@ Comme expliqué ci-dessus, les champs magnétiques sont des méthodes virtuelles
 \noindent \textbf{(P9.3)} Nous devons à présent être vigilants vis-à-vis du constructeur de copie et l'opérateur d'affectation, du fait que cette classe contient des pointeurs. Une solution serait de définir une copie profonde et non de surface. Toutefois la copie d'accélérateur n'est pas une fonctionnalité qu'on envisage dans le cadre du projet, donc nous contentons de supprimer ces derniers.
 
 \section{La classe \T{Beam}}
+\subsection{Généralités}
 \noindent \textbf{(P11.1)} Les attributs de \T{Beam} (faisceau) sont les suivants :
 \begin{itemize}
 	\item Un tableau dynamique de \T{unique\_ptr<unique\_ptr<Particle>>}. En effet, nous voyons les faisceaux non comme des listes particules, mais des listes de références vers des particules (et donc, par souci de polymorphisme, une liste de références vers des références de particules).
@@ -179,6 +184,13 @@ Comme expliqué ci-dessus, les champs magnétiques sont des méthodes virtuelles
 	\item L'attribut \T{Accelerator* habitat} correspond à l'accélérateur dans lequel le faisceau évolue. Cet attribut est nécessaire car certaines méthodes dépendent intimement de la géométrie de l'accélérateur en question.
 	\item Les divers renseignements physiques (énergie, coefficients elliptiques) sont donnés sous forme de méthodes.
 \end{itemize}
+
+\subsection{Faisceaux circulaires}
+\noindent La sous-classe \T{CircularBeam} décrit des faisceaux dont les particules sont distribués régulièrement le long de l'accélérateur, mais auxquelles on ajoute à la position et à la vitesse un déplacement aléatoire.
+
+Ces dernières sont réalisées à l'aide des attributs \T{position\_offset} et \T{velocity\_offset} qui sont de distributions aléatoire vectorielles de type \T{RandomVector} (cf. \S1.5).
+
+En résultent les sous-classes concrètes \T{UniformCircularBeam} et \T{GaussianCircularBeam}.
 
 \section{Interactions inter-particules}
 \subsection{Première approche}
@@ -233,7 +245,7 @@ Dans le cas général, lors du calcul de l'action de l'arbre sur une particule, 
 
 Ainsi, avec un tel algorithme, la méthode \T{evolve} sera $\O(n \log n) + \O(n \log n)$ soit $\O(n \log n)$.
 
-Par la pratique, on constate qu'on est désormais capable d'augmenter le nombre de particules d'un facteur 10 à 20 par rapport à l'algorithme naïf (quadratique).
+Par la pratique, on constate que l'on est désormais capable d'augmenter le nombre de particules d'un facteur 10 à 20 par rapport à l'algorithme naïf (quadratique).
 
 \subsection*{Précision et choix de $\theta$}
 Le facteur $\theta$ quantifie la précision de l'approximation : plus il est grand, plus l'approximation est agressive mais moins elle est précise. Quand $\theta = 0$ l'algorithme dégénère en l'algorithme naïf. En mettant $\theta = 0.5$ nous avons obtenu une bonne précision sur des périodes de temps raisonnables, tout en ayant une complexité temporelle beaucoup plus intéressante.

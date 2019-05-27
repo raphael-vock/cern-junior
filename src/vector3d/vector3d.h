@@ -68,17 +68,6 @@ class RandomVector3D{
 		Vector3D operator()(std::random_device &gen); // overloaded call operator
 };
 
-class GaussianVector3D : public RandomVector3D{
-	// Gaussian-distributed Vector3D along 3 axes
-	private:
-		const double sigma; // standard deviation
-	public:
-		explicit GaussianVector3D(double my_sigma) :
-			RandomVector3D(std::normal_distribution<double>(0.0, my_sigma)),
-			sigma(my_sigma)
-		{}
-};
-
 class UniformVector3D : public RandomVector3D{
 	// Uniformly-distributed Vector3D along 3 axes
 	private:
@@ -87,6 +76,17 @@ class UniformVector3D : public RandomVector3D{
 		explicit UniformVector3D(double my_r) :
 			RandomVector3D(std::uniform_real_distribution<double>(-my_r, my_r)),
 			r(my_r)
+		{}
+};
+
+class GaussianVector3D : public RandomVector3D{
+	// Gaussian-distributed Vector3D along 3 axes
+	private:
+		const double sigma; // standard deviation
+	public:
+		explicit GaussianVector3D(double my_sigma) :
+			RandomVector3D(std::normal_distribution<double>(0.0, my_sigma)),
+			sigma(my_sigma)
 		{}
 };
 
