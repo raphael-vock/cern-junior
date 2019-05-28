@@ -1,6 +1,11 @@
 // Lomàn Vezin & Raphaël Vock
 // Projet de Programmation, EPFL BA2, mai 2019
 
+Réponse aux trois questions :
+1. Jusqu'à la fin, et quelques extensions en plus.
+2. Nous avons une version graphique grace à la bibliothèque Qt, version 5.12.3
+3. Ce projet a nécessité aux environs de 90 heures de travail par personne sur les 14 semaines.
+
 Ce projet porte sur la simulation relativiste d'un accélérateur de particules. Nous l'avons nommé "CERN Junior" en l'honneur du plus grand accélérateur de particules au monde.
 
 Les fichiers |REPONSES.PDF|, |CONCEPTION.pdf|, |JOURNAL.pdf|, (ainsi que leur code source LaTeX si ça intéresse) et le fichier |TODO.txt| achevé se trouvent dans |misc|.

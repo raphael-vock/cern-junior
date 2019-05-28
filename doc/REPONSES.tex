@@ -233,7 +233,7 @@ Ainsi on arrive à réduire le nombre de calculs de force via un processus de mo
 
 En pratique, on procédera plutôt dans l'autre sens : en partant d'un arbre vide, on insère les particules une à une en en suivant le même algorithme. (Dans la littérature anglo-saxonne on utilise le terme le terme \textit{octree}. Dans le code, il s'agit de la classe \T{Node}.) À chaque insertion d'une particule dans un pavé on met à jour la ``particule barycentrique'', qui permettra par la suite les calculs de force.
 
-\subsection*{Description du calcul de force}
+\subsection*{Algorithme de calcul des forces}
 \noindent Lorsqu'il s'agit de calculer l'interaction totale d'un ensemble de particules stockées sous la forme d'un arbre A sur une particule donnée C, on traverse l'arbre selon l'algorithme suivant :
 
 \begin{enumerate}
@@ -241,7 +241,7 @@ En pratique, on procédera plutôt dans l'autre sens : en partant d'un arbre vid
 	\item S'il contient 1 particule, on fait agir cette unique particule sur A.
 	\item Sinon, on calcule le rapport du volume du pavé correspondant à C par le cube de la distance séparant A de la particule barycentrique de A.
 \begin{itemize}
-	\item Si ce rapport est suffisamment petit (disons plus petit qu'un paramètre adimensionné $\theta$ correspondant à la précision de la simulation) alors on fait agir la particule barycentrique sur A.
+	\item Si ce rapport est suffisamment petit (disons plus petit qu'un paramètre adimensionné $\theta$ correspondant à la précision de la simulation), alors on fait agir la particule barycentrique sur A.
 	\item Sinon, on répète le processus sur chaque sous-pavé.
 \end{itemize}
 \end{enumerate}
@@ -256,7 +256,7 @@ Ainsi, avec un tel algorithme, la méthode \T{evolve} sera $\O(n \log n) + \O(n 
 Par la pratique, on constate que l'on est désormais capable d'augmenter le nombre de particules d'un facteur 10 à 20 par rapport à l'algorithme naïf (quadratique).
 
 \subsection*{Précision et choix de $\theta$}
-\noindent Le facteur $\theta$ quantifie la précision de l'approximation : plus il est grand, plus l'approximation est agressive mais moins elle est précise. Quand $\theta = 0$ l'algorithme dégénère en l'algorithme naïf. En mettant $\theta = 0.5$ nous avons obtenu une bonne précision sur des périodes de temps raisonnables, tout en ayant une complexité temporelle beaucoup plus intéressante.
+\noindent Le facteur $\theta$ quantifie la précision de l'approximation : plus il est grand, plus l'approximation est agressive mais moins elle est précise. Quand $\theta = 0$ l'algorithme dégénère en l'algorithme quadratique. En mettant $\theta = 0.5$ nous avons obtenu une bonne précision sur des périodes de temps raisonnables, tout en ayant une complexité temporelle beaucoup plus intéressante.
 
 \begin{figure}
 	\centering
@@ -267,16 +267,16 @@ Par la pratique, on constate que l'on est désormais capable d'augmenter le nomb
 \newpage
 \section{D'autres extensions}
 \subsection{Éléments supplémentaires}
-\noindent Les mailles FODO et les cavités de radiofréquence sont entièrement implémentées dans le programme. (Ceci dit les CRF ne figurent pas à l'interface utilisateur car nous n'avons pas trouvé d'application intéressante dans un accélérateur simple.)
+\noindent Les mailles FODO et les cavités de radiofréquence sont entièrement implémentées dans le programme. (Ceci dit, les CRF ne figurent pas à l'interface utilisateur car nous n'avons pas trouvé d'application intéressante dans un accélérateur simple.)
 
 \subsection{Distributions aléatoires}
-\noindent Comme détaillé dans \S 1.5 nous avons apporter une façon systématique de générer des distributions aléatoires dans l'espace, et ainsi d'obtenir des faisceaux distribués selon une distribution gaussienne ou uniforme.
+\noindent Comme détaillé dans \S 1.5, nous avons apporté une façon systématique de générer des distributions aléatoires dans l'espace, et ainsi d'obtenir des faisceaux distribués selon une distribution gaussienne ou uniforme.
 
 \subsection{Coloration des particules en dégradé}
 \noindent Les particules sont colorées selon la qualité de leur trajectoire. Les couleurs décrivent un gradient allant de la couleur intrinsèque de la particule (pour une trajectoire idéale) jusqu'au noir (pour un trajectoire amenant à une collision imminente.)
 
 \subsection{Choix de point de vue}
-\noindent Comme expliqué dans le fichier \T{README.txt} nous avons implémenté trois points de vues différents qui peuvent être sélectionnés dynamiquement pendant la simulation.
+\noindent Comme expliqué dans le fichier \T{README.txt}, nous avons implémenté trois points de vues différents qui peuvent être sélectionnés dynamiquement pendant la simulation.
 
 \begin{figure}[b!]
 	\centering
