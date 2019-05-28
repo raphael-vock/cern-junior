@@ -20,8 +20,6 @@ void cli::add_beams(Accelerator &w){
 			int N(cli::getInput<int>("Number of particles:\nN = "));
 			if(N < 0) N = 0;
 
-			double E(cli::getInput<double>("Median energy: (GeV) (recommended: 2.0)\nE = "));
-
 			char distr(std::tolower(cli::getInput<char>("Distribution type: (n)one / (u)niform / (g)aussian:\n")));
 
 			double distr_param;
@@ -47,10 +45,10 @@ void cli::add_beams(Accelerator &w){
 				switch(distr){
 					case 'g':
 					case 'n':{
-						w.addGaussianCircularBeam(*concrete_particle(Vector3D(), E, Vector3D(1,0,0), type), N, lambda, distr_param, 0.0);
+						w.addGaussianCircularBeam(*concrete_particle(Vector3D(), 2.0, Vector3D(1,0,0), type), N, lambda, distr_param, 0.0);
 						break;
 					}case 'u':{
-						w.addUniformCircularBeam(*concrete_particle(Vector3D(), E, Vector3D(1,0,0), type), N, lambda, distr_param, 0.0);
+						w.addUniformCircularBeam(*concrete_particle(Vector3D(), 2.0, Vector3D(1,0,0), type), N, lambda, distr_param, 0.0);
 						break;
 					}default:{
 						cout << string("Unrecognized distribution type '") + distr + "'\n";
@@ -72,7 +70,7 @@ void cli::print_keybindings(char lang, ostream& output){
 	switch(lang){
 		case 'f':{
 			cout << "* Se déplacer avec W-A-S-D\n";
-			cout << "* Clic droit + souris pour changer de PDV\n";
+			cout << "* Clic gauche + souris pour changer de PDV\n";
 			cout << endl;
 			cout << "* Saisir '1' pour entrer dans le PDV 1ère personne\n";
 			cout << "* Saisir '3' pour entrer dans le PDV 3ème personne\n";

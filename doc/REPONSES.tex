@@ -38,6 +38,16 @@
 \renewcommand{\familydefault}{\sfdefault}
 \begin{document}
 \maketitle
+
+\thispagestyle{empty}
+\begin{figure}[b!]
+	\centering
+	\includegraphics[width=5in]{images/accelerator.png}
+	\vspace{20pt}
+\end{figure}
+\newpage
+
+\addtocounter{page}{-1}
 \section{La classe \T{Vector3D}}
 \subsection{Conception}
 \noindent \textbf{(P1.1)} Les points et vecteurs de l'espace euclidien sont représentés au moyen de la classe \V\ dont les attributs \T{x}, \T{y}, \T{z} (de type \double) représentent les coordonnées cartésiennes d'une instance. Celles-ci sont des attributs privés, mais tout le reste est publique. Voici les opérations que nous avons implémentées en premier :
@@ -83,9 +93,9 @@ Si l'on choisit la première option, l'unique avantage des sphériques serait pe
 \end{itemize}
 
 \subsection{Vecteurs aléatoires}
-\noindent Pour pouvoir générer facilement des faisceaux de nature aléatoire dont la distribution suit une fonction connue au préalable, nous avons implémenté la classe \T{RandomVector} qui génère, en partant d'une distribution réelle $\mathcal{N}$ centrée en l'origine, construit une distribution vectorielle telle que chaque coordonnée est distribuée selon $\mathcal{N}$.
+\noindent Pour pouvoir générer facilement des faisceaux de nature aléatoire dont la distribution suit une fonction connue au préalable (cf. \S 6.2), nous avons implémenté la classe \T{RandomVector} qui génère, en partant d'une distribution réelle $\mathcal{N}$ centrée en l'origine, une distribution vectorielle telle que chaque coordonnée est distribuée selon $\mathcal{N}$.
 
-À l'aide des distributions fournies par la bibliothèque \T{<random>} (depuis C++11), nous avons créé les sous-classes concrètes \T{UniformVector3D} défini par un paramètre \T{r} correspondant au rayon de la distribution uniforme sphérique (centrée en l'origine), et \T{GaussianVector3D} défini par un paramètre \T{sigma} correspondant à l'écart-type de la distribution gaussienne.
+À l'aide des distributions fournies par la bibliothèque \T{<random>} (depuis C++11), nous avons créé les sous-classes concrètes \T{UniformVector3D} défini par un paramètre \T{r} correspondant au rayon de la distribution uniforme sphérique (centrée en l'origine), et \T{GaussianVector3D} défini par un paramètre \T{sigma} correspondant à l'écart-type de la distribution gaussienne (aussi centrée en l'origine).
 \section{La classe \T{Particle}}
 
 \subsection{Facteur gamma, énergie}
@@ -107,7 +117,7 @@ L'implémentation du facteur gamma et de l'énergie dans la classe \T{Particle} 
 \subitem $\ominus$ \ldots quitte à éventuellement effectuer plusieurs fois le même calcul.
 \end{itemize}
 \bigskip
-\textit{A priori} ses grandeurs seront accédés plusieurs fois par mise à jour de l'accélérateur. C'est pourquoi nous avons décidé de les implémenter sous forme d'attribut.
+\textit{A priori} ses grandeurs seront accédés plusieurs fois par mise à jour de l'accélérateur. C'est pourquoi nous avons décidé de les implémenter sous forme d'attribut malgré l'inconvénient conceptuel.
 
 \section{Premiers éléments}
 
@@ -122,9 +132,7 @@ L'implémentation du facteur gamma et de l'énergie dans la classe \T{Particle} 
 \end{itemize}
 
 \ \linebreak
-\textbf{(P6.2)} Comment représenter les champs magnétiques ?
-
-Comme expliqué ci-dessus, les champs magnétiques sont des méthodes virtuelles pures qui prennent en argument un point de l'espace, et retournent la valeur du champ vectoriel en se point.
+\textbf{(P6.2)} Comme expliqué ci-dessus, les champs magnétiques sont des méthodes virtuelles pures qui prennent en argument un point de l'espace ainsi qu'un temps,\footnote{pour les éventuels cas où le champ dépend du temps} Et retournent la valeur du champ vectoriel en se point.
 
 \ \linebreak
 \ \linebreak
@@ -143,7 +151,7 @@ Comme expliqué ci-dessus, les champs magnétiques sont des méthodes virtuelles
 	\item L'attribut \T{std::vector<std::unique\_ptr<Particle>> particles} stockera les particules contenues dans l'accélérateur. Nous utilisons à nouveau des \T{unique\_ptr} pour pouvoir avoir un comportement polymorphe si le besoin se présente.
 	\item L'attribut \T{const Vector3D origin} définit un point de repère sur l'accélérateur et servira à faciliter la construction de l'accélérateur.
 	\item L'attribut \T{double length} décrit la longueur géométrique de l'accélérateur. Celui-ci aidera à définir un système de coordonnées curviligne global sur la longeur de l'accélérateur.
-	\item La méthode \T{void addParticle(const \&Particle)} permet d'insérer une particule dans l'accélérateur \textit{tout en conservant la nature de l'instance s'il s'agit d'une sous-classe.}
+	\item La méthode \T{void addParticle(const \&Particle)} permet d'insérer une particule dans l'accélérateur \textit{tout en conservant la nature de l'instance s'il s'agit d'une sous-classe.} Il existe des méthodes analogues pour les différents faisceaux.
 	\item Pour chaque sous-classe concrète \T{E} de \T{Element} nous avons une méthode \T{addE} permettant d'ajouter une instance de cette sous-classe à l'accélérateur. Cette méthode prend en arguments un point de l'espace ainsi que les divers paramètres géométriques et physiques de l'élément en question. L'unique point correspond au point de sortie de l'élément ; le point d'entrée est déduit comme étant le point de sortie du précédent (ou sinon \T{origin} s'il n'y en a pas).
 	\item La méthode \T{weld} permet de ``souder'' les éléments de l'accélérateur entre eux, i.e. d'affecter les valeurs de \T{next\_element} et \T{previous\_element}.
 
@@ -192,7 +200,7 @@ Ces dernières sont réalisées à l'aide des attributs \T{position\_offset} et 
 
 En résultent les sous-classes concrètes \T{UniformCircularBeam} et \T{GaussianCircularBeam}.
 
-\section{Interactions inter-particules}
+\section{Interactions inter-particule}
 \subsection{Première approche}
 \noindent \textbf{(P13.1)} Étant donnée une collection de $n$ il y a $1+2+\cdots+n = n(n+1)/2$ interactions qui ont lieu. Ceci donne lieu donc à un un algorithme en $\O(n^2)$ dans les deux cas.
 
@@ -206,27 +214,27 @@ Il y a trois inconvénients à cet algorithme:
 	\item \textit{Un algorithme qui ne tient pas compte de la répartition des particules.} Si, admettons, les particules ne sont pas équi-réparties dans l'accélérateur, l'échantillonnage de l'espace ne s'adapte pas pour tenir compte de leur déséquilibre.
 \end{itemize}
 
-\noindent \textbf{(P14.2)} Au vu des inconvénients présentés ci-dessus, l'algorithme proposer n'est pas celui qui figure dans le programme. En implémentant une version modifiée de l'algorithme de Barnes-Hut, nous sommes arrivés à une précision supérieure tout en ayant une complexité temporelle moyenne en $\O(n \log n)$ Nous détaillons son implémentation dans l'annexe.
+\noindent \textbf{(P14.2)} Au vu des inconvénients présentés ci-dessus, l'algorithme proposer n'est pas celui qui figure dans le programme. En implémentant une version modifiée de l'algorithme de Barnes-Hut, nous sommes arrivés à une précision supérieure tout en ayant une complexité temporelle moyenne en $\O(n \log n)$ Nous détaillons son implémentation dans \S 8.
 
 \newpage
 
 \part*{Extensions}
 \section{Algorithme de Barnes--Hut}
-Comme énoncé plus haut, le schéma de gestion des voisins est un algorithme subquadratique basé sur l'approximation de Barnes--Hut.
+\noindent Comme énoncé plus haut, le schéma de gestion des voisins est un algorithme subquadratique basé sur l'approximation de Barnes--Hut.
 \subsection*{Cadre et motivation}
-L'algorithme de Barnes--Hut\footnote{\url{https://en.wikipedia.org/wiki/Barnes-Hut_simulation}} est conçu pour simuler de façon efficace le problème à $n$ corps gravitationnel, non relativiste. En toute généralité, on peut l'adapter dans le cadre plus général d'un système de champs de force centrale (qui décroit rapidement avec la distance) engendrés par $n$ particules qui interagissent toutes entre elles.
+\noindent L'algorithme de Barnes--Hut\footnote{\url{https://en.wikipedia.org/wiki/Barnes-Hut_simulation}} est conçu pour simuler de façon efficace le problème à $n$ corps gravitationnel, non relativiste. En toute généralité, on peut l'adapter dans le cadre plus général d'un système de champs de force centrale (qui décroit rapidement avec la distance) engendrés par $n$ particules qui interagissent toutes entre elles.
 
 Donnons l'idée avec un exemple : supposons que l'on dispose de trois particules A, B et C qui interagissent entre elles. (Pour fixer les idées dans le cadre du projet, disons que cette interaction est de nature électromagnétique). Supposons que A et B sont proches l'une de l'autre, mais que C est loin de ces dernières. Pour calculer l'influence de A et B sur C, on imagine qu'à une bonne approximation on puisse se contenter de ``moyenner'' A et B en une particule ``virtuelle'' P, puis de calculer l'influence de P sur A. Concrètement, pour effectuer cette moyenne, on choisit la grandeur inertielle pertinente selon la nature de la force (donc dans ce cas-là la charge, mais pour la gravité on utiliserait la masse) et on calcule le barycentre de A et B, pondéré par cette grandeur.
 
 Ainsi on arrive à réduire le nombre de calculs de force via un processus de moyennage. L'idée est de cumuler ces moyennages afin d'obtenir une complexité globalement plus faible via un algorithme de recherche transverse dans un arbre.
 
 \subsection*{La structure de donnée pertinente}
-On va considérer une structure de données correspondant à un découpage récursif de l'espace en pavés. On part d'un pavé peuplé d'un certain nombre de particules. S'il contient au moins deux, on le découpe en $2^3 = 8$ sous-pavés égaux. Sur chaque sous-pavé contenant au moins une particule on répète ce processus, et ainsi de suite jusqu'à que chaque particule occupe son propre pavé.
+\noindent On va considérer une structure de données correspondant à un découpage récursif de l'espace en pavés. On part d'un pavé peuplé d'un certain nombre de particules. S'il contient au moins deux, on le découpe en $2^3 = 8$ sous-pavés égaux. Sur chaque sous-pavé contenant au moins une particule on répète ce processus, et ainsi de suite jusqu'à que chaque particule occupe son propre pavé.
 
 En pratique, on procédera plutôt dans l'autre sens : en partant d'un arbre vide, on insère les particules une à une en en suivant le même algorithme. (Dans la littérature anglo-saxonne on utilise le terme le terme \textit{octree}. Dans le code, il s'agit de la classe \T{Node}.) À chaque insertion d'une particule dans un pavé on met à jour la ``particule barycentrique'', qui permettra par la suite les calculs de force.
 
 \subsection*{Description du calcul de force}
-Lorsqu'il s'agit de calculer l'interaction totale d'un ensemble de particules stockées sous la forme d'un arbre A sur une particule donnée C, on traverse l'arbre selon l'algorithme suivant :
+\noindent Lorsqu'il s'agit de calculer l'interaction totale d'un ensemble de particules stockées sous la forme d'un arbre A sur une particule donnée C, on traverse l'arbre selon l'algorithme suivant :
 
 \begin{enumerate}
 	\item Si le pavé ne contient pas de particule, il n'y a rien à faire.
@@ -239,7 +247,7 @@ Lorsqu'il s'agit de calculer l'interaction totale d'un ensemble de particules st
 \end{enumerate}
 En d'autre termes, en partant de sa racine, on va descendre dans l'arbre jusqu'à que les distances soit suffisamment grandes qu'on puisse appliquer l'approximation barycentrique.
 \subsection*{Complexité temporelle}
-Si on note $\epsilon$ la distance minimale entre deux particules, alors la création de l'arbre avec $n$ particules est en $\O(n \log(1/\epsilon))$. Si les particules sont assez bien réparties on peut supposer que $\epsilon \propto 1/n$, donc on obtient finalement une complexité en $\O(n \log n)$.
+\noindent Si on note $\epsilon$ la distance minimale entre deux particules, alors la création de l'arbre avec $n$ particules est en $\O(n \log(1/\epsilon))$. Si les particules sont assez bien réparties on peut supposer que $\epsilon \propto 1/n$, donc on obtient finalement une complexité en $\O(n \log n)$.
 
 Dans le cas général, lors du calcul de l'action de l'arbre sur une particule, la profondeur typique sera en $\O(\log n)$. Si les calculs algébriques sur les vecteurs sont $\O(1)$, le calcul de la force de l'arbre sur une particule donnée sera donc $\O(\log n)$. Le calcul total de toutes les interactions sera donc $\O(n \log n)$.
 
@@ -248,30 +256,38 @@ Ainsi, avec un tel algorithme, la méthode \T{evolve} sera $\O(n \log n) + \O(n 
 Par la pratique, on constate que l'on est désormais capable d'augmenter le nombre de particules d'un facteur 10 à 20 par rapport à l'algorithme naïf (quadratique).
 
 \subsection*{Précision et choix de $\theta$}
-Le facteur $\theta$ quantifie la précision de l'approximation : plus il est grand, plus l'approximation est agressive mais moins elle est précise. Quand $\theta = 0$ l'algorithme dégénère en l'algorithme naïf. En mettant $\theta = 0.5$ nous avons obtenu une bonne précision sur des périodes de temps raisonnables, tout en ayant une complexité temporelle beaucoup plus intéressante.
+\noindent Le facteur $\theta$ quantifie la précision de l'approximation : plus il est grand, plus l'approximation est agressive mais moins elle est précise. Quand $\theta = 0$ l'algorithme dégénère en l'algorithme naïf. En mettant $\theta = 0.5$ nous avons obtenu une bonne précision sur des périodes de temps raisonnables, tout en ayant une complexité temporelle beaucoup plus intéressante.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=5in]{images/octree.png}
-	\caption{\textbf{Figure 1.} Visualisation des octree avec 3,000 particules}
+	\caption{\textbf{Figure 1.} Visualisation des \textit{octree} avec 3,000 particules}
 \end{figure}
 
-\section{Éléments supplémentaires}
-Les mailles FODO et les cavités de radiofréquence sont entièrement implémentées dans le programme. (Ceci dit les CRF ne figurent pas à l'interface utilisateur car nous n'avons pas trouvé d'application intéressante dans un accélérateur simple.)
+\newpage
+\section{D'autres extensions}
+\subsection{Éléments supplémentaires}
+\noindent Les mailles FODO et les cavités de radiofréquence sont entièrement implémentées dans le programme. (Ceci dit les CRF ne figurent pas à l'interface utilisateur car nous n'avons pas trouvé d'application intéressante dans un accélérateur simple.)
 
-\section{Coloration des particules en fonction de leur distance à la trajectoire optimale}
-Les particules sont colorées suivant un gradient allant de leur couleur intrinsèque (pour une trajectoire idéale) jusqu'au noir (pour un trajectoire amenant à une collision imminente.)
+\subsection{Distributions aléatoires}
+\noindent Comme détaillé dans \S 1.5 nous avons apporter une façon systématique de générer des distributions aléatoires dans l'espace, et ainsi d'obtenir des faisceaux distribués selon une distribution gaussienne ou uniforme.
 
-\begin{figure}
+\subsection{Coloration des particules en dégradé}
+\noindent Les particules sont colorées selon la qualité de leur trajectoire. Les couleurs décrivent un gradient allant de la couleur intrinsèque de la particule (pour une trajectoire idéale) jusqu'au noir (pour un trajectoire amenant à une collision imminente.)
+
+\subsection{Choix de point de vue}
+\noindent Comme expliqué dans le fichier \T{README.txt} nous avons implémenté trois points de vues différents qui peuvent être sélectionnés dynamiquement pendant la simulation.
+
+\begin{figure}[b!]
 	\centering
-	\includegraphics[width=5in]{images/colors.png}
-	\caption{\textbf{Figure 2.} Dégradé des couleurs des particules}
+	\includegraphics[width=4in]{images/colors.png}
+	\caption{\textbf{Figure 2.} Dégradé des couleurs des particules selon leur trajectoire}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[b!]
 	\centering
-	\includegraphics[width=5in]{images/accelerator.png}
-	\caption{\textbf{Figure 3.} L'accélérateur en toute sa splendeur}
+	\includegraphics[width=7in]{images/firstperson.png}
+	\caption{\textbf{Figure 3.} Point de vue ``première personne'' dans l'accélérateur}
 \end{figure}
 
 \end{document}

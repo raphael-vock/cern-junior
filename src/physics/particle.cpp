@@ -18,11 +18,14 @@ Vector3D PointCharge::electromagnetic_force(const PointCharge &Q) const{
 void PointCharge::incorporate(const PointCharge &P){
 	const double q(P.charge);
 
+	if(abs(charge + q) <= simcst::ZERO_CHARGE){
+		charge = 0;
+		return;
+	}
+
 	*this *= charge;
-	/* gamma *= charge; */
 
 	*this += q*P;
-	/* gamma += q*P.gamma; */
 
 	charge += q;
 

@@ -52,53 +52,43 @@ Après la compilation (cf. 0) et si tout ce passe bien, un certain nombre d'exé
 
 	* |src/exerciceP12/cern-junior| est le programme graphique : le fruit principal de ce projet. Nous expliquons son fonctionnement dans II.
 
-	* |src/exerciceP10/cern-junior| est l'analogue en "mode texte".
+	* |src/cern-junior-text/cern-junior-text| est l'analogue en "mode texte".
 
 	* Le répertoire |src/tests| contient un certain nombre de tests correspondant à un certain nombre d'exercices :
 		- vector_test => exercice P1
-		- particle_test => exercice P5
+		- particle_test => exercice P5 (voir note plus haut sur sa compilation)
 		- accelerator_test => exercice P10
 
 ------------------------------------------------------------------------
 3. UTILISATION DU PROGRAMME
 ------------------------------------------------------------------------
 
-Pour pouvoir utiliser pleinement l'interface console, il faut lancer le programme depuis le terminal, via e.g. les commandes
+Pour pouvoir utiliser l'interface console, il faut lancer le programme depuis le terminal, en saisissant par exemple les commandes
 
 $ cd src/exerciceP12
 $ ./cern-junior
 
 Nous allons détailler ici l'utilisation du programme principal (qui, pour rappel, se trouve à l'emplacement |src/exerciceP12/cern-junior|.
 
-1. Vous aurez, en ouvrant le programme, la possibilité de choisir une configuration de particules par défaut ou d'en créer une autre.
+1. Vous aurez, en ouvrant le programme, la possibilité de choisir une configuration de particules par défaut ou de créer la vôtre.
 
-1.1. Si vous choisissez la seconde option, vous pourrez ajouter un nombre arbitraire de faisceaux via la console, puis vous aurez le choix du type de particule, de leur nombre, leur énergie médiane, la nature de la distribution, les paramètres de la distribution, et enfin le facteur d'agrandissement des macroparticules.
+1.1. Si vous choisissez la seconde option, vous pourrez ajouter un nombre arbitraire de faisceaux via la console, puis vous aurez le choix du type de particule, de leur nombre, la nature de leur distribution, les paramètres de la distribution, et enfin le facteur d'agrandissement des macroparticules.
 
-(Rappelons ici que sur les machines du CO il vaut mieux être très conservateur avec le nombre total de particules (≤ 10), bien cela ne représente pas les réelles performances du programme.)
+(Rappelons ici que sur les machines du CO il vaut mieux être très conservateur avec le nombre total de particules (≤ 10), bien cela ne représente pas les performances du programme sur un ordinateur générique.)
 
 Dès que vous choisirez de ne plus rajouter de faisceau, vous aurez la possibilité de voir une liste des commandes en français ou en anglais.
 
-2. Une fois la fenêtre principale ouverte, appuyez deux fois sur la touche espace pour lancer la simulation.
+2. Une fois la fenêtre principale ouverte, la simulation sera lancée.
 
-3. Vous serez placé par défaut dans le point de vue libre. Vous pourrez donc changer de position (resp. de point de vue) grâce aux touches W-A-S-D (resp. la souris). Vous pouvez vriller autour d'un axe avec les touches Q-E.
+3. Vous serez placé par défaut dans le point de vue libre. Vous pourrez donc changer de position (resp. de point de vue) grâce aux touches W-A-S-D (resp. la souris + clic gauche). Vous pouvez vriller autour d'un axe avec les touches 'Q' et 'E'.
 
 3.1. Vous pouvez changer de point de vue à l'aide des touches 1-2-3.
-* La touche 1 correspond au point de vue 1ère personne, qui suit le point de vue d'une particule dans l'accélérateur. Appuyez sur 'W' (resp. S) pour passer à la suivante (resp. précédente).
-* La touche 3 correspond au point de vue 3ème personne, qui suivra une particule depuis l'extérieur. Mêmes touches pour changer de particule.
+* La touche 1 correspond au point de vue 1ère personne, qui suit le point de vue d'une particule dans l'accélérateur. Appuyez sur 'W' (resp. 'S') pour passer à la suivante (resp. précédente).
+* La touche 3 correspond au point de vue 3ème personne, qui suivra une particule depuis l'extérieur. Mêmes touches que ci-dessus pour changer de particule.
 * La touche 2 permet de repasser au point de vue libre.
 
-4. Pour accélérer (resp. décélérer) le pas de la simulation, vous pouvez à tout moment appuyez sur la touche '+' (resp. '-')
+4. Pour accélérer (resp. décélérer) le pas de la simulation, vous pouvez à tout moment appuyez sur la touche '+' (resp. '=')
 
 5. Pour enter/sortir du "mode matrix" (qui permet de visualiser le fonctionnement de l'octree), appuyer sur la touche 'M'.
 
-6. Bien entendu, on peut quitter le programme à tout moment en faisant Ctrl-W (Windows/Linux) ou Cmd-W (Mac)
-
-
-
-***** Une note sur le choix des paramètres ******
-
-Certaines contraintes absolues (e.g. la vitesse de la lumière) pèsent sur le déroulement de la simulation. C'est pourquoi certaines combinaisons de paramètres peuvent mener à des situations surprenantes (e.g. disparition spontannée des particules). Cela s'explique généralement par le fait que la situation en question est non phyique (e.g. facteur gamma imaginaire ou vitesse supérieure à c). Or il est difficile de distinguer a priori les cas où cela peut se produire.
-
-C'est pourquoi dans l'interface de création de faisceaux nous mis des paramètres recommandés qui mènent la plupart du temps à des résultats intéressants agréables à l'œil.
-
-*************************************************
+6. Bien entendu, on peut quitter le programme à tout moment en faisant Ctrl-W (Windows/Linux) ou Cmd-W (Mac).

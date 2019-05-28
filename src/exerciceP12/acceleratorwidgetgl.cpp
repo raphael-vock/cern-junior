@@ -22,7 +22,11 @@ void AcceleratorWidgetGL::timerEvent(QTimerEvent*){
 	/* Q_UNUSED(event); */
 	/* double dt(time_factor * stopwatch.restart() / 1000.0); */
 	double dt(timestep/simcst::DEPTH_FACTOR);
-	for(int i(1); i <= simcst::DEPTH_FACTOR; ++i) evolve(dt);
+	try{
+		for(int i(1); i <= simcst::DEPTH_FACTOR; ++i) evolve(dt);
+	}catch(std::exception exc){
+		std::cerr << exc.what();
+	}
 	update();
 }
 

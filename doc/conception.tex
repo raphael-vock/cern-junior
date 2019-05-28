@@ -47,7 +47,7 @@ Langue de Shakespeare & Langue de Molière \\ [0.5ex]
 \end{center}
 
 \section{Représentation schématique des hiérarchies}
-Ci-dessous deux schémas représentant les hiérarchies relationnelles des classes.
+\noindent Ci-dessous deux schémas représentant les hiérarchies relationnelles des classes.
 
 \subsection{Légende}
 \begin{tikzpicture}[transform shape,mylabel/.style={thin, draw=black, align=center, minimum width=0.5cm, minimum height=0.5cm,fill=white,font=\normalsize}]
@@ -146,11 +146,11 @@ Ci-dessous deux schémas représentant les hiérarchies relationnelles des class
 
 \ \linebreak
 \begin{enumerate}
-	\item La classe \T{PointCharge} est une ``généralisation'' d'une particule ; c'est la formalisation de la notion de \textit{charge ponctuelle relativiste} dont l'utilité est primordiale dans le fonctionnement de l'algorithme de Barnes--Hut (cf. fichier réponses \S 8) dans laquelle les instances de \T{PointCharge} représentent les ``charges ponctuelles moyennes.'' En effet, la classe \T{Particle} contient plusieurs attributs qui ne sont pas pertinentes. Dans l'optique d'affiner la conception et de réduire l'empreinte mémoire (la performance de cet algorithme est clé) nous avons donc introduit cette super-classe dont les attributs sont la position, la charge et le facteur gamma.
+	\item La classe \T{PointCharge} est une ``généralisation'' d'une particule ; c'est la formalisation de la notion de \textit{charge ponctuelle relativiste} dont l'utilité est primordiale dans le fonctionnement de l'algorithme de Barnes--Hut (cf. fichier réponses \S 8) dans laquelle les instances de \T{PointCharge} représentent les ``charges ponctuelles moyennes.'' En effet, la classe \T{Particle} contient plusieurs attributs qui ne sont pas pertinentes. Dans l'optique d'affiner la conception et de réduire l'empreinte mémoire (cet algorithme est clé à la performance du programme), nous avons donc introduit cette super-classe dont les attributs sont la position, la charge et le facteur gamma.
 
 	\item La décision de faire hériter \T{PointCharge} (et donc \T{Particle}) de \T{Vector3D} permet de voir les particules comme des points de l'espace munis de structure supplémentaire, et de ce fait d'obtenir un polymorphisme avec les diverses méthodes ``géométriques'' des éléments. Par exemple, les méthodes liées au système de coordonnées locales d'un élément devraient, en toute généralité, pouvoir être appelés sur des points quelconques de l'espace et non que des particules. En revanche, c'est très contraignant de devoir faire recours à un getter à chaque fois que nous voulons l'appeler sur (la position d') une particule. Dès lors, en faisant hériter la classe \T{Particle} de \T{Vector3D}, nous contournons ce problème.
 
-	\item Les sous-classes \T{Electron}, \T{Proton} permettent tout simplement de s'abstraire des grandeurs physiques qui les définissent et de définir une affichage caractéristique à chaque type de particule. À l'avenir on ajoutera des sous-classes correspondant à d'autres types de particules subatomiques.
+	\item Les sous-classes \T{Electron}, \T{Proton} de \T{Particle} permettent tout simplement de s'abstraire des grandeurs physiques qui les définissent et de définir une affichage caractéristique à chaque type de particule. À l'avenir on ajoutera des sous-classes correspondant à d'autres types de particules subatomiques.
 
 	\item La classe \T{Node} est l'implémentation de l'arbre décrit dans \S 8.
 
