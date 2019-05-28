@@ -50,7 +50,7 @@ class Particle : public Drawable, public PointCharge{
 
 		double energy;
 
-		Element* current_element;
+		Element* current_element = nullptr;
 
 	public:
 		explicit Particle(const Vector3D &x_0, const Vector3D &v_0, double my_mass, double my_charge) :
@@ -94,7 +94,7 @@ class Particle : public Drawable, public PointCharge{
 
 		void setCanvas(Canvas* c){ canvas = c; }
 
-		inline void reset_force(void){ F = vctr::ZERO_VECTOR; }
+		void reset_force(void){ F = vctr::ZERO_VECTOR; }
 
 		inline void add_force(const Vector3D& my_F){ F += my_F; };
 		void add_magnetic_force(const Vector3D& B, double dt);

@@ -17,6 +17,7 @@ int main(int argc, char* argv[]){
 	cernjunior::build_default_accelerator(w);
 
 	cli::add_beams(w);
+	cli::offer_keybindings();
 
 	w.initialize();
 	w.show();

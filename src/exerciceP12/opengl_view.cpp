@@ -61,11 +61,20 @@ void OpenGLView::draw(const Accelerator &to_draw){
 	}
 }
 
-void OpenGLView::init(){
+void OpenGLView::init(void){
 	 // initializes the OpenGL POV, and builds the shader.
 
+	// formatting of links seems to be platform-dependant
+	#ifdef __APPLE__
 	prog.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vertex_shader.glsl");
 	prog.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fragment_shader.glsl");
+	#elif __MACH__
+	prog.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vertex_shader.glsl");
+	prog.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fragment_shader.glsl");
+	#else
+	prog.addShaderFromSourceFile(QOpenGLShader::Vertex, "vertex_shader.glsl");
+	prog.addShaderFromSourceFile(QOpenGLShader::Fragment, "fragment_shader.glsl");
+	#endif
 
 	prog.bindAttributeLocation("vertex", VertexId);
 	prog.bindAttributeLocation("color", ColorId);

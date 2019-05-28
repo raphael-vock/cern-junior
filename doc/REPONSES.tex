@@ -256,4 +256,22 @@ Le facteur $\theta$ quantifie la précision de l'approximation : plus il est gra
 	\caption{\textbf{Figure 1.} Visualisation des octree avec 3,000 particules}
 \end{figure}
 
+\section{Coloration des particules en fonction de leur distance à la trajectoire optimale}
+Les particules sont colorées suivant un gradient allant de leur couleur intrinsèque (pour une trajectoire idéale) jusqu'au noir (pour un trajectoire amenant à une collision imminente.)
+
+\section{Éléments supplémentaires}
+Les mailles FODO et les cavités de radiofréquence sont entièrement implémentées dans le programme. (Ceci dit les CRF ne figurent pas à l'interface utilisateur car nous n'avons pas trouvé d'application intéressante dans un accélérateur simple.)
+
+\begin{figure}
+	\centering
+	\includegraphics[width=5in]{images/accelerator.png}
+	\caption{\textbf{Figure 2.} L'accélérateur en toute sa splendeur}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=5in]{images/colors.png}
+	\caption{\textbf{Figure 3.} Dégradé des couleurs des particules}
+\end{figure}
+
 \end{document}

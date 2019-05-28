@@ -1,0 +1,21 @@
+[x] Write a custom swap(x,y) for Vector3D for efficiency purposes // note: was not needed in the end
+[x] Fix the bug in Node.cpp
+[x] Finish implementing Barnes-Hut
+[x] Finish off the Particle class
+[x] replace IFNDEF by pragma once
+[x] delete canvas copy constructor
+[x] finish cylinder
+[x] properly calculate Vector3D axis in RadiofrequencyCavity::field
+[x] replace Element::is_before(), is_after() by more general methods
+[x] add explicit keyword to constructors
+[x] replace Accelerator::addX methods using a polymorphic copy
+[x] optimise Beam calculations
+[x] make mass, charge static class attributes
+[x] profile code, compare inline vs non inline for critical methods
+[x] add platform dependent code to sourcing of resource.qrc files
+[x] RadioFrequencyCavity
+[ ] Sextupole
+[x] Color modulation when particles reach the edge of the elements
+[ ] Draw ellipses // no time :(
+[x] Console user interface
+[ ] More friendly (graphical?) user interface

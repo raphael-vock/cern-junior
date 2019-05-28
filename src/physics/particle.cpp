@@ -86,6 +86,8 @@ void Particle::move(double dt){
 	v += dt/(gamma*mass*phcst::C_USI) * F;
 	*this += dt * phcst::C_USI * v;
 
+	if(not current_element) return;
+
 	if(current_element->is_after(*this)){
 		current_element = current_element->getSuccessor();
 	}
@@ -100,7 +102,8 @@ void Particle::insert_into_tree(void){
 }
 
 void Particle::evolve(double dt){
-	current_element->apply_forces(*this, dt);
+	if(current_element) current_element->apply_forces(*this, dt);
+
 	move(dt);
 	reset_force();
 	update_attributes();

@@ -20,4 +20,8 @@ namespace cli{
 	}
 
 	void add_beams(Accelerator& w);
+
+	void print_keybindings(char lang, std::ostream& output = std::cout);
+
+	void offer_keybindings(void);
 }

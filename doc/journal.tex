@@ -18,7 +18,9 @@
 \usepackage{pifont}
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
+
 \newcommand{\done}{\rlap{$\square$}{\raisebox{2pt}{\large\hspace{1pt}\cmark}}%
+
 \hspace{-2.5pt}}
 \newcommand{\wontfix}{\rlap{$\square$}{\large\hspace{1pt}\xmark}}
 
@@ -35,31 +37,32 @@
 \ \linebreak
 
 \begin{todolist}
-	\item[\done] Création du journal \hfill 10min
-	\item[\done] Création du répertoire GitHub \hfill 15min
+	\item[\done] Création du journal \hfill 1 min
+	\item[\done] Création du répertoire GitHub \hfill 5 min
 	\item[\done] Lecture complète du descriptif général \hfill 1h
-	\item[\done] Inscription en binôme \hfill 10min
+	\item[\done] Inscription en binôme \hfill 10 min
 	\item[\done] Makefile \hfill 2h
 	\item[\done] Classe Vecteur finie (pleinement opérationnelle, revisitée et testée) \hfill 4h
-	\item[\done] Fichiers REPONSES et CONCEPTION \hfill 15min/semaine
+	\item[\done] Fichiers REPONSES et CONCEPTION \hfill 20 min / semaine
 	\item[\done] Classe Particule finie (avec tous les ajouts) \hfill 5h
 	\item[\done] Implémentation de Barnes-Hut \hfill 6h
 	\item[\done] Premiers éléments \hfill 3h
-	\item[\done] Plus d'éléments (mailles FODO, sextupoles, \ldots) \hfill 2h
+	\item[$\sim$] Plus d'éléments (mailles FODO : oui ; sextupôle : non) \hfill 2h
 	\item[\done] Classe Accélérateur finie \hfill 3h
 	\item[\done] Graphismes: Premiers pas \hfill 5h
 	\item[\done] Graphismes: Particules \hfill 1h
-	\item[\done] Graphismes: Elements et accélérateur \hfill 4h
-	\item[\done] Graphismes: Derniers ajouts \hfill 3h
+	\item[\done] Graphismes: Élements et accélérateur \hfill 4h
+	\item[\done] Graphismes: Derniers ajouts \hfill 4h
 	\item[\done] Classe Faisceaux finie (avec coordonnée curviligne) \hfill 4h
-	\item[\done] Interractions interparticules (avec Barnes-Hut) \hfill 4h
+	\item[\done] Interractions interparticules \hfill 4h
+	\item[\done] Implémentation de Barnes--Hut \hfill 4h
+	\item[\done] Résolution de beugues \hfill 4h
 \end{todolist}
-
-\rule{\textwidth}{0.4pt}
+\newpage
 
 \section{Suivi:}
 
-\subsection{Semaine 1:}
+\subsection*{Semaine 1}
 \begin{itemize}
 \item Création du module Vector3D.
 \item Testé et presque finalisé.
@@ -68,14 +71,14 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 2:}
+\subsection*{Semaine 2}
 \begin{itemize}
 	\item Mise en place de l’environnement Qt et réalisation du tutoriel graphisme P12.
 	\item Prise en main plus poussée de l’environnement graphique, implémentation de plusieurs exemples simples (polygônes plans, cubes, sphères, sphères en mouvement).
 	\item Création du répertoire Github qui sera, à terme, le répertoire du projet final.
 	\item Résolution d’un bug très pénible du à QMake sur Macintosh qui rendait la compilation de librairie impossible (ouf!).
 	\item Création du module `physics' contenant la classe Particle.
-	\item Conception d’une toute première (et fort rudimentaire) simulation physique en temps réel à sortie graphique: un simulateur de problème à n corps (Calculs par somme direct, donc $\mathcal{O}(n^2)$. Devient très couteux à partir de $\sim1000$ particules.).
+	\item Conception d’une toute première (et fort rudimentaire) simulation physique en temps réel à sortie graphique: un simulateur de problème à $n$ corps (Calculs par somme direct, donc $\mathcal{O}(n^2)$. Devient très couteux à partir de 1,000 particules.).
 	\item Modification des opérateurs de calcul algébrique sur les vecteurs et surcharge des opérateurs d’affichage
 	\item Ajout de la méthode rotate à la classe Vector3D.
 	\item Ajout de la méthode force magnétique à la classe Particule.
@@ -84,7 +87,7 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 3:}
+\subsection*{Semaine 3}
 \begin{itemize}
 \item Cela sort un peu du cadre du projet mais je décide d'essayer d'implémenter l'algorithme de Barnes-Hut pour accélérer les calculs des interactions gravitationnelles des particules. Celui-ci est en  $\mathcal{O}(n\log{n})$ donc très intéressant si on a un grand nombre de particules en jeu.
 
@@ -96,7 +99,7 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 4 :}
+\subsection*{Semaine 4}
 
 \begin{itemize}
 \item Première implémentation des éléments, une classe abstraite représente les éléments en général, de cette classe héritent deux sous classes pour les éléments droits et courbes.
@@ -108,25 +111,25 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 5 :}
+\subsection*{Semaine 5}
 \begin{itemize}
-\item Complétion de la classe élément et finalisation (temporaire) de la classe accélérateur.
+\item Complétion de la classe élément et finalisation (temporaire) de la classe représentant l'accélérateur.
 \item Premiers dessins de cylindres et sections de tore sur l’environnement Qt.
 \item Ajout d’une classe pour la gestion des couleurs afin d’alléger le code.
 \end{itemize}
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 6 :}
+\subsection*{Semaine 6}
 \begin{itemize}
 \item Finalisation des dessins de cylindres et sections de tore, adaptation des méthodes au cas de notre projet.
 \item Affichage des premiers éléments à l'aide des méthodes précédentes.
 \item Révision de la conception des méthodes afin de rendre plus naturelle et pratique la construction graphique des éléments.
-\item Ajout de namespace pour une meilleure gestion des exceptions ainsi que des constantes physiques.
+\item Ajout de namespace pour une gestion centralisée des exceptions ainsi que des constantes physiques.
 \end{itemize}
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 7 :}
+\subsection*{Semaine 7}
 \begin{itemize}
 \item Gestion des déplacements à la souris.
 \item Ajout de la classe Faisceaux.
@@ -136,7 +139,7 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 8 :}
+\subsection*{Semaine 8}
 \begin{itemize}
 \item Révision de la classe Particule, ajout d’une classe Point Charge pour rendre le code plus léger et intuitif.
 \item Fin de l'implémentation des méthodes relatives aux faisceaux (émittance, coefficients des ellipses).
@@ -146,7 +149,7 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 9 :}
+\subsection*{Semaine 9}
 \begin{itemize}
 \item Ajout de la cavité radiofréquence et des mailles Fodo.
 \item Réorganisation de la classe accélérateur.
@@ -155,25 +158,25 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 10 :}
+\subsection*{Semaine 10}
 \begin{itemize}
 \item Dernière révision de l’affichage graphique, nous optons pour un rendu plus épuré.
-\item Ajout de différents points de vue afin de pouvoir mieux suivre l’évolution des particules (touches `1', `2', `3').
+\item Ajout de différents points de vue afin de pouvoir mieux suivre l’évolution des particules (touches 1, 2, 3).
 \item Révision complète de la gestion des évènements clavier en conséquence.
 \end{itemize}
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 11 :}
+\subsection*{Semaine 11}
 \begin{itemize}
 \item Début de l’implémentation des interractions interparticulaires à l’aide de l’algorithme de Barnes-Hut implémenté en semaine 3 pour une meilleure complexité.
-\item Test avec $7500$ particules, quelques ralentissements mais résultat très satisfaisant.
-\item Ajout du mode matrice affichant les boites de l’algotithme relatives à l'implémentation de Branes-Hut (touche `m').
+\item Test avec 7,500 particules, quelques ralentissements mais résultat très satisfaisant.
+\item Ajout du mode matrice affichant les boites de l’algotithme relatives à l'implémentation de Barnes--Hut (touche M).
 \end{itemize}
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 12 :}
+\subsection*{Semaine 12}
 \begin{itemize}
 \item Mise en page du fichier Réponses sur \LaTeX, dessin des schémas représentant les différentes classes du projet.
 \item Mise en page du fichier Journal sur \LaTeX.
@@ -183,9 +186,10 @@
 
 \rule{\textwidth}{0.4pt}
 
-\subsection{Semaine 13 :}
+\subsection*{Semaine 13}
 \begin{itemize}
-\item Dernières finalisations, relecture du projet dans son ensemble.
+	\item Résolution de quelques beugues et segfaults.
+	\item Dernières finalisations, relecture et affinement de la documentation.
 \end{itemize}
 
 \rule{\textwidth}{0.4pt}

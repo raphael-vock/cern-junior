@@ -4,6 +4,15 @@
 
 #include "acceleratorwidgetgl.h"
 
+AcceleratorWidgetGL::AcceleratorWidgetGL(QWidget* parent, Vector3D origin) :
+	QOpenGLWidget(parent),
+	Accelerator(&view, origin)
+{
+	setMouseTracking(true);
+	timerId = startTimer(20);
+	stopwatch.restart();
+}
+
 void AcceleratorWidgetGL::initializeGL(void){
 	view.init();
 	setWindowTitle("CERN Junior");

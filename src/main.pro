@@ -5,6 +5,6 @@ SUBDIRS += \
 	vector3d \
 	physics \
 	textview \
-	cern-junior-text \
+#	cern-junior-text \
 	tests \
 	exerciceP12 \

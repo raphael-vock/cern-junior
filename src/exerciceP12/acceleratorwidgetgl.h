@@ -43,6 +43,7 @@ class AcceleratorWidgetGL : public QOpenGLWidget, public Accelerator{
 		int timerId;
 		QTime stopwatch;
 	public:
-		AcceleratorWidgetGL(QWidget* parent, Vector3D origin) : QOpenGLWidget(parent), Accelerator(&view, origin){ setMouseTracking(true); }
+		AcceleratorWidgetGL(QWidget* parent, Vector3D origin);
+
 		virtual ~AcceleratorWidgetGL(void){}
 };
