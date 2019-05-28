@@ -4,7 +4,7 @@
 
 #include "particle.h"
 
-#include "../accelerator/element.h"
+#include "element.h"
 
 using namespace std;
 using namespace phcst;

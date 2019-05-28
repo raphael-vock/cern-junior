@@ -5,7 +5,7 @@
 #include <cmath>
 
 #include "acceleratorwidgetgl.h"
-#include "../accelerator/accelerator_cli.h"
+#include "../physics/accelerator_cli.h"
 
 using namespace std;
 

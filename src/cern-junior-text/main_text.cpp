@@ -3,7 +3,7 @@
 
 #include "../textview/acceleratorwidgetconsole.h"
 
-#include "../accelerator/accelerator_cli.h"
+#include "../physics/accelerator_cli.h"
 
 int main(void){
 	AcceleratorWidgetConsole w(Vector3D(3,2,0));
@@ -18,9 +18,8 @@ int main(void){
 
 	int iterations(cli::getInput<int>("Number of iterations: (-1 to continue until accelerator is empty)\n"));
 
-	int i(0);
-
 	try{
+		int i(0);
 		while(i != iterations){
 			w.evolve(dt);
 			w.draw();

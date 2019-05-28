@@ -8,8 +8,8 @@
 #include "../general/drawable.h"
 #include "../misc/exceptions.h"
 
-#include "../physics/particle.h"
-#include "../physics/node.h"
+#include "particle.h"
+#include "node.h"
 
 class Element : public Drawable, public Node{
 	protected:

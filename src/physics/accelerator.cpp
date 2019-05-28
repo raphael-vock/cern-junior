@@ -1,5 +1,5 @@
 #include "accelerator.h"
-#include "../physics/beam.h"
+#include "beam.h"
 
 void Accelerator::weld(void){
 	const int N(size());
@@ -36,8 +36,7 @@ void Accelerator::draw_particles(void) const{
 }
 
 void Accelerator::draw_beams(void) const{
-	/* for(auto &b : beams) if(b) b->draw(); */
-	for(auto &b : beams) if(b) b->print(std::cout);
+	for(auto &b : beams) if(b) b->draw();
 }
 
 void Accelerator::addParticle(const Particle &to_copy){

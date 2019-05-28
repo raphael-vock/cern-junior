@@ -24,9 +24,7 @@ En ordre de dépendance, voici les différents modules et leur utilité :
 
 * Le répertoire |vector3d| contient la classe Vector3D ainsi que quelques autres classes auxiliaires.
 
-* Le répertoire |physics| contient les classes liés aux particules, aux faisceaux et à la gestion des voisins.
-
-* Le répertoire |accelerator| contient les classes liés aux éléments et à l'accélérateur. Il contient de plus deux namespace utiles : cernjunior qui permet de construire l'accélérateur par défaut que nous avons utilisé dans notre simulateur ; et cli ("command-line interface") qui contient des fonctions utiles à l'interaction avec l'utilisateur via la console.
+* Le répertoire |physics| contient les classes liés aux particules, aux faisceaux et à la gestion des voisins, aux éléments, à l'accélérateur. Il contient de plus deux namespace utiles : cernjunior qui permet de construire l'accélérateur par défaut que nous avons utilisé dans notre simulateur ; et cli ("command-line interface") qui contient des fonctions utiles à l'interaction avec l'utilisateur via la console.
 
 * Le répertoire |exerciceP12| contient tout un tas de classes liées à la représentation graphique des objets via OpenGL ainsi que les interactions via Qt.
 
@@ -37,6 +35,7 @@ En ordre de dépendance, voici les différents modules et leur utilité :
 * Le répertoire |misc| contient des namespace contenant des exceptions (excptn)et des constantes : de la simulation (simcst) ainsi que de la physique (phcst)
 
 Les répertoires présents mais non mentionnés ici seront expliqués par la suite.
+
 
 ------------------------------------------------------------------------
 2. DISPOSITION DES EXÉCUTABLES

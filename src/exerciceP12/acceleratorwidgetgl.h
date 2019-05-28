@@ -5,7 +5,7 @@
 
 #include "opengl_view.h"
 #include "../general/drawable.h"
-#include "../accelerator/accelerator.h"
+#include "../physics/accelerator.h"
 
 class AcceleratorWidgetGL : public QOpenGLWidget, public Accelerator{
 	private:

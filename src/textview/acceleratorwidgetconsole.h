@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "textview.h"
-#include "../accelerator/accelerator.h"
+#include "../physics/accelerator.h"
 
 class AcceleratorWidgetConsole : public Accelerator{
 	public:

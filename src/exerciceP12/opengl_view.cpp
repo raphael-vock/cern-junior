@@ -6,7 +6,7 @@
 #include "../misc/constants.h"
 #include "../misc/exceptions.h"
 
-#include "../accelerator/accelerator.h"
+#include "../physics/accelerator.h"
 #include "../physics/beam.h"
 
 using namespace simcst;
@@ -53,7 +53,7 @@ void OpenGLView::draw(const Element &to_draw){
 }
 
 void OpenGLView::draw(const Accelerator &to_draw){
-	to_draw.draw_beams();
+	/* to_draw.draw_beams(); */
 
 	to_draw.draw_elements();
 	if(not matrix_mode){

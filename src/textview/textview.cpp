@@ -3,8 +3,8 @@
 #include <iostream>
 
 #include "../physics/particle.h"
-#include "../accelerator/element.h"
-#include "../accelerator/accelerator.h"
+#include "../physics/element.h"
+#include "../physics/accelerator.h"
 
 void TextView::draw(const Box &to_draw){ to_draw.print(stream); }
 

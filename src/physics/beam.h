@@ -4,7 +4,7 @@
 
 #include "../misc/exceptions.h"
 
-#include "../accelerator/accelerator.h"
+#include "../physics/accelerator.h"
 
 class Beam : public Drawable, protected std::vector<Particle*>{
 	protected:

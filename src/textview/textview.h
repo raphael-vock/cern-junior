@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../accelerator/accelerator.h"
+#include "../physics/accelerator.h"
 #include "../physics/beam.h"
 
 class TextView : public Canvas{
