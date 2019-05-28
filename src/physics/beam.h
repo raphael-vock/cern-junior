@@ -6,7 +6,7 @@
 
 #include "../accelerator/accelerator.h"
 
-class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_ptr<Particle>>>{
+class Beam : public Drawable, protected std::vector<Particle*>{
 	protected:
 		std::unique_ptr<Particle> model_particle;
 		const uint N; // number of particles that will effectively be created
@@ -20,7 +20,7 @@ class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_
 
 		void update(void);
 
-		void draw_particles(void) const{ for(const auto &p : *this) (**p).draw(); }
+		void draw_particles(void) const{ for(const auto &p : *this) p->draw(); }
 		virtual void draw(void) override{ canvas->draw(*this); }
 
 		virtual void activate(void) = 0;
@@ -43,7 +43,7 @@ class Beam : public Drawable, protected std::vector<std::unique_ptr<std::unique_
 
 		double mean_energy(void) const;
 
-		std::ostream& print(std::ostream& output) const;
+		virtual std::ostream& print(std::ostream& output) const;
 };
 
 class CircularBeam : public Beam{
@@ -73,6 +73,8 @@ class GaussianCircularBeam : public CircularBeam{
 			sigma_x(my_sigma_x),
 			sigma_v(my_sigma_v)
 		{}
+
+		virtual std::ostream& print(std::ostream& output) const override;
 };
 
 class UniformCircularBeam : public CircularBeam{
@@ -87,4 +89,6 @@ class UniformCircularBeam : public CircularBeam{
 			delta_x(my_delta_x),
 			delta_v(my_delta_v)
 		{}
+
+		virtual std::ostream& print(std::ostream& output) const override;
 };

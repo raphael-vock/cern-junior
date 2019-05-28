@@ -20,7 +20,6 @@ class AcceleratorWidgetGL : public QOpenGLWidget, public Accelerator{
 		virtual void timerEvent(QTimerEvent*) override;
 
 		void pause(void);
-		void quit(void);
 
 		QPoint lastMousePosition; // for remembering mouse position
 
@@ -45,5 +44,5 @@ class AcceleratorWidgetGL : public QOpenGLWidget, public Accelerator{
 		QTime stopwatch;
 	public:
 		AcceleratorWidgetGL(QWidget* parent, Vector3D origin) : QOpenGLWidget(parent), Accelerator(&view, origin){ setMouseTracking(true); }
-		virtual ~AcceleratorWidgetGL(){}
+		virtual ~AcceleratorWidgetGL(void){}
 };

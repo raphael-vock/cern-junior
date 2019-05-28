@@ -32,8 +32,8 @@ void OpenGLView::draw(const Box &to_draw){
 	glEnd();
 }
 
-void OpenGLView::draw(const Beam &to_draw){
-	// TODO
+void OpenGLView::draw(const Beam &){
+	// TODO draw ellipses
 }
 
 void OpenGLView::draw(const Particle &to_draw){
@@ -53,6 +53,8 @@ void OpenGLView::draw(const Element &to_draw){
 }
 
 void OpenGLView::draw(const Accelerator &to_draw){
+	to_draw.draw_beams();
+
 	to_draw.draw_elements();
 	if(not matrix_mode){
 		to_draw.draw_particles();

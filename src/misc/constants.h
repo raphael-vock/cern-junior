@@ -28,7 +28,6 @@ namespace simcst{ // simulation constants
 	constexpr double ZERO_ENERGY_GEV(1e-10);
 	constexpr double ZERO_FORCE(1e-10);
 	constexpr double ZERO_CURVATURE(1e-5);
-	constexpr double ZERO_LAMBDA(1e-3);
 
 	constexpr double DEFAULT_MASS(1.0);
 	constexpr double DEFAULT_RADIUS(1.0);

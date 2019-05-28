@@ -35,6 +35,11 @@ void Accelerator::draw_particles(void) const{
 	for(auto &p : particles) if(p) p->draw();
 }
 
+void Accelerator::draw_beams(void) const{
+	/* for(auto &b : beams) if(b) b->draw(); */
+	for(auto &b : beams) if(b) b->print(std::cout);
+}
+
 void Accelerator::addParticle(const Particle &to_copy){
 	for(auto &E : *this){
 		if(E->contains(to_copy)){

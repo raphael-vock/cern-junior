@@ -108,7 +108,7 @@ class StraightSection : public Element{
 
 		virtual const RGB* getColor(void) const override{ return &RGB::SKY_BLUE; }
 
-		virtual void apply_lorentz_force(Particle& p, double dt) const override{ return; } // no electromagnetic interaction
+		virtual void apply_lorentz_force(Particle&, double) const override{ return; } // no electromagnetic interaction
 };
 
 class ElectricElement : public Element{

@@ -9,11 +9,7 @@ void AcceleratorWidgetGL::initializeGL(void){
 	setWindowTitle("CERN Junior");
 }
 
-void AcceleratorWidgetGL::quit(void){
-	quit();
-}
-
-void AcceleratorWidgetGL::timerEvent(QTimerEvent* event){
+void AcceleratorWidgetGL::timerEvent(QTimerEvent*){
 	/* Q_UNUSED(event); */
 	/* double dt(time_factor * stopwatch.restart() / 1000.0); */
 	double dt(timestep/simcst::DEPTH_FACTOR);
@@ -56,6 +52,7 @@ void AcceleratorWidgetGL::update_pov_matrix(void){
 			view.set_first_person_view(*particles[pov_particle]);
 			break;
 		}
+		default: return; // do nothing by default
 	}
 }
 

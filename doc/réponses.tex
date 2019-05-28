@@ -177,8 +177,8 @@ Comme expliqué ci-dessus, les champs magnétiques sont des méthodes virtuelles
 \subsection{Généralités}
 \noindent \textbf{(P11.1)} Les attributs de \T{Beam} (faisceau) sont les suivants :
 \begin{itemize}
-	\item Un tableau dynamique de \T{unique\_ptr<unique\_ptr<Particle>>}. En effet, nous voyons les faisceaux non comme des listes particules, mais des listes de références vers des particules (et donc, par souci de polymorphisme, une liste de références vers des références de particules).
-	\item Un attribut \T{std::unique\_ptr<Particle>} correspondant à la \textit{particule modèle} du faisceau. De nouveau, nous utilisons un pointeur par souci de polymorphisme.
+	\item Un tableau dynamique de \T{Particle*} obtenu par héritage privé de \T{std::vector}. En effet, nous voyons les faisceaux comme des collections de particules, mais sans la même relation d'appartenance que celle de l'accélérateur, d'où l'utilisation de pointeurs à la C.
+	\item Un attribut \T{std::unique\_ptr<Particle>} correspondant à la \textit{particule modèle} du faisceau. De nouveau, nous utilisons un pointeur pour avoir du polymorphisme.
 	\item L'attribut \T{double lambda} correspondant au facteur de proportionnalité entre la particule modèle et les particules qui seront effectivement construites.
 	\item L'attribut \T{uint N} correspondant au nombre de particules qui seront construites dans l'accélérateur.
 	\item L'attribut \T{Accelerator* habitat} correspond à l'accélérateur dans lequel le faisceau évolue. Cet attribut est nécessaire car certaines méthodes dépendent intimement de la géométrie de l'accélérateur en question.

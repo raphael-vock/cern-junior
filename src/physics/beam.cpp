@@ -5,12 +5,10 @@
 Beam::Beam(Accelerator& machine, const Particle &p, uint number_of_particles, double my_lambda) :
 	Drawable(machine.getCanvas()),
 	model_particle(p.copy()),
-	N(number_of_particles / my_lambda),
-	lambda(my_lambda),
+	N(my_lambda >= 1 ? number_of_particles / my_lambda : number_of_particles),
+	lambda(my_lambda >= 1 ? my_lambda : 1),
 	habitat(&machine)
-{
-	if(my_lambda <= simcst::ZERO_LAMBDA) throw excptn::ZERO_LAMBDA;
-}
+{}
 
 void Beam::update(void){
 	// TODO
@@ -19,7 +17,7 @@ void Beam::update(void){
 double Beam::mean_energy(void) const{
 	double mean(0.0);
 	for(const auto &p : *this){
-		mean += (*p)->getEnergy();
+		mean += p->getEnergy();
 	}
 	return N ? (lambda/N) * mean : 0.0;
 }
@@ -31,9 +29,9 @@ double Beam::vertical_emittance(void) const{
 	double rvr(0.0); // denotes the sum over the product of velocity and position coordinate
 
 	for (auto const& p : *this) {
-		double position = (*p)->vertical_position();
+		double position = p->vertical_position();
 		r += position*position;
-		double velocity = (*p)->vertical_velocity();
+		double velocity = p->vertical_velocity();
 		vr += velocity*velocity;
 		rvr += position*velocity;
 		++n;
@@ -51,9 +49,9 @@ double Beam::radial_emittance(void) const{
 	double rvr(0.0);
 
 	for (auto const& p : *this) {
-		double position = (*p)->radial_position();
+		double position = p->radial_position();
 		r += position*position;
-		double velocity = (*p)->radial_velocity();
+		double velocity = p->radial_velocity();
 		vr += velocity*velocity;
 		rvr += position*velocity;
 		++n;
@@ -71,7 +69,7 @@ double Beam::mean_radial_position_squared(void) const {
 	double r(0.0);
 
 	for (auto const& p : *this) {
-		double position = (*p)->radial_position();
+		double position = p->radial_position();
 		r += position*position;
 		++n;
 	}
@@ -82,7 +80,7 @@ double Beam::mean_vertical_position_squared(void) const {
 	double r(0.0);
 
 	for (auto const& p : *this) {
-		double position = (*p)->vertical_position();
+		double position = p->vertical_position();
 		r += position*position;
 		++n;
 	}
@@ -94,7 +92,7 @@ double Beam::mean_radial_velocity_squared(void) const {
 	double r(0.0);
 
 	for (auto const& p : *this) {
-		double position = (*p)->radial_velocity();
+		double position = p->radial_velocity();
 		r += position*position;
 		++n;
 	}
@@ -105,7 +103,7 @@ double Beam::mean_vertical_velocity_squared(void) const {
 	double r(0.0);
 
 	for (auto const& p : *this) {
-		double position = (*p)->vertical_velocity();
+		double position = p->vertical_velocity();
 		r += position*position;
 		++n;
 	}
@@ -117,8 +115,8 @@ double Beam::mean_radial_product(void) const {
 	double r(0.0);
 
 	for (auto const& p : *this) {
-		double position = (*p)->radial_position();
-		double velocity = (*p)->radial_velocity();
+		double position = p->radial_position();
+		double velocity = p->radial_velocity();
 		r += position*velocity;
 		++n;
 	}
@@ -130,8 +128,8 @@ double Beam::mean_vertical_product(void) const {
 	double r(0.0);
 
 	for (auto const& p : *this) {
-		double position = (*p)->vertical_position();
-		double velocity = (*p)->vertical_velocity();
+		double position = p->vertical_position();
+		double velocity = p->vertical_velocity();
 		r += position*velocity;
 		++n;
 	}
@@ -157,8 +155,23 @@ std::array<double,3> Beam::vertical_ellipse_coefficients(void) const{
 }
 
 std::ostream& Beam::print(std::ostream& output) const{
-	output << "Model particle:\n" << *model_particle;
-	// TODO
+	output << "A beam with " << N << " copies of" << *model_particle << "scaled by a factor of " << lambda << "\n";
+	return output;
+}
+
+std::ostream& GaussianCircularBeam::print(std::ostream& output) const{
+	Beam::print(output);
+	output << "with Gaussian distribution on position and velocity\n";
+	output << "with standard deviation " << sigma_x <<" on position\n";
+	output << "and " << sigma_v <<" on velocity\n";
+	return output;
+}
+
+std::ostream& UniformCircularBeam::print(std::ostream& output) const{
+	Beam::print(output);
+	output << "with uniform distribution on position and velocity\n";
+	output << "with variance " << delta_x <<" on position\n";
+	output << "and " << delta_v <<" on velocity\n";
 	return output;
 }
 
@@ -180,6 +193,8 @@ void CircularBeam::activate(){
 		copy->scale(lambda);
 
 		habitat->addParticle(*copy);
+
+		push_back(habitat->getLastParticle());
 	}
 	shrink_to_fit(); // deallocate redundant memory
 }

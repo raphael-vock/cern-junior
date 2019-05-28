@@ -57,7 +57,7 @@ Ci-dessous deux schémas représentant les hiérarchies relationnelles des class
 
 \node (L1) at (0,-1) {};
 \node (R1) at (3.5,-1) {};
-\node (T1) at (3.5,-1) [label=right: hérite de \textit{via} \T{template<>}] {};
+\node (T1) at (3.5,-1) [label=right: hérite de \textit{via} \T{template<\_>}] {};
 
 \node (L2) at (0,-2) {};
 \node (R2) at (3.5,-2) {};
@@ -69,7 +69,7 @@ Ci-dessous deux schémas représentant les hiérarchies relationnelles des class
 
 \draw
 (L0) edge [->] (R0)
-(L1) edge [->] node[mylabel] {\T{template<>}} (R1)
+(L1) edge [->] node[mylabel] {\T{template<\_>}} (R1)
 (L2) edge [->, red] (R2)
 (L3) edge [->, red, dashed] (R3);
 
@@ -90,8 +90,8 @@ Ci-dessous deux schémas représentant les hiérarchies relationnelles des class
 \node (Proton) at (0,-7.5) {\T{Proton}};
 
 \draw
-(Accelerator) edge [->] node[mylabel] {\T{vector<unique\_ptr<>\,>}} (Element)
-(Beam) edge [-> , bend left = 20] node[mylabel] {\T{std::vector<unique\_ptr<unique\_ptr<>\,>\,>}} (Particle.south east)
+(Accelerator) edge [->] node[mylabel] {\T{vector<unique\_ptr<\_>>}} (Element)
+(Beam) edge [-> , bend left = 20] node[mylabel] {\T{std::vector<\_*>}} (Particle.south east)
 (Electron) edge [->] (Particle)
 (Proton) edge [->] (Particle)
 (Node) edge [-> , loop right, dashed, red] (Node.south)

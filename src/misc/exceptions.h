@@ -4,7 +4,6 @@
 
 namespace excptn{
 	const std::invalid_argument ZERO_VECTOR_UNITARY("Could not normalize zero-vector");
-	const std::invalid_argument ZERO_LAMBDA("Cannot initialize macro-particle beam with too small a scaling factor");
 
 	const std::out_of_range BAD_VECTOR3D_ACCESS("Could not access Vector3D's i-th coordinates for i≠0,1,2");
 	const std::out_of_range BAD_RGB_ACCESS("Could not access RGB's i-th value for i≠0,1,2");

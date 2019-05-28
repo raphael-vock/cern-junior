@@ -71,23 +71,17 @@ class RandomVector3D{
 
 class UniformVector3D : public RandomVector3D{
 	// Uniformly-distributed Vector3D along 3 axes
-	private:
-		const double r; // radius of distribution
 	public:
 		explicit UniformVector3D(double my_r) :
-			RandomVector3D(std::uniform_real_distribution<double>(-my_r, my_r)),
-			r(my_r)
+			RandomVector3D(std::uniform_real_distribution<double>(-my_r, my_r))
 		{}
 };
 
 class GaussianVector3D : public RandomVector3D{
 	// Gaussian-distributed Vector3D along 3 axes
-	private:
-		const double sigma; // standard deviation
 	public:
 		explicit GaussianVector3D(double my_sigma) :
-			RandomVector3D(std::normal_distribution<double>(0.0, my_sigma)),
-			sigma(my_sigma)
+			RandomVector3D(std::normal_distribution<double>(0.0, my_sigma))
 		{}
 };
 

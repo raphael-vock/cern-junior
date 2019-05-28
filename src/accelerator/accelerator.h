@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <iterator>
 
 #include "element.h"
 
@@ -22,8 +23,8 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 		Accelerator& operator=(const Accelerator &to_copy) = delete;
 
 		// Masking the "deletion" operators to guarantee data integrity:
-		void erase(iterator a) const{ throw excptn::ILLEGAL_ACCESS; }
-		void erase(iterator a, iterator b) const{ throw excptn::ILLEGAL_ACCESS; }
+		void erase(iterator) const{ throw excptn::ILLEGAL_ACCESS; }
+		void erase(iterator, iterator) const{ throw excptn::ILLEGAL_ACCESS; }
 		void clear(void){ throw excptn::ILLEGAL_ACCESS; }
 
 		void weld(void);
@@ -32,11 +33,14 @@ class Accelerator : public Drawable, private std::vector<std::unique_ptr<Element
 
 		void draw_elements(void) const;
 		void draw_particles(void) const;
+		void draw_beams(void) const;
 
 		bool is_empty(void) const{ return empty(); }
 
 		double getLength(void) const{ return length; }
 		Vector3D getOrigin(void) const{ return origin; }
+
+		Particle* getLastParticle(void) const{ return particles.back().get(); }
 
 		void addParticle(const Particle &to_copy);
 		void addGaussianCircularBeam(const Particle &model, uint N, double lambda, double sigma_x, double sigma_v);
