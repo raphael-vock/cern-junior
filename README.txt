@@ -22,7 +22,7 @@ $ qmake & make
 
 **** Erreur de linker sur les machines du CO ***
 
-À cause du linker « archaïque » présent dans les machines du CO, la compilation des modules |particle_test| et |cern-junior-cpp| provoquent des erreurs de linker qui nous demeurent à ce jour mystérieux. Par défaut nous ne les incluons donc pas dans compilation, mais nous avons laissé le code source ainsi que des captures d'écran de leur fonctionnement sur des machines plus compétentes. Nous nous désolons de ne pas avoir réglé le problème mais nous insistons bien sur le fait que c'est a priori une erreur lié à la plateforme et non au code/conception.
+À cause du linker « archaïque » présent dans les machines du CO, la compilation des modules |particle_test| et |cern-junior-cpp| provoquent des erreurs de linker qui nous demeurent à ce jour mystérieuses. Par défaut nous ne les incluons donc pas dans compilation, mais nous avons laissé le code source ainsi que des captures d'écran de leur fonctionnement sur des machines plus compétentes. Nous nous désolons de ne pas avoir réglé le problème mais nous insistons bien sur le fait que c'est a priori une erreur lié à la plateforme et non au code/conception.
 
 *************************************************
 
